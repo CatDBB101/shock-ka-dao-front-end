@@ -1,0 +1,16 @@
+{
+  "version": "demo-1",
+  "updated": "2026-11-14",
+  "note": "Admin-curated watchpoints (demo). Edit this file, or serve GET /v1/watchpoints from the alerts backend (docs/adr/ADR-016).",
+  "watchpoints": [
+    { "id": "ar-parana-delta", "name": "สามเหลี่ยมปากแม่น้ำปารานา", "area": "โรซาริโอ อาร์เจนตินา", "region": "south_america", "lat": -33.2, "lon": -60.1, "radiusKm": 40, "note": "พื้นที่ชุ่มน้ำ ไฟใหญ่ ส.ค. 2022" },
+    { "id": "br-pantanal", "name": "แพนทานัล", "area": "มาตูโกรสซูดูซูล บราซิล", "region": "south_america", "lat": -18.9, "lon": -57.0, "radiusKm": 60, "note": "พื้นที่ชุ่มน้ำใหญ่ที่สุดในโลก ไฟรุนแรงปี 2020 และ 2024" },
+    { "id": "br-jalapao", "name": "ฮาลาเปา (เซราโด)", "area": "โตกังชินส์ บราซิล", "region": "south_america", "lat": -10.4, "lon": -46.6, "radiusKm": 50 },
+    { "id": "ao-luengue-luiana", "name": "อุทยานแห่งชาติลูเอนเก-ลูเอียนา", "area": "กวันโดกูบังโก แองโกลา", "region": "africa", "lat": -16.9, "lon": 21.6, "radiusKm": 60, "note": "ทุ่งหญ้าสะวันนา ไฟตามฤดูกาลทุกปี" },
+    { "id": "ca-kamloops", "name": "แคมลูปส์", "area": "บริติชโคลัมเบีย แคนาดา", "region": "canada_usa", "lat": 50.67, "lon": -120.33, "radiusKm": 50 },
+    { "id": "ca-fort-mcmurray", "name": "ฟอร์ตแมกเมอร์เรย์", "area": "แอลเบอร์ตา แคนาดา", "region": "canada_usa", "lat": 56.73, "lon": -111.38, "radiusKm": 60, "note": "ไฟป่าใหญ่ปี 2016" },
+    { "id": "us-butte-county", "name": "บิวต์เคาน์ตี (พาราไดซ์)", "area": "แคลิฟอร์เนีย สหรัฐฯ", "region": "canada_usa", "lat": 39.76, "lon": -121.62, "radiusKm": 40, "note": "Camp Fire ปี 2018" },
+    { "id": "au-kakadu", "name": "อุทยานแห่งชาติคาคาดู", "area": "นอร์เทิร์นเทร์ริทอรี ออสเตรเลีย", "region": "australia", "lat": -12.67, "lon": 132.6, "radiusKm": 60 },
+    { "id": "au-blue-mountains", "name": "บลูเมาน์เทนส์", "area": "นิวเซาท์เวลส์ ออสเตรเลีย", "region": "australia", "lat": -33.7, "lon": 150.3, "radiusKm": 40, "note": "Black Summer 2019–2020" }
+  ]
+}
