@@ -7,7 +7,7 @@
 
 ```bash
 npm install
-npm run data:sync        # คัดลอก 4 ไฟล์ข้อมูลจริงเข้า public/data (ค่าเริ่มต้นอ่านจาก Downloads/nsa/…)
+npm run data:sync        # ดาวน์โหลด 4 ไฟล์ข้อมูลจริง (42 MB) จาก HF bucket Ploychomphoo/firecalendar-data เข้า public/data
                          # หรือ: npm run data:sync -- <โฟลเดอร์ที่มี manifest.json, calendar_region.json, cell_*.parquet>
 npm run dev              # http://localhost:5173
 ```
@@ -53,3 +53,4 @@ UI เรียกแค่ hook ใน `src/lib/firecalendar/hooks.ts` (`useMet
 
 - `docs/adr/ADR-015-data-access-path.md` เหตุผลที่เลือกทาง A และผลทดสอบ
 - `docs/REPO_NOTES.md` stack จริง โครงโฟลเดอร์ สิ่งที่ต่างจาก kit
+- `docs/UI_HANDOFF.md` **สำหรับคนปรับ UX/UI**: หน้าไหนอยู่ไฟล์ไหน, design token, วิธีใช้ Tailwind, สิ่งที่ห้ามแตะ

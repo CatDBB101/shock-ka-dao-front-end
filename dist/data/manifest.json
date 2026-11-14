@@ -1,0 +1,39 @@
+{
+ "data_version": "12bdb9ea0385",
+ "model_id": "v3-0afab45b08c6",
+ "generated": "2026-11-14",
+ "files": {
+  "calendar_region": "calendar_region.json",
+  "cell_month": "cell_month/*.parquet"
+ },
+ "final_test_poisson_dev": 1.0883056172339125,
+ "known_limitations": [
+  "largest fire months underestimated (see 13_bias_by_modis_size.png)",
+  "Terra-only period (Nov 2000 - Jun 2002) less accurate: CV deviance ~2x the main model",
+  "cell-level 80% intervals under-cover fire months (58-65%); calendar intervals use region-level monthly ratios instead",
+  "monthly unit, 6 countries; land cover not yet included"
+ ],
+ "calendar_interval_ratios": {
+  "africa": {
+   "q10": 0.6383088324985496,
+   "q50": 1.0020217274467769,
+   "q90": 1.2889476709640322
+  },
+  "south_america": {
+   "q10": 0.7633144580217257,
+   "q50": 0.972071337190953,
+   "q90": 1.1368151900006014
+  },
+  "canada_usa": {
+   "q10": 0.7567611359098438,
+   "q50": 0.9930038453742105,
+   "q90": 1.3569246988648302
+  },
+  "australia": {
+   "q10": 0.8062016329753975,
+   "q50": 0.9755718224770875,
+   "q90": 1.1126163370829825
+  }
+ },
+ "model_version": "v3"
+}

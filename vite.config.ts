@@ -1,4 +1,5 @@
 import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite'
 import { defineConfig, type Connect, type Plugin } from 'vite'
 import { createReadStream, statSync } from 'node:fs'
 import { join, normalize, sep } from 'node:path'
@@ -60,6 +61,6 @@ function dataRangeServer(): Plugin {
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), dataRangeServer()],
+  plugins: [react(), tailwindcss(), dataRangeServer()],
   build: { chunkSizeWarningLimit: 1200 },
 })

@@ -1,0 +1,1 @@
+var e=`/assets/duckdb-mvp-DuKjbjvP.wasm`;export{e as default};

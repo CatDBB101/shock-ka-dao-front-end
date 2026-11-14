@@ -11,6 +11,7 @@
 | ข้อมูล | TanStack Query 5.59 + DuckDB-WASM 1.29 | ตามนั้น |
 | Test | vitest 2.1.5 | ตามนั้น ใช้ `vitest.config.ts` แยก (vitest 2 มี Vite 5 ของตัวเอง) |
 | แผนที่ (ต้นแบบ) | maplibre-gl 4.7.1 | ตามนั้น + terra-draw 1.0.0 |
+| CSS | ไม่ระบุ | CSS เดิม (`firecalendar.css`) + **Tailwind v4** (`@tailwindcss/vite`, ไม่มี preflight) ดู `docs/UI_HANDOFF.md` |
 
 ## โครงโฟลเดอร์
 
@@ -24,6 +25,7 @@ src/
 ├── components/layout/         Layout (เมนู + footer), PageErrorBoundary
 ├── pages/                     Home, Explore, Evidence, Data, About, Ask (ซ่อน), NotFound
 ├── prototype/                 React port ของ reference/*.html: Guide (/guide), Explorer (/prototype)
+├── styles/tailwind.css        Tailwind v4 entry + mapping token → utility
 └── styles/firecalendar.css    token สี light/dark, ลายทแยง, ปฏิทิน
 public/
 ├── data/      4 ไฟล์ข้อมูลจริง (gitignored, `npm run data:sync`)

@@ -1,0 +1,1 @@
+var e=`/assets/duckdb-browser-eh.worker-D6ypKDsm.js`;export{e as default};

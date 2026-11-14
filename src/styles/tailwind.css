@@ -1,0 +1,84 @@
+/* Tailwind CSS v4 entry, imported once from src/main.tsx.
+   See docs/UI_HANDOFF.md section 4 for usage rules.
+
+   Layer order: theme < base < components < utilities
+   - Tailwind preflight is NOT loaded: firecalendar.css already ships its own reset/base,
+     and preflight would restyle h1–h4, p, buttons, and inputs across every page.
+   - firecalendar.css lives in the `components` layer, so a utility always beats
+     an existing class:  <button className="btn primary px-8">  → px-8 wins.
+*/
+@layer theme, base, components, utilities;
+
+@import "tailwindcss/theme.css" layer(theme);
+@import "./firecalendar.css" layer(components);
+@import "tailwindcss/utilities.css" layer(utilities);
+
+/* ---------- design tokens → utilities ----------
+   `inline` makes each utility point at var(--fc-*) directly (not a copied value), so:
+   - light/dark switches by itself (prefers-color-scheme or <html data-theme>)
+   - local overrides still apply, e.g. .orbit forces night colours inside the hero
+   → no need for `dark:` on colours; just use bg-fc-panel, text-fc-text, … */
+@theme inline {
+  /* surfaces + text */
+  --color-fc-bg: var(--fc-bg);
+  --color-fc-bg-deep: var(--fc-bg-deep);
+  --color-fc-panel: var(--fc-panel);
+  --color-fc-panel-2: var(--fc-panel-2);
+  --color-fc-text: var(--fc-text);
+  --color-fc-muted: var(--fc-muted);
+  --color-fc-line: var(--fc-line);
+  --color-fc-focus: var(--fc-focus);
+
+  /* accents */
+  --color-fc-ember: var(--fc-ember); /* main action / alert */
+  --color-fc-ember-ink: var(--fc-ember-ink); /* text on top of ember */
+  --color-fc-viirs: var(--fc-viirs); /* VIIRS / links */
+  --color-fc-modis: var(--fc-modis); /* MODIS */
+
+  /* heat ramp (calendar): h0 = no fire → h4 = most fire */
+  --color-fc-h0: var(--fc-h0);
+  --color-fc-h1: var(--fc-h1);
+  --color-fc-h2: var(--fc-h2);
+  --color-fc-h3: var(--fc-h3);
+  --color-fc-h4: var(--fc-h4);
+
+  /* fonts */
+  --font-head: var(--fc-font-head); /* Trirong: headings */
+  --font-body: var(--fc-font-body); /* Anuphan: body text */
+  --font-num: var(--fc-font-num); /* numbers (pair with tabular-nums) */
+
+  /* radius */
+  --radius-fc-sm: var(--r-sm);
+  --radius-fc-md: var(--r-md);
+  --radius-fc-lg: var(--r-lg);
+
+  /* glow + motion */
+  --shadow-glow-heat: var(--glow-heat);
+  --shadow-glow-aurora: var(--glow-aurora);
+  --ease-fc-out: var(--ease-out);
+  --ease-fc-in-out: var(--ease-in-out);
+}
+
+/* ---------- custom variants ---------- */
+/* app mode: ModeProvider sets <html data-mode="scientist|firefighter"> */
+@custom-variant ff (&:where([data-mode="firefighter"], [data-mode="firefighter"] *));
+@custom-variant sci (&:where([data-mode="scientist"], [data-mode="scientist"] *));
+
+/* light theme (dark is the default theme). Use only for things that are NOT tokens,
+   e.g. a background image. Matches the token rules in firecalendar.css. */
+@custom-variant light {
+  @media (prefers-color-scheme: light) {
+    &:where(:root:not([data-theme="dark"]), :root:not([data-theme="dark"]) *) {
+      @slot;
+    }
+  }
+  &:where([data-theme="light"], [data-theme="light"] *) {
+    @slot;
+  }
+}
+
+/* ---------- small helpers ---------- */
+@utility tabular {
+  font-family: var(--fc-font-num);
+  font-variant-numeric: tabular-nums lining-nums;
+}

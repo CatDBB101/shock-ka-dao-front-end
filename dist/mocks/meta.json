@@ -1,0 +1,88 @@
+{
+ "data_version": "12bdb9ea0385",
+ "model_id": "v3-0afab45b08c6",
+ "generated": "2026-11-14",
+ "files": {
+  "calendar_region": "calendar_region.json",
+  "cell_month": "cell_month/*.parquet"
+ },
+ "final_test_poisson_dev": 1.0883056172339125,
+ "known_limitations": [
+  "largest fire months underestimated (see 13_bias_by_modis_size.png)",
+  "Terra-only period (Nov 2000 - Jun 2002) less accurate: CV deviance ~2x the main model",
+  "cell-level 80% intervals under-cover fire months (58-65%); calendar intervals use region-level monthly ratios instead",
+  "monthly unit, 6 countries; land cover not yet included"
+ ],
+ "calendar_interval_ratios": {
+  "africa": {
+   "q10": 0.6383088324985496,
+   "q50": 1.0020217274467769,
+   "q90": 1.2889476709640322
+  },
+  "south_america": {
+   "q10": 0.7633144580217257,
+   "q50": 0.972071337190953,
+   "q90": 1.1368151900006014
+  },
+  "canada_usa": {
+   "q10": 0.7567611359098438,
+   "q50": 0.9930038453742105,
+   "q90": 1.3569246988648302
+  },
+  "australia": {
+   "q10": 0.8062016329753975,
+   "q50": 0.9755718224770875,
+   "q90": 1.1126163370829825
+  }
+ },
+ "model_version": "v3",
+ "unit": "VIIRS S-NPP-equivalent fire-pixel detections (375 m), vegetation fires, day+night",
+ "sources": {
+  "observed": "measured by VIIRS S-NPP",
+  "backcast": "reconstructed from MODIS Terra+Aqua",
+  "backcast_terra": "reconstructed from MODIS Terra only (less accurate)"
+ },
+ "season": {
+  "africa": {
+   "peak_month": 8,
+   "start_month": 5,
+   "end_month": 9,
+   "method": "cumulative 10-90% of the 2013-2024 median monthly calendar, circular 3-month smoothing"
+  },
+  "south_america": {
+   "peak_month": 9,
+   "start_month": 7,
+   "end_month": 12,
+   "method": "cumulative 10-90% of the 2013-2024 median monthly calendar, circular 3-month smoothing"
+  },
+  "canada_usa": {
+   "peak_month": 8,
+   "start_month": 4,
+   "end_month": 10,
+   "method": "cumulative 10-90% of the 2013-2024 median monthly calendar, circular 3-month smoothing"
+  },
+  "australia": {
+   "peak_month": 10,
+   "start_month": 4,
+   "end_month": 12,
+   "method": "cumulative 10-90% of the 2013-2024 median monthly calendar, circular 3-month smoothing"
+  }
+ },
+ "regions": [
+  "africa",
+  "south_america",
+  "canada_usa",
+  "australia"
+ ],
+ "years": [
+  2001,
+  2024
+ ],
+ "coverage_bbox": {
+  "min_lat": -54.91,
+  "max_lat": 82.56,
+  "min_lon": -176.57,
+  "max_lon": 179.52
+ },
+ "n_cells": 122824
+}
