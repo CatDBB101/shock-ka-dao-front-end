@@ -8,7 +8,7 @@ import type { Box } from "../../lib/firecalendar";
 import { HEX_MAX_KM, HEX_MIN_KM, haversineKm, hexagonRing, type Hexagon, type LonLat } from "../../lib/firecalendar";
 import { searchPlaces, type Place } from "../../lib/geocode";
 
-const STYLE = "https://tiles.openfreemap.org/styles/liberty";
+const STYLE = "https://tiles.openfreemap.org/styles/fiord";
 const SATELLITE = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
 const EMPTY: GeoJSON.FeatureCollection = { type: "FeatureCollection", features: [] };
 

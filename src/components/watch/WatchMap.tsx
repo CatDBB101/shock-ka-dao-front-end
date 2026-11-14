@@ -6,7 +6,7 @@ import { destination, type LonLat } from "../../lib/firecalendar";
 import type { Hotspot, WatchLevel } from "../../lib/watch/risk";
 import type { Watchpoint } from "../../lib/watch/types";
 
-const STYLE = "https://tiles.openfreemap.org/styles/liberty";
+const STYLE = "https://tiles.openfreemap.org/styles/fiord";
 // same hues as the CSS level badges; the map needs literal colours
 const LEVEL_COLOUR: Record<WatchLevel, string> = { active: "#d4471f", high: "#ec6f33", elevated: "#f9b26b", normal: "#7d8a96" };
 

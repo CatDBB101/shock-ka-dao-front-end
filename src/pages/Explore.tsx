@@ -37,6 +37,8 @@ import {
   type Series,
 } from "../components/firecalendar";
 
+import { HeatStrata, type StrataMode } from "../components/hero/HeatStrata";
+
 // the map (maplibre + h3) is large → load it only on this page
 const AoiMap = lazy(() => import("../components/firecalendar/AoiMap"));
 
@@ -69,6 +71,14 @@ export default function Explore() {
   const q = useAoiCalendar(rangeErr || hexErr ? null : box, start, end, ring);
   const [picked, setPicked] = useState<AoiRow | null>(null);
   const [showAllCrit, setShowAllCrit] = useState(false);
+  const view3d = sp.get("view") === "3d";
+  const [morph, setMorph] = useState<StrataMode>("harmonized");
+  const setView = (v: "grid" | "3d") => {
+    const n = new URLSearchParams(sp);
+    if (v === "3d") n.set("view", "3d");
+    else n.delete("view");
+    setSp(n, { replace: true });
+  };
   const series: Series = sp.get("series") === "modis" || sp.get("series") === "viirs" ? (sp.get("series") as Series) : "harmonized";
 
   const update = (patch: Record<string, string | null>) => {
@@ -170,16 +180,42 @@ export default function Explore() {
 
             <div className="grid-2">
               <div className="panel stack">
-                <SeriesTabs value={series} onChange={(s) => { const n = new URLSearchParams(sp); if (s === "harmonized") n.delete("series"); else n.set("series", s); setSp(n, { replace: true }); }} />
-                <CalendarGrid
-                  rows={data.rows}
-                  series={series}
-                  onPick={setPicked}
-                  selected={picked}
-                  markCritical={!small}
-                  label={`ปฏิทินไฟของ${placeName}`}
-                />
-                <Legend series={series} />
+                <div className="row" style={{ justifyContent: "space-between" }}>
+                  <div className="tabs" role="group" aria-label="มุมมองปฏิทิน">
+                    <button type="button" aria-pressed={!view3d} onClick={() => setView("grid")}>
+                      ตาราง
+                    </button>
+                    <button type="button" aria-pressed={view3d} onClick={() => setView("3d")}>
+                      3 มิติ
+                    </button>
+                  </div>
+                </div>
+                {view3d ? (
+                  <div className="strata-panel">
+                    <div className="morph" role="group" aria-label="วิธีต่อข้อมูลสองดาวเทียม">
+                      <button type="button" aria-pressed={morph === "spliced"} onClick={() => setMorph("spliced")}>
+                        ต่อข้อมูลตรงๆ
+                      </button>
+                      <button type="button" aria-pressed={morph === "harmonized"} onClick={() => setMorph("harmonized")}>
+                        ปรับเทียบแล้ว
+                      </button>
+                    </div>
+                    <HeatStrata rows={data.rows} mode={morph} compact label={`ปฏิทินไฟ 3 มิติของ${placeName}`} />
+                  </div>
+                ) : (
+                  <>
+                    <SeriesTabs value={series} onChange={(s) => { const n = new URLSearchParams(sp); if (s === "harmonized") n.delete("series"); else n.set("series", s); setSp(n, { replace: true }); }} />
+                    <CalendarGrid
+                      rows={data.rows}
+                      series={series}
+                      onPick={setPicked}
+                      selected={picked}
+                      markCritical={!small}
+                      label={`ปฏิทินไฟของ${placeName}`}
+                    />
+                    <Legend series={series} />
+                  </>
+                )}
               </div>
               <div className="stack">
                 <div className="panel" aria-live="polite">
