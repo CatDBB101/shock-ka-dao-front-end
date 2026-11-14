@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# FireCalendar+ real data (42 MB) — copy with `npm run data:sync`, deploy via bucket
+public/data/

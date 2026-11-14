@@ -1,0 +1,365 @@
+// Firefighter mode: admin-defined watchpoints, subscribe by email, current status per point.
+import { lazy, Suspense, useMemo, useState, type FormEvent } from "react";
+import { Link } from "react-router-dom";
+import {
+  errorMessageTh,
+  fmtCount,
+  hexagonRing,
+  hexToParam,
+  monthTh,
+  MONTHS_TH,
+  ringBox,
+  useAoiCalendar,
+  useDataSource,
+  useMeta,
+} from "../lib/firecalendar";
+import { LoadError, regionTh } from "../components/firecalendar";
+import { normEmail, validateEmail } from "../lib/watch/alerts";
+import { alertService, useRecentHotspots, useStoredEmail, useSubscriptions, useWatchpoints } from "../lib/watch/hooks";
+import { ACTIVE_HOURS, assessWatchpoint, LEVEL_ORDER, LEVEL_TH, type WatchStatus } from "../lib/watch/risk";
+import type { Watchpoint } from "../lib/watch/types";
+
+const WatchMap = lazy(() => import("../components/watch/WatchMap"));
+
+type Filter = "all" | "mine";
+
+export default function Watch() {
+  const ds = useDataSource();
+  const meta = useMeta();
+  const wps = useWatchpoints();
+  const [email, setEmail] = useStoredEmail();
+  const subs = useSubscriptions(email);
+  const [filter, setFilter] = useState<Filter>(email ? "mine" : "all");
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [month] = useState(() => new Date().getUTCMonth() + 1);
+  const svc = alertService();
+
+  const points = useMemo(() => wps.data ?? [], [wps.data]);
+  const subscribed = useMemo(() => new Set((subs.data ?? []).map((s) => s.watchpointId)), [subs.data]);
+  // NRT checks only for subscribed points + the selected one (FIRMS rate limits per key)
+  const checkList = useMemo(() => points.filter((w) => subscribed.has(w.id) || w.id === selectedId), [points, subscribed, selectedId]);
+  const nrt = useRecentHotspots(checkList);
+
+  const rows = useMemo(() => {
+    const out = points.map((wp) => {
+      const n = nrt.byId.get(wp.id);
+      const status = assessWatchpoint({ month, season: meta.data?.season[wp.region], near: n?.data ?? null });
+      return { wp, status, subscribed: subscribed.has(wp.id), nrtLoading: n?.loading ?? false, nrtError: n?.error ?? null };
+    });
+    return out.sort((a, b) => Number(b.subscribed) - Number(a.subscribed) || LEVEL_ORDER[b.status.level] - LEVEL_ORDER[a.status.level] || a.wp.name.localeCompare(b.wp.name, "th"));
+  }, [points, nrt, meta.data, month, subscribed]);
+
+  const shown = filter === "mine" ? rows.filter((r) => r.subscribed) : rows;
+  const selected = rows.find((r) => r.wp.id === selectedId) ?? null;
+  const activeMine = rows.filter((r) => r.subscribed && r.status.level === "active");
+  const mapPoints = useMemo(() => rows.map((r) => ({ ...r.wp, level: r.status.level, subscribed: r.subscribed })), [rows]);
+  const mapHotspots = useMemo(() => rows.flatMap((r) => r.status.hotspots ?? []), [rows]);
+
+  return (
+    <>
+      <h1>จุดเฝ้าระวัง</h1>
+      <p className="muted">
+        เลือกจุดเฝ้าระวังที่ผู้ดูแลระบบกำหนดไว้ แล้วกดติดตาม เมื่อดาวเทียมพบจุดความร้อนในรัศมีหรือเข้าช่วงพีคของฤดูไฟ ระบบจะแจ้งเตือนทางอีเมล
+      </p>
+
+      <div className="stack" style={{ marginBottom: 16 }}>
+        {!svc.sendsEmail && (
+          <p className="note small">
+            <b>โหมดเดโม:</b> การติดตามบันทึกไว้ในเบราว์เซอร์นี้เท่านั้น และยังไม่ส่งอีเมลจริง ต้องเชื่อมระบบแจ้งเตือนก่อน (ตั้ง <code>VITE_FC_ALERTS_API</code> ดู ADR-016)
+          </p>
+        )}
+        {!ds.canDownloadHotspots && (
+          <p className="note small">
+            ยังตรวจจุดความร้อนล่าสุดไม่ได้ เพราะยังไม่ได้ตั้ง <code>VITE_FIRMS_MAP_KEY</code> ตอนนี้จึงแสดงเฉพาะระดับตามฤดูไฟ
+          </p>
+        )}
+        {activeMine.length > 0 && (
+          <div className="alert" role="alert">
+            <b>พบจุดความร้อนใน {activeMine.length} จุดที่คุณติดตาม:</b> {activeMine.map((r) => r.wp.name).join(", ")}
+          </div>
+        )}
+      </div>
+
+      <section className="panel stack" aria-labelledby="ff-email">
+        <h2 id="ff-email" style={{ margin: 0, fontSize: 18 }}>
+          อีเมลรับการแจ้งเตือน
+        </h2>
+        <EmailForm email={email} onSave={(e) => { setEmail(e); if (e) setFilter("mine"); }} />
+      </section>
+
+      <section className="panel stack" aria-label="แผนที่จุดเฝ้าระวัง" style={{ marginTop: 16 }}>
+        <Suspense fallback={<div className="aoi-map-wrap"><div className="aoi-map" /><p className="aoi-map-hint" role="status">กำลังโหลดแผนที่…</p></div>}>
+          <WatchMap points={mapPoints} hotspots={mapHotspots} selectedId={selectedId} onSelect={setSelectedId} />
+        </Suspense>
+        <LevelLegend />
+      </section>
+
+      <section style={{ marginTop: 24 }} aria-labelledby="ff-list">
+        <div className="row" style={{ justifyContent: "space-between" }}>
+          <h2 id="ff-list" style={{ margin: 0 }}>
+            รายการจุดเฝ้าระวัง
+          </h2>
+          <div className="tabs" role="group" aria-label="กรองรายการ">
+            <button type="button" aria-pressed={filter === "all"} onClick={() => setFilter("all")}>
+              ทั้งหมด ({rows.length})
+            </button>
+            <button type="button" aria-pressed={filter === "mine"} onClick={() => setFilter("mine")} disabled={!email}>
+              ที่ติดตาม ({subscribed.size})
+            </button>
+          </div>
+        </div>
+
+        {wps.isPending && <p role="status">กำลังโหลดจุดเฝ้าระวัง…</p>}
+        {wps.isError && <LoadError error={wps.error} onRetry={() => void wps.refetch()} />}
+        {subs.toggle.isError && (
+          <p className="error" role="alert">
+            {errorMessageTh(subs.toggle.error)}: {subs.toggle.error.message}
+          </p>
+        )}
+        {wps.data && shown.length === 0 && (
+          <p className="muted" style={{ marginTop: 12 }}>
+            {filter === "mine" ? "ยังไม่ได้ติดตามจุดไหน กด “ติดตาม” ที่จุดในแท็บทั้งหมด" : "ยังไม่มีจุดเฝ้าระวัง"}
+          </p>
+        )}
+
+        <div className="grid-2" style={{ marginTop: 12 }}>
+          <ul className="ff-list" aria-label="จุดเฝ้าระวัง">
+            {shown.map((r) => (
+              <li key={r.wp.id}>
+                <WatchCard
+                  wp={r.wp}
+                  status={r.status}
+                  subscribed={r.subscribed}
+                  nrtLoading={r.nrtLoading}
+                  nrtError={r.nrtError ? errorMessageTh(r.nrtError) : null}
+                  selected={r.wp.id === selectedId}
+                  canSubscribe={Boolean(email)}
+                  busy={subs.toggle.isPending && subs.toggle.variables?.id === r.wp.id}
+                  onSelect={() => setSelectedId(r.wp.id)}
+                  onToggle={() => subs.toggle.mutate({ id: r.wp.id, on: !r.subscribed })}
+                />
+              </li>
+            ))}
+          </ul>
+          <div className="panel" aria-live="polite" style={{ alignSelf: "start" }}>
+            {selected ? <WatchDetail wp={selected.wp} status={selected.status} month={month} /> : <p className="small muted">เลือกจุดบนแผนที่หรือในรายการเพื่อดูรายละเอียด</p>}
+          </div>
+        </div>
+      </section>
+
+      <section className="panel small" style={{ marginTop: 24 }} aria-labelledby="ff-how">
+        <h3 id="ff-how" style={{ marginTop: 0 }}>
+          ระบบตัดสินระดับอย่างไร
+        </h3>
+        <ul style={{ paddingLeft: 18, margin: 0 }}>
+          <li>
+            <b>{LEVEL_TH.active}</b>: ดาวเทียม VIIRS (NOAA-20, NOAA-21 แบบใกล้เวลาจริง) พบจุดความร้อนในรัศมีภายใน {ACTIVE_HOURS} ชม. ไม่นับจุดความมั่นใจต่ำ
+          </li>
+          <li>
+            <b>{LEVEL_TH.high}</b>: เดือนนี้อยู่ใกล้เดือนพีคของฤดูไฟของภูมิภาค (±1 เดือน)
+          </li>
+          <li>
+            <b>{LEVEL_TH.elevated}</b>: เดือนนี้อยู่ในฤดูไฟ (ช่วงสะสม 10–90% ของจุดไฟทั้งปี)
+          </li>
+          <li>ระดับตามฤดูกาลมาจากสถิติ 2001–2024 ไม่ใช่ความน่าจะเป็นที่จะเกิดไฟ จุดความร้อนจากดาวเทียมอาจเป็นไฟที่ตั้งใจเผา ควรตรวจสอบในพื้นที่</li>
+        </ul>
+      </section>
+    </>
+  );
+}
+
+function EmailForm({ email, onSave }: { email: string; onSave: (e: string) => void }) {
+  const [draft, setDraft] = useState(email);
+  const [err, setErr] = useState<string | null>(null);
+  const submit = (ev: FormEvent) => {
+    ev.preventDefault();
+    try {
+      onSave(validateEmail(draft));
+      setErr(null);
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : String(e));
+    }
+  };
+  if (email && normEmail(draft) === normEmail(email))
+    return (
+      <div className="row">
+        <span>
+          รับการแจ้งเตือนที่ <b>{email}</b>
+        </span>
+        <button type="button" className="btn ghost" onClick={() => { setDraft(""); onSave(""); }}>
+          เปลี่ยนอีเมล
+        </button>
+      </div>
+    );
+  return (
+    <form className="row" onSubmit={submit} noValidate>
+      <label className="field" style={{ flex: "1 1 240px" }}>
+        อีเมล
+        <input type="email" autoComplete="email" inputMode="email" value={draft} onChange={(e) => setDraft(e.target.value)} placeholder="name@example.org" />
+      </label>
+      <button className="btn primary" type="submit" style={{ alignSelf: "end" }}>
+        ใช้อีเมลนี้
+      </button>
+      {err && (
+        <span className="error" role="alert">
+          {err}
+        </span>
+      )}
+    </form>
+  );
+}
+
+function LevelBadge({ level }: { level: WatchStatus["level"] }) {
+  return <span className={`ff-badge lvl-${level}`}>{LEVEL_TH[level]}</span>;
+}
+
+function LevelLegend() {
+  return (
+    <div className="fc-legend" aria-label="คำอธิบายสีระดับ">
+      {(["active", "high", "elevated", "normal"] as const).map((l) => (
+        <span key={l}>
+          <LevelBadge level={l} />
+        </span>
+      ))}
+      <span>เส้นหนา = จุดที่ติดตาม · จุดแดงเล็ก = จุดความร้อนล่าสุด</span>
+    </div>
+  );
+}
+
+function WatchCard(p: {
+  wp: Watchpoint;
+  status: WatchStatus;
+  subscribed: boolean;
+  nrtLoading: boolean;
+  nrtError: string | null;
+  selected: boolean;
+  canSubscribe: boolean;
+  busy: boolean;
+  onSelect: () => void;
+  onToggle: () => void;
+}) {
+  return (
+    <article className={`ff-card lvl-${p.status.level}${p.selected ? " selected" : ""}`} aria-label={`${p.wp.name}: ${LEVEL_TH[p.status.level]}`}>
+      <div className="row" style={{ justifyContent: "space-between", alignItems: "start" }}>
+        <div>
+          <h3 style={{ margin: 0, fontSize: 17 }}>{p.wp.name}</h3>
+          <p className="small muted" style={{ margin: "2px 0 0" }}>
+            {p.wp.area} · {regionTh(p.wp.region)} · รัศมี {p.wp.radiusKm} กม.
+          </p>
+        </div>
+        <LevelBadge level={p.status.level} />
+      </div>
+      <ul className="small" style={{ paddingLeft: 18, margin: "8px 0" }}>
+        {p.status.reasons.map((r) => (
+          <li key={r}>{r}</li>
+        ))}
+        {p.nrtLoading && <li className="muted">กำลังตรวจจุดความร้อนล่าสุด…</li>}
+        {p.nrtError && <li className="error">ตรวจจุดความร้อนล่าสุดไม่สำเร็จ ({p.nrtError})</li>}
+        {!p.subscribed && !p.selected && p.status.hotspots == null && <li className="muted">ติดตามหรือเลือกจุดนี้เพื่อตรวจจุดความร้อนล่าสุด</li>}
+      </ul>
+      <div className="row">
+        <button
+          type="button"
+          className={`btn${p.subscribed ? " ghost" : " primary"}`}
+          aria-pressed={p.subscribed}
+          disabled={!p.canSubscribe || p.busy}
+          title={p.canSubscribe ? undefined : "กรอกอีเมลก่อน"}
+          onClick={p.onToggle}
+        >
+          {p.busy ? "กำลังบันทึก…" : p.subscribed ? "✓ ติดตามอยู่ (กดเพื่อเลิก)" : "ติดตาม"}
+        </button>
+        <button type="button" className="btn ghost" aria-pressed={p.selected} onClick={p.onSelect}>
+          รายละเอียด
+        </button>
+      </div>
+    </article>
+  );
+}
+
+function WatchDetail({ wp, status, month }: { wp: Watchpoint; status: WatchStatus; month: number }) {
+  const hex = { lat: wp.lat, lon: wp.lon, radiusKm: wp.radiusKm };
+  const ring = useMemo(() => hexagonRing(hex), [wp.lat, wp.lon, wp.radiusKm]); // eslint-disable-line react-hooks/exhaustive-deps
+  const box = useMemo(() => ringBox(ring), [ring]);
+  const hist = useAoiCalendar(box, "2013-01", "2024-12", ring);
+
+  // typical (median) fire count per calendar month, 2013–2024, VIIRS-measured
+  const clim = useMemo(() => {
+    if (!hist.data) return null;
+    const by = new Map<number, number>();
+    for (const r of hist.data.rows) if (r.clim_median != null) by.set(r.month, r.clim_median);
+    return Array.from({ length: 12 }, (_, i) => by.get(i + 1) ?? 0);
+  }, [hist.data]);
+  const maxClim = clim ? Math.max(1, ...clim) : 1;
+  const hs = (status.hotspots ?? []).slice().sort((a, b) => b.time.localeCompare(a.time));
+
+  return (
+    <div className="stack">
+      <div className="row" style={{ justifyContent: "space-between" }}>
+        <h3 style={{ margin: 0 }}>{wp.name}</h3>
+        <LevelBadge level={status.level} />
+      </div>
+      <p className="small muted" style={{ margin: 0 }}>
+        {wp.area} · <span className="num">{wp.lat.toFixed(2)}, {wp.lon.toFixed(2)}</span> · รัศมี {wp.radiusKm} กม.
+        {wp.note ? ` · ${wp.note}` : ""}
+      </p>
+
+      <div>
+        <h4 style={{ margin: "8px 0 4px" }}>จุดความร้อนล่าสุด ({ACTIVE_HOURS} ชม.)</h4>
+        {status.hotspots == null ? (
+          <p className="small muted">ยังไม่ได้ตรวจ</p>
+        ) : hs.length === 0 ? (
+          <p className="small">ไม่พบจุดความร้อนในรัศมี</p>
+        ) : (
+          <div className="table-scroll">
+            <table className="fc-table small">
+              <thead>
+                <tr>
+                  <th>เวลา (UTC)</th>
+                  <th className="num">ละติจูด</th>
+                  <th className="num">ลองจิจูด</th>
+                  <th className="num">FRP (MW)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {hs.slice(0, 10).map((h, i) => (
+                  <tr key={i}>
+                    <td className="num">{h.time.slice(0, 16).replace("T", " ")}</td>
+                    <td className="num">{h.lat.toFixed(3)}</td>
+                    <td className="num">{h.lon.toFixed(3)}</td>
+                    <td className="num">{h.frp.toFixed(1)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {hs.length > 10 && <p className="small muted">และอีก {hs.length - 10} จุด</p>}
+          </div>
+        )}
+      </div>
+
+      <div>
+        <h4 style={{ margin: "8px 0 4px" }}>ไฟตามฤดูกาลของจุดนี้ (ค่ามัธยฐาน 2013–2024)</h4>
+        {hist.isPending && <p className="small muted" role="status">กำลังคำนวณ… ครั้งแรกอาจใช้เวลาสักครู่</p>}
+        {hist.isError && <LoadError error={hist.error} onRetry={() => void hist.refetch()} />}
+        {clim && (
+          <>
+            <div className="ff-bars" role="img" aria-label={`จุดไฟปกติรายเดือน: ${clim.map((v, i) => `${MONTHS_TH[i]} ${Math.round(v)}`).join(", ")}`}>
+              {clim.map((v, i) => (
+                <div key={i} className={`ff-bar${i + 1 === month ? " now" : ""}`}>
+                  <i style={{ height: `${Math.max(2, (v / maxClim) * 100)}%` }} />
+                  <span>{MONTHS_TH[i]}</span>
+                </div>
+              ))}
+            </div>
+            <p className="small">
+              ปกติเดือน{monthTh(month)}พบไฟราว <b className="num">{fmtCount(clim[month - 1] ?? 0)}</b> จุด/เดือนในพื้นที่นี้ ({fmtCount(hist.data?.cells ?? 0)} ช่อง H3)
+            </p>
+          </>
+        )}
+      </div>
+
+      <Link className="btn ghost" to={`/explore?hex=${hexToParam(hex)}`}>
+        ดูข้อมูลย้อนหลัง 24 ปีในโหมด Scientist →
+      </Link>
+    </div>
+  );
+}
