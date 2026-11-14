@@ -1,22 +1,18 @@
 import { Link } from "react-router-dom";
 import { REGIONS, useMeta, useRegionCalendar, type Region } from "../lib/firecalendar";
 import { ContinuityChart, LoadError, regionTh } from "../components/firecalendar";
+import { EvidenceGallery } from "./evidence/EvidenceGallery";
 
 // Source: model_card.json · final test set 622,200 rows (switch to /v1/meta/eval when it exists)
-const SCORES: { region: string; dev: string; bias: string }[] = [
-  { region: "แอฟริกา", dev: "1.98", bias: "−6.8%" },
-  { region: "อเมริกาใต้", dev: "1.33", bias: "−2.3%" },
-  { region: "แคนาดา + สหรัฐฯ", dev: "0.81", bias: "−10.6%" },
-  { region: "ออสเตรเลีย", dev: "1.28", bias: "+1.5%" },
+const SCORES: { region: string; dev: number; bias: number }[] = [
+  { region: "แอฟริกา", dev: 1.98, bias: -6.8 },
+  { region: "อเมริกาใต้", dev: 1.33, bias: -2.3 },
+  { region: "แคนาดา + สหรัฐฯ", dev: 0.81, bias: -10.6 },
+  { region: "ออสเตรเลีย", dev: 1.28, bias: 1.5 },
 ];
-
-const FIGURES: [string, string][] = [
-  ["02_seam_annual_counts.png", "จำนวนจุดไฟรายปีของ MODIS และ VIIRS — เห็นรอยหักปี 2012 ถ้าต่อกันตรงๆ"],
-  ["12_model_comparison.png", "เทียบคะแนนวิธีต่างๆ: วิธีคูณเลข, โมเดล v2 และ v3"],
-  ["12_calendar_reconstruction.png", "ปฏิทินที่แปลงย้อนหลังเทียบกับค่าจริงในช่วงทดสอบ"],
-  ["13_bias_by_modis_size.png", "ความเอนเอียงตามขนาดไฟของ MODIS — เดือนไฟใหญ่มากมักทายต่ำไป"],
-  ["15_continuity_audit.png", "ตรวจความต่อเนื่องรายปีทั้ง 4 ภูมิภาค"],
-];
+const DEV_MAX = 2.2;
+const BIAS_MAX = 12;
+const fmtBias = (b: number) => `${b > 0 ? "+" : b < 0 ? "−" : ""}${Math.abs(b).toFixed(1)}%`;
 
 export default function Evidence() {
   const meta = useMeta();
@@ -45,30 +41,45 @@ export default function Evidence() {
           </p>
         )}
         <div className="table-scroll">
-          <table className="fc-table">
+          <table className="fc-table score-table">
+            <caption className="sr-only">คะแนนรายภูมิภาคบนข้อสอบปลายภาค</caption>
             <thead>
               <tr>
                 <th>ภูมิภาค</th>
-                <th className="num">Poisson deviance (ข้อสอบปลายภาค)</th>
-                <th className="num">ทายเกิน/ขาดรวม</th>
+                <th>Poisson deviance (ยิ่งสั้นยิ่งดี)</th>
+                <th>ทายเกิน / ขาดรวม</th>
               </tr>
             </thead>
             <tbody>
               {SCORES.map((s) => (
                 <tr key={s.region}>
                   <td>{s.region}</td>
-                  <td className="num">{s.dev}</td>
-                  <td className="num">{s.bias}</td>
+                  <td>
+                    <span className="score-bar">
+                      <i style={{ width: `${(s.dev / DEV_MAX) * 100}%` }} />
+                      <b className="num">{s.dev.toFixed(2)}</b>
+                    </span>
+                  </td>
+                  <td>
+                    <span className={`bias-bar ${s.bias < 0 ? "under" : "over"}`}>
+                      <i style={{ width: `${(Math.abs(s.bias) / BIAS_MAX) * 50}%` }} />
+                      <b className="num">{fmtBias(s.bias)}</b>
+                    </span>
+                  </td>
                 </tr>
               ))}
-              <tr>
+              <tr className="score-total">
                 <td>
                   <b>รวม</b>
                 </td>
-                <td className="num">
-                  <b>1.09</b> (v2 = 1.14, วิธีคูณเลข = 5.17)
+                <td>
+                  <span className="score-bar">
+                    <i style={{ width: `${(1.09 / DEV_MAX) * 100}%` }} />
+                    <b className="num">1.09</b>
+                  </span>
+                  <span className="small muted">v2 ได้ 1.14 และวิธีคูณเลขได้ 5.17 (ยาวเกินสเกล)</span>
                 </td>
-                <td className="num">–</td>
+                <td className="muted">–</td>
               </tr>
             </tbody>
           </table>
@@ -103,18 +114,12 @@ export default function Evidence() {
         )}
       </section>
 
-      <section aria-labelledby="figs">
-        <h2 id="figs">กราฟประกอบ</h2>
-        <div className="figs">
-          {FIGURES.map(([f, cap]) => (
-            <figure key={f}>
-              <a href={`/figures/${f}`} target="_blank" rel="noreferrer">
-                <img src={`/figures/${f}`} alt={cap} loading="lazy" />
-              </a>
-              <figcaption>{cap}</figcaption>
-            </figure>
-          ))}
+      <section aria-labelledby="figs" className="lt-section">
+        <div className="lt-head">
+          <h2 id="figs">ห้องกราฟหลักฐาน</h2>
+          <p className="muted">กราฟจริงจากขั้นตอนสร้างโมเดล เรียงตามเรื่อง ปัญหา การทดสอบ จุดอ่อน และผลลัพธ์ กดภาพเพื่อดูขนาดใหญ่ พร้อมคำอธิบายว่าควรดูตรงไหน</p>
         </div>
+        <EvidenceGallery />
       </section>
 
       <section aria-labelledby="ai">

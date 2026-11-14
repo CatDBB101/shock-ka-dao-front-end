@@ -1,86 +1,133 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import type { Region } from "../lib/firecalendar";
 import { useRegionCalendar } from "../lib/firecalendar";
-import { ContinuityChart, LoadError, RegionTabs, RegionView, regionTh } from "../components/firecalendar";
+import { CalendarSkeleton, ContinuityChart, LoadError, RegionTabs, RegionView, regionTh } from "../components/firecalendar";
+import { EarthLimb } from "../components/hero/EarthLimb";
+import { HeatStrata, type StrataMode } from "../components/hero/HeatStrata";
+import { SeamMeter } from "../components/hero/SeamMeter";
 
 export default function Home() {
-  const [region, setRegion] = useState<Region>("africa");
-  const [before, setBefore] = useState(false);
+  const [region, setRegion] = useState<Region>("south_america");
+  const [sp, setSp] = useSearchParams();
+  const mode: StrataMode = sp.get("seam") === "fixed" ? "harmonized" : "spliced";
+  const setMode = (m: StrataMode) => {
+    const n = new URLSearchParams(sp);
+    if (m === "harmonized") n.set("seam", "fixed");
+    else n.delete("seam");
+    setSp(n, { replace: true });
+  };
+  const q = useRegionCalendar(region);
+
   return (
     <>
-      <section className="hero">
-        <h1>ปฏิทินไฟป่า 24 ปี ที่ต่อเนื่องเป็นเส้นเดียว</h1>
-        <p>
-          เราแปลงข้อมูลดาวเทียม MODIS รุ่นเก่าให้เทียบเท่า VIIRS 375 ม. จึงดูไฟรายเดือนตั้งแต่ปี 2001 ถึง 2024 ได้ในมาตรฐานเดียวกัน
-          ทุกช่องบอกว่าเป็นค่าวัดจริงหรือค่าคำนวณ
-        </p>
-        <Link to="/explore" className="btn primary">
-          เลือกพื้นที่ของคุณ →
-        </Link>
-      </section>
+      <section className="orbit" aria-labelledby="orbit-title">
+        <EarthLimb region={region} />
+        <div className="orbit-inner">
+          <div className="orbit-copy">
+            <h1 id="orbit-title" className="orbit-title">
+              <span className="t1">ไฟบนโลก 24 ปี</span>
+              <span className="t2">วัดด้วยไม้บรรทัดเดียวกัน</span>
+            </h1>
+            <p className="orbit-lede">
+              แต่ละแท่งคือหนึ่งเดือน สูงตามจำนวนจุดไฟที่ดาวเทียมเห็น ปี 2012 ดาวเทียม VIIRS ที่ละเอียดกว่าเข้ามาแทน MODIS ถ้าต่อข้อมูลตรงๆ
+              ไฟจะดูเหมือนเพิ่มขึ้นหลายเท่าในปีเดียว
+            </p>
 
-      <section aria-labelledby="sample">
-        <h2 id="sample">ปฏิทินตัวอย่าง</h2>
-        <RegionTabs value={region} onChange={setRegion} />
-        <div className="panel" style={{ marginTop: 12 }}>
-          <RegionView region={region} showModis={before} />
-        </div>
-      </section>
+            <div className="orbit-controls">
+              <RegionTabs value={region} onChange={setRegion} />
+              <div className="morph" role="group" aria-label="วิธีต่อข้อมูลสองดาวเทียม">
+                <button type="button" aria-pressed={mode === "spliced"} onClick={() => setMode("spliced")}>
+                  ต่อข้อมูลตรงๆ
+                </button>
+                <button type="button" aria-pressed={mode === "harmonized"} onClick={() => setMode("harmonized")}>
+                  ปรับเทียบด้วย FireCalendar+
+                </button>
+              </div>
+              <p className="orbit-caption">
+                {mode === "spliced"
+                  ? "ก่อน 2012 เป็น MODIS ดิบ หลังจากนั้นเป็น VIIRS สังเกตขั้นบันไดตรงเส้นประ"
+                  : "ปีก่อน 2012 ถูกแปลงให้เทียบเท่า VIIRS ขั้นบันไดหายไป แท่งลายทแยงคือค่าที่คำนวณ"}
+              </p>
+            </div>
 
-      <section aria-labelledby="seam">
-        <h2 id="seam">รอยต่อที่เราซ่อม</h2>
-        <p className="muted">
-          ปี 2012 ดาวเทียม VIIRS เริ่มทำงาน มันเห็นไฟละเอียดกว่า MODIS หลายเท่า ถ้าเอาสองชุดมาต่อกันตรงๆ จะเห็น "ไฟเพิ่มขึ้น" แบบหักศอกทั้งที่ไม่จริง
-          สลับปุ่มด้านล่างเพื่อดูปฏิทินก่อนและหลังปรับเทียบ
-        </p>
-        <div className="tabs" role="group" aria-label="ก่อนหรือหลังปรับเทียบ">
-          <button type="button" aria-pressed={!before} onClick={() => setBefore(false)}>
-            หลังปรับเทียบ
-          </button>
-          <button type="button" aria-pressed={before} onClick={() => setBefore(true)}>
-            ก่อนปรับเทียบ (MODIS ดิบ)
-          </button>
-        </div>
-        <div className="panel" style={{ marginTop: 12 }}>
-          <SeamChart region={region} />
-        </div>
-      </section>
-
-      <section aria-label="ข้อความหลัก">
-        <div className="claims">
-          <div className="panel">
-            <h3>ต่อเนื่องตั้งแต่ปี 2001 ไม่มีรอยหักปี 2012</h3>
-            <p className="small muted">โมเดล LightGBM เรียนจากช่วงที่มีดาวเทียมทั้งสองดวง แล้วแปลง MODIS ย้อนหลังให้อยู่ในหน่วยเดียวกับ VIIRS</p>
+            <Link to="/explore" className="btn primary">
+              เลือกพื้นที่ของคุณเอง
+            </Link>
           </div>
-          <div className="panel">
-            <h3>ทุกตัวเลขบอกว่าวัดจริงหรือคำนวณ พร้อมช่วงความไม่แน่นอน</h3>
-            <p className="small muted">ช่องที่มีลายทแยงคือค่าคำนวณ และบอกช่วงที่น่าจะเป็น (~80%) เสมอ</p>
-          </div>
-          <div className="panel">
-            <h3>ทำทันก่อนดาวเทียมรุ่นเก่าหมดอายุ</h3>
-            <p className="small muted">MODIS บนดาวเทียม Terra และ Aqua ทยอยปลดระวางปี 2026–2027</p>
+
+          <div className="orbit-stage">
+            {q.isPending && <div className="strata-wait" role="status">กำลังโหลดปฏิทิน…</div>}
+            {q.isError && <LoadError error={q.error} onRetry={() => void q.refetch()} />}
+            {q.data && (
+              <>
+                <HeatStrata rows={q.data.rows} mode={mode} label={`ปฏิทินไฟ 3 มิติ ${regionTh(region)} 2001–2024`} />
+                <SeamMeter rows={q.data.rows} mode={mode} />
+              </>
+            )}
           </div>
         </div>
       </section>
 
-      <section aria-labelledby="proof">
-        <h2 id="proof">ตัวเลขยืนยัน</h2>
-        <p className="bignum">
-          5.17<span className="arrow">→</span>1.09
+      <section className="band" aria-labelledby="flat">
+        <div className="band-head">
+          <h2 id="flat">ปฏิทินเดียวกัน แบบตาราง</h2>
+          <p className="muted">อ่านค่าทุกเดือนได้ด้วยแป้นพิมพ์และโปรแกรมอ่านหน้าจอ ภูมิภาคเปลี่ยนตามที่เลือกด้านบน</p>
+        </div>
+        <div className="sheet">
+          {q.isPending ? <CalendarSkeleton /> : <RegionView region={region} />}
+        </div>
+      </section>
+
+      <section className="band" aria-labelledby="seam">
+        <div className="band-head">
+          <h2 id="seam">ยอดรายปี ก่อนและหลังปรับเทียบ</h2>
+          <p className="muted">เส้นเทาคือ MODIS ดิบ เส้นส้มคือ FireCalendar+ ช่วงที่มี VIIRS แล้ว เส้นประฟ้าคือค่าที่โมเดลทาย ซึ่งทับค่าจริงเกือบสนิท</p>
+        </div>
+        <div className="sheet">{q.data ? <ContinuityChart rows={q.data.rows} title={regionTh(region)} /> : <p role="status">กำลังโหลด…</p>}</div>
+      </section>
+
+      <section className="band" aria-labelledby="proof">
+        <div className="band-head">
+          <h2 id="proof">ความคลาดเคลื่อนบนข้อสอบที่โมเดลไม่เคยเห็น</h2>
+          <p className="muted">Poisson deviance ยิ่งสั้นยิ่งดี วัดบนพื้นที่และปีที่กันไว้ตั้งแต่ต้น เปิดดูครั้งเดียวตอนจบ</p>
+        </div>
+        <div className="proof" role="img" aria-label="วิธีคูณตัวเลขเดียว 5.17 เทียบกับ FireCalendar+ 1.09">
+          <div className="proof-row">
+            <span>คูณ MODIS ด้วยตัวเลขเดียว</span>
+            <i style={{ width: "100%" }} className="proof-bar base" />
+            <b>5.17</b>
+          </div>
+          <div className="proof-row">
+            <span>FireCalendar+ (LightGBM)</span>
+            <i style={{ width: `${(1.09 / 5.17) * 100}%` }} className="proof-bar ours" />
+            <b>1.09</b>
+          </div>
+        </div>
+        <p className="small">
+          <Link to="/evidence">ดูหลักฐานและข้อจำกัดทั้งหมด</Link>
         </p>
-        <p>
-          ความคลาดเคลื่อน (Poisson deviance) บนข้อสอบปลายภาคลดลงเกือบ 5 เท่า เทียบกับวิธีคูณเลขแบบเดิม{" "}
-          <Link to="/evidence">ดูหลักฐาน →</Link>
-        </p>
+      </section>
+
+      <section className="band" aria-labelledby="why">
+        <h2 id="why" className="band-title-only">
+          สิ่งที่ปฏิทินนี้ให้
+        </h2>
+        <dl className="facts">
+          <div>
+            <dt>ไม่มีรอยหักปี 2012</dt>
+            <dd>โมเดลเรียนจากปีที่มีดาวเทียมทั้งสองดวง แล้วแปลง MODIS ย้อนไปถึงปี 2001 ให้อยู่ในหน่วยเดียวกับ VIIRS</dd>
+          </div>
+          <div>
+            <dt>บอกเสมอว่าวัดจริงหรือคำนวณ</dt>
+            <dd>ค่าคำนวณมีลายทแยงและช่วงที่น่าจะเป็นราว 80% ทุกเดือน</dd>
+          </div>
+          <div>
+            <dt>ดาวเทียมรุ่นเก่ากำลังปลดระวาง</dt>
+            <dd>Terra และ Aqua ทยอยหยุดทำงานปี 2026–2027 สะพานเชื่อมข้อมูลต้องสร้างตอนที่ยังมีช่วงเวลาซ้อนกันให้เรียน</dd>
+          </div>
+        </dl>
       </section>
     </>
   );
-}
-
-function SeamChart({ region }: { region: Region }) {
-  const q = useRegionCalendar(region);
-  if (q.isPending) return <p role="status">กำลังโหลด…</p>;
-  if (q.isError) return <LoadError error={q.error} onRetry={() => void q.refetch()} />;
-  return <ContinuityChart rows={q.data.rows} title={regionTh(region)} />;
 }
