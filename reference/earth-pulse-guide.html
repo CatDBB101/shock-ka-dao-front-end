@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="th"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Earth Pulse – คู่มืออธิบายต้นแบบ (ไฟป่า)</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔥</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f5f2;--pn:#fff;--tx:#16222c;--mu:#5b6872;--ln:#d8ddd8;--ac:#0f6f8f;--fire:#d63b3b;--kid:#fff4d6;--kidb:#e9c25a;--kidt:#4a3a05;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b141c;--pn:#121f2a;--tx:#e6edf1;--mu:#93a4b0;--ln:#243645;--ac:#52c0e6;--fire:#ff6b5e;--kid:#3a3112;--kidb:#8a6f1c;--kidt:#ffe9a8}}
+:root[data-theme="dark"]{--bg:#0b141c;--pn:#121f2a;--tx:#e6edf1;--mu:#93a4b0;--ln:#243645;--ac:#52c0e6;--fire:#ff6b5e;--kid:#3a3112;--kidb:#8a6f1c;--kidt:#ffe9a8}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:64px}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.65 "IBM Plex Sans Thai",system-ui,sans-serif;color-scheme:light dark}
+header{padding:28px 16px 12px;max-width:1040px;margin:auto}
+h1{font-size:28px;margin:0 0 6px}h2{font-size:22px;margin:0 0 10px}h3{font-size:16px;margin:0 0 4px}
+.mu{color:var(--mu);font-size:14px}
+nav{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(6px);border-bottom:1px solid var(--ln)}
+nav div{max-width:1040px;margin:auto;display:flex;gap:8px;padding:8px 16px;overflow-x:auto}
+nav a{white-space:nowrap;padding:6px 12px;border:1px solid var(--ln);border-radius:20px;color:var(--tx);text-decoration:none;font-size:14px;background:var(--pn)}
+nav a:hover,nav a:focus-visible{border-color:var(--ac);outline:none}
+main{max-width:1040px;margin:auto;padding:0 16px 48px}
+section{margin-top:32px}
+.warn{border:1px dashed var(--fire);border-radius:8px;padding:8px 12px;font-size:14px;margin:10px 0}
+.kid{background:var(--kid);border:2px solid var(--kidb);color:var(--kidt);border-radius:12px;padding:12px 16px;margin:10px 0 16px}
+.kid b{display:block;margin-bottom:2px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.card{background:var(--pn);border:1px solid var(--ln);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:6px}
+.card .k{background:var(--kid);color:var(--kidt);border-radius:8px;padding:6px 10px;font-size:14px}
+.card dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:2px 10px;font-size:14px}
+.card dt{color:var(--mu)}.card dd{margin:0}
+.tag{display:inline-block;font-size:11px;border:1px solid var(--ln);border-radius:10px;padding:0 8px;color:var(--mu);margin-left:6px;vertical-align:middle}
+.steps{counter-reset:s;display:grid;gap:12px}
+.step{background:var(--pn);border:1px solid var(--ln);border-radius:10px;padding:14px 14px 14px 52px;position:relative}
+.step::before{counter-increment:s;content:counter(s);position:absolute;left:14px;top:14px;width:26px;height:26px;border-radius:50%;background:var(--ac);color:var(--bg);display:grid;place-items:center;font-weight:600;font-size:14px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;font-size:14px}
+@media(max-width:640px){.cols{grid-template-columns:1fr}}
+.cols div{border-radius:8px;padding:8px 10px;border:1px solid var(--ln)}
+.real{border-left:4px solid var(--ac)!important}.proto{border-left:4px solid var(--fire)!important}
+.cols b{display:block;font-size:12px;color:var(--mu)}
+ul{margin:4px 0 0;padding-left:20px;font-size:14px}li{margin:2px 0}
+.info{background:var(--pn);border:1px solid var(--ln);border-radius:12px;padding:12px;margin:12px 0;overflow-x:auto}
+.info svg{width:100%;height:auto;min-width:600px;display:block}
+.info svg text{font-family:inherit}
+.t{fill:var(--tx);font-weight:600;font-size:14px}.s{fill:var(--mu);font-size:12px}.w{fill:#fff;font-size:12px;font-weight:600}
+.bx{fill:var(--bg);stroke:var(--ln);stroke-width:1.5}.ln{stroke:var(--mu);stroke-width:1.5;fill:none}.ar{fill:none;stroke:var(--mu);stroke-width:2;marker-end:url(#ah)}.mk{fill:var(--mu)}
+.cap{font-size:13px;color:var(--mu);margin:6px 2px 0}
+.flow{display:flex;flex-wrap:wrap;gap:18px;margin-bottom:10px}
+.flow .st{flex:1 1 140px;border:1px solid var(--ln);border-radius:10px;padding:8px 10px;background:var(--bg);position:relative;font-size:13px}
+.flow .st b{display:block;font-size:14px}
+.flow .st:not(:last-child)::after{content:"→";position:absolute;right:-16px;top:50%;transform:translateY(-50%);color:var(--mu)}
+.strip{height:10px;border-radius:5px}.sl{display:flex;justify-content:space-between;font-size:12px;color:var(--mu);margin-top:-2px}
+footer{max-width:1040px;margin:auto;padding:0 16px 32px;color:var(--mu);font-size:13px}
+</style></head><body>
+<header><h1>Earth Pulse: คู่มืออธิบายต้นแบบ</h1>
+<div class="mu">ดาวเทียม MODIS และ VIIRS สำหรับงานเฝ้าระวังไฟป่า · อธิบายให้เด็กประถมอ่านเข้าใจ</div>
+<div class="warn">ตัวเลขทั้งหมดในต้นแบบเป็นข้อมูลจำลอง (mock) ไม่ใช่ค่าจากดาวเทียมจริง สูตรดัชนีเสี่ยงเป็นสูตรที่ตั้งขึ้นเพื่อสาธิต ยังไม่ผ่านการตรวจสอบกับข้อมูลไฟจริง</div></header>
+<nav aria-label="หัวข้อ"><div><a href="#s1">1 ค่าทางวิทยาศาสตร์</a><a href="#s2">2 การคำนวณเบื้องหลัง</a><a href="#s3">3 สิ่งที่ต้นแบบทำได้</a></div></nav>
+<main>
+<section id="s1"><h2>1. ค่าทางวิทยาศาสตร์ที่ต้นแบบใช้</h2>
+<div class="kid"><b>อธิบายง่ายๆ</b>ดาวเทียมเป็นเหมือนกล้องถ่ายรูปบนฟ้า มันไม่ได้บอกว่า “ไฟไหม้” ตรงๆ แต่วัดสิ่งต่างๆ เช่น ต้นไม้เขียวแค่ไหน พื้นดินร้อนแค่ไหน และมีจุดร้อนแรงตรงไหน แล้วเรานำตัวเลขเหล่านี้มาช่วยเดาว่าป่าตรงไหนเสี่ยง หรือไฟกำลังไหม้อยู่ตรงไหน</div>
+<div class="info" id="i1"></div><div class="grid" id="g1"></div></section>
+<section id="s2"><h2>2. การคำนวณทางเทคนิคเบื้องหลัง</h2>
+<div class="kid"><b>อธิบายง่ายๆ</b>ให้คิดเหมือนทำอาหาร: ไปซื้อวัตถุดิบ (ดาวน์โหลดภาพ) ล้างและคัดของเสียออก (กรองเมฆ) หั่นให้พอดีคำ (ตัดเป็นช่อง) ปรุง (คำนวณคะแนน) แล้วเสิร์ฟทันเวลา (แจ้งเตือน) แต่ละขั้นต้องทำถูก อาหารจานสุดท้ายถึงจะอร่อยและปลอดภัย</div>
+<div class="mu">ในแต่ละขั้น กรอบน้ำเงินคือสิ่งที่ระบบจริงต้องทำ กรอบแดงคือสิ่งที่ต้นแบบนี้ทำอยู่ตอนนี้</div>
+<div class="info" id="i2"></div><div class="steps" id="g2" style="margin-top:12px"></div></section>
+<section id="s3"><h2>3. สรุปสิ่งที่ต้นแบบทำได้</h2>
+<div class="kid"><b>อธิบายง่ายๆ</b>ต้นแบบนี้เหมือนกล่องเครื่องมือของคนเฝ้าป่า มีแผนที่โลกให้ดู มีปฏิทินและกราฟดูย้อนหลัง มีโหมดสำหรับนักวิทยาศาสตร์ที่อยากรู้ว่าตัวเลขเชื่อถือได้แค่ไหน และมีโหมดสำหรับนักดับเพลิงที่อยากรู้ว่าไฟอยู่ตรงไหนและควรไปที่ไหนก่อน</div>
+<div class="grid" id="g3"></div></section>
+</main>
+<footer>แหล่งข้อมูลเซนเซอร์อ้างอิงจากเอกสารสรุป MODIS และ VIIRS ที่ผู้ใช้ให้มา (NASA LAADS / Earthdata) ส่วนสูตรดัชนีเสี่ยงและค่าปรับ bias เป็นค่าสาธิตของต้นแบบ</footer>
+<script>
+const M=[
+['NDVI ดัชนีพืชพรรณ','วัดว่าต้นไม้เขียวสดแค่ไหน เขียวมาก = ชุ่มชื้น เขียวน้อย = แห้ง','ตัวเลขไม่มีหน่วย −1 ถึง 1 (แอปแสดง 0.1–0.9) คำนวณจากแสงแดงและอินฟราเรดใกล้ที่พืชสะท้อน ผลิตภัณฑ์ MOD13Q1 (250 ม. รวม 16 วัน) และ VNP13','เป็นส่วน “ความแห้งของพืช” น้ำหนัก 35% ในดัชนีเสี่ยง ค่ายิ่งต่ำยิ่งเสี่ยง','พืชแห้งคือเชื้อเพลิงของไฟ ช่วยรู้ล่วงหน้าว่าป่าตรงไหนติดง่าย','จริง/จำลอง'],
+['LST อุณหภูมิพื้นผิว','เหมือนไข้ของพื้นดิน ยิ่งร้อนยิ่งแห้งและติดไฟง่าย','หน่วย °C วัดจากรังสีความร้อน MOD11A1 (1 กม. รายวัน) และ VNP21 (750 ม.)','น้ำหนัก 45% ในดัชนีเสี่ยง (สเกล 30–40 °C) และแสดงในการ์ดพื้นที่','อากาศร้อนทำให้เชื้อเพลิงแห้งเร็ว เป็นสัญญาณเตือนล่วงหน้า','จริง/จำลอง'],
+['FRP กำลังแผ่รังสีของไฟ','ความแรงของกองไฟ ยิ่งมากยิ่งร้อนแรง','หน่วย MW (เมกะวัตต์) ต่อจุดที่ตรวจพบ ณ ตอนดาวเทียมผ่าน จาก MOD14 และ VNP14IMG ไม่ใช่อุณหภูมิ','ขนาดจุดบนแผนที่ อันดับ “จุดที่ FRP สูงสุด” และตัวกรอง FRP ขั้นต่ำ','ช่วยเลือกว่าจุดไหนควรไปดูก่อน','จริง/จำลอง'],
+['ระดับความเชื่อมั่น','ดาวเทียมบอกว่ามั่นใจแค่ไหนว่านี่คือไฟจริง ไม่ใช่เงาหลอก','ป้าย 3 ขั้น ต่ำ/ปานกลาง/สูง (สีเหลือง/ส้ม/แดง) ผลิตภัณฑ์ไฟมีค่านี้มาให้ แต่กฎในต้นแบบเป็นการจำลอง','ตัวกรอง “เฉพาะความเชื่อมั่นสูง” และสีของจุด','ลดการแจ้งเตือนผิด คนไม่เสียเวลาไปดูไฟปลอม','จำลอง'],
+['จำนวนจุดความร้อนและอายุข้อมูล','นับว่ามีกองไฟกี่กอง และดาวเทียมเห็นมาเมื่อไหร่','จำนวนจุด, FRP รวม (MW), วันที่ข้อมูล VIIRS ผ่านราว 01:30 และ 13:30 น. ได้ข้อมูลไฟทุก ≤12 ชม.','การ์ดสรุปในหน้านักผจญเพลิง และเงื่อนไขการแจ้งเตือน','ข้อมูลเก่าอาจไม่ตรงกับไฟตอนนี้ ต้องรู้ว่าเห็นเมื่อไหร่','จริง/จำลอง'],
+['ดัชนีเสี่ยงไฟป่า 0–100','คะแนนความน่ากลัวของป่าตรงนั้น 0 สบายใจ 100 ระวังที่สุด','0–100 = 45×ความร้อน + 35×ความแห้ง + 20×กิจกรรมไฟ (แต่ละส่วนปรับเป็น 0–1) ระดับ ต่ำ &lt;35, ปานกลาง 35–54, สูง 55–74, สูงมาก ≥75 ถ้าพบไฟจะไม่ต่ำกว่า “สูง”','สีของพื้นที่เฝ้าระวัง การจัดอันดับ และเงื่อนไขแจ้งเตือน','รวมหลายเรื่องเป็นเลขเดียวช่วยตัดสินใจ แต่ตั้งน้ำหนักเอง ยังไม่ปรับเทียบกับข้อมูลจริง และไม่รวมลม ความชื้น ฝน','สูตรสาธิต'],
+['จำนวนวันที่พบไฟ ใน 90 วัน','ป่านี้ไฟมาบ่อยไหม','หน่วย วัน (จาก 90 วัน) นับวันที่มีจุดความร้อนในพื้นที่','การ์ดรายละเอียดพื้นที่','พื้นที่ที่ไฟมาบ่อยควรเฝ้าเป็นพิเศษ','จำลอง'],
+['NTL แสงไฟกลางคืน','ที่ไหนสว่างตอนกลางคืน แปลว่ามีคนอยู่','หน่วย nW/cm²/sr จากแบนด์ Day/Night Band (0.5–0.9 µm) ผลิตภัณฑ์ VNP46A1/A2 (500 ม. รายวัน) MODIS ไม่มีแบนด์นี้','เป็นตัวแปรในมุมมองนักวิทยาศาสตร์ ยังไม่ใช้ในดัชนีเสี่ยง','บอกที่ตั้งชุมชนรอบป่า ใช้ประเมินคนที่อาจได้รับผลกระทบ','จริง/จำลอง'],
+['ความละเอียดและความถี่','ภาพละเอียดแค่ไหน และถ่ายบ่อยแค่ไหน','MODIS 250/500/1000 ม. ครอบคลุมโลกทุก 1–2 วัน แนวกวาด 2,330 กม. VIIRS I-band 375 ม. M-band 750 ม. แนวกวาด ~3,040 กม.','ใช้เลือกเซนเซอร์ VIIRS 375 ม. เหมาะกับตรวจไฟ','ไฟเล็กเห็นได้ต่อเมื่อภาพละเอียดพอ','จริง'],
+['QA: เปอร์เซ็นต์พิกเซลที่ผ่านเกณฑ์','ถ้าเมฆบังภาพ เราไม่ควรเชื่อตรงนั้น','หน่วย % ของพิกเซลที่ไม่ถูกเมฆบัง','สวิตช์ซ่อนพิกเซลถูกเมฆบัง และตัวเลข % ในมุมมองนักวิทยาศาสตร์','ค่าที่เมฆบังน้อยเชื่อถือได้กว่า (เมฆในต้นแบบเป็นข้อมูลจำลอง)','จำลอง'],
+['Bias และ r (MODIS − VIIRS)','สองกล้องเห็นเหมือนกันไหม','Bias คือผลต่างเฉลี่ย (หน่วยเดียวกับตัวแปร) r คือสหสัมพันธ์ −1 ถึง 1 ไม่มีหน่วย','การ์ดเทียบเซนเซอร์','ต้องรู้ก่อนนำสองเซนเซอร์มาต่อกัน เพราะ MODIS จะทยอยปลดระวางปลายปี 2026 ถึง 2027','คำนวณจากข้อมูลจำลอง'],
+['ส่วนเบี่ยงเบนจากค่าเฉลี่ย','วันนี้ผิดปกติจากปกติหรือเปล่า','ค่าวันที่เลือก ลบค่าเฉลี่ยของช่วงเวลาที่เลือก (หน่วยเดียวกับตัวแปร) ไม่ใช่ค่าเฉลี่ยหลายปีมาตรฐาน','การ์ดในมุมมองนักวิทยาศาสตร์','ช่วยแยกความผิดปกติออกจากการเปลี่ยนตามฤดูกาล','คำนวณจากข้อมูลจำลอง'],
+['Harmonized','นำภาพจากสองกล้องมารวมเป็นภาพเดียว','เฉลี่ยค่า MODIS กับ VIIRS หลังปรับความต่าง (NDVI ±0.02, LST ±0.8, ไฟหารตามความละเอียด) เป็นค่าตัวอย่าง','ตัวเลือก Harmonized บนแผนที่','ทำให้ดูข้อมูลต่อเนื่องแม้เปลี่ยนเซนเซอร์ ของจริงต้องใช้วิธีทางสถิติที่ตรวจสอบแล้ว','สูตรสาธิต']];
+const S=[
+['ดึงและเตรียมข้อมูล','ไปเอาภาพจากดาวเทียมมาจัดให้อ่านง่าย','ดาวน์โหลดไฟล์จาก LAADS/Earthdata ปรับเป็นระบบพิกัดเดียวกัน (จากกริด sinusoidal เป็น WGS84) ใช้ scale factor และค่า fill','ไม่ทำ ใช้ข้อมูลสร้างจากสูตร'],
+['กรองคุณภาพและเมฆ','ทิ้งภาพที่เมฆบังหรือเสียออก','อ่านบิต QA ของผลิตภัณฑ์ กรองเมฆ เงาเมฆ ละอองลอย แล้วนับสัดส่วนพิกเซลที่ใช้ได้','จำลองเมฆด้วยสูตรเสียงแบบราบเรียบ แล้วซ่อนพิกเซลตามสวิตช์'],
+['รวมข้อมูลตามช่วงเวลา','หลายวันมารวมกันให้ภาพชัดขึ้น','สร้างภาพรวม (composite) เช่น 16 วันของ NDVI เลือกค่าที่ดีที่สุดในแต่ละพิกเซล','MODIS NDVI ใช้ค่าคงที่ทุก 16 วัน'],
+['จัดเป็นช่องและทำ tile','ตัดแผนที่เป็นแผ่นเล็กๆ เปิดเร็ว','สร้างพีระมิดหลายระดับซูม เก็บเป็น COG/tile บนที่เก็บไฟล์ แล้วให้เบราว์เซอร์โหลดเฉพาะที่เห็น','คำนวณกริดบนจอ (ละเอียดสุด 300 คอลัมน์) แล้ววาดเป็นภาพ'],
+['สถิติตามพื้นที่ (zonal statistics)','ถามว่า “ในวงที่วาด ค่าเฉลี่ยเท่าไหร่”','ตัดภาพด้วย polygon คำนวณ ค่าเฉลี่ย มัธยฐาน จำนวนพิกเซล ถ่วงน้ำหนักตามพื้นที่ ที่ฝั่งเซิร์ฟเวอร์','เก็บตัวอย่างจุด 14×14 ในกรอบแล้วทดสอบว่าอยู่ในพื้นที่ (point-in-polygon)'],
+['อนุกรมเวลา ปฏิทิน และ anomaly','ดูว่าค่าเปลี่ยนไปอย่างไรวันต่อวัน','รวมค่ารายวัน เทียบกับ baseline หลายปี (2000–ปัจจุบัน) และทดสอบแนวโน้ม','ค่าเฉลี่ยของช่วงที่เลือกเป็นฐานเทียบ ข้อมูล 365 วัน'],
+['ปรับเซนเซอร์ให้ต่อกันได้','ทำให้สองกล้องพูดเรื่องเดียวกัน','ถดถอยในช่วงที่ทั้งสองเซนเซอร์ทับซ้อนกัน (VIIRS เริ่ม 2012) ประเมิน bias และ gain พร้อมค่าความไม่แน่นอน','ลบ bias ตัวอย่างแล้วเฉลี่ย'],
+['ประมวลผลจุดความร้อน','คัดจุดไฟจริงและจัดอันดับ','รับข้อมูล NRT กรองตามความเชื่อมั่น ตัดแหล่งความร้อนคงที่ รวมจุดที่ใกล้กัน รวม FRP','จำลองจุดจากสนามไฟแบบเป็นหย่อม กรองตามความเชื่อมั่นและ FRP ขั้นต่ำ'],
+['คำนวณความเสี่ยงไฟป่า','รวมเรื่องร้อน แห้ง และไฟ เป็นคะแนนเดียว','ใช้ตัวแปรอุตุนิยมวิทยา (ลม ความชื้น ฝน อุณหภูมิ) ดัชนีไฟป่ามาตรฐาน หรือโมเดลที่สอบเทียบด้วยประวัติไฟ','สูตรเชิงเส้นง่ายๆ: ความร้อน 45% ความแห้ง 35% กิจกรรมไฟ 20%'],
+['ระบบแจ้งเตือน','เห็นเหตุแล้วบอกคนที่ต้องรู้ทันที','ซ้อนจุดไฟกับพื้นที่ที่ผู้ใช้ติดตาม ลดการเตือนซ้ำ ตั้งระดับความรุนแรง แล้วส่ง push, LINE หรือ SMS จากเซิร์ฟเวอร์ตลอดเวลา','ตรวจในหน้าเว็บ แสดงแถบเตือน และใช้ Notification ของเบราว์เซอร์ได้เฉพาะตอนเปิดหน้าอยู่'],
+['แสดงผลให้เร็ว','วาดภาพใหญ่ให้ไม่กระตุก','ให้เซิร์ฟเวอร์คำนวณหนักและเก็บแคช ใช้ tile และ GPU ตัดช่วงข้อมูลที่โหลด','ใช้ canvas และกริดที่ระยะเท่ากันบนแผนที่ Mercator และเก็บกริดทั้งโลกไว้ใช้ซ้ำ']];
+const F=[
+['แผนที่และการวาด',['แผนที่โลกพร้อมชายฝั่งและพรมแดน (Natural Earth 1:50m)','วาดและแก้ polygon ด้วย Terra Draw กดปุ่มแดงเพื่อยกเลิกการวาด','ซูมอัตโนมัติไปยังพื้นที่ที่วาด','ใช้ MapLibre ทำงานได้ทั้งบนจอกว้างและมือถือ']],
+['ตัวแปรและเซนเซอร์',['MODIS, VIIRS และ Harmonized','NDVI, LST, ไฟ (FRP), แสงไฟกลางคืน','Heatmap แบบภาพ raster เรียบ สีตรงกับสเกลสี']],
+['เวลา',['เลือกช่วงเวลาด้วยปุ่มลัดหรือเลือกวันเอง','slider เลื่อนดูวันภายในช่วง และปุ่มเล่นอัตโนมัติ','กราฟย้อนหลังและปฏิทิน เลื่อนแนวนอนได้ ขนาดช่องคงที่']],
+['มุมมองนักวิทยาศาสตร์',['สถิติ ค่าเฉลี่ย ต่ำสุด–สูงสุด ส่วนเบี่ยงเบนจากค่าเฉลี่ย','ซ่อนพิกเซลที่ถูกเมฆบัง และดู % ผ่านเกณฑ์','เทียบ MODIS กับ VIIRS (bias, r)','คัดลอกข้อมูลเป็น CSV']],
+['มุมมองนักผจญเพลิง',['จุดความร้อนรายจุด ขนาดตาม FRP สีตามความเชื่อมั่น','สรุปจำนวนจุด FRP รวม และตัวกรอง','พื้นที่เฝ้าระวังจากเซิร์ฟเวอร์ ค้นหาและกรองตามทวีปหรือประเทศ','กดติดตาม ดูรายละเอียด ดัชนีเสี่ยง และกราฟ 14 วัน','แจ้งเตือนในหน้า พร้อมคำแนะนำ และแจ้งเตือนเข้าเครื่องที่ทดลองได้']],
+['หน้าตาและการใช้งาน',['ปุ่มควบคุมบนแผนที่เป็นไอคอน ย่อและเปิดแต่ละแผงได้','แผงด้านซ้ายแยกเป็นหน้าย่อย ลากปรับความกว้างและพับได้','บนมือถือแผงเปิดเต็มจอ','รองรับโหมดสว่างและมืด']],
+['ข้อจำกัดของต้นแบบ',['ข้อมูลทั้งหมดเป็นข้อมูลจำลองและมีย้อนหลังแค่ 365 วัน','ยังไม่มีเซิร์ฟเวอร์จริง การแจ้งเตือนจึงทำงานเฉพาะตอนเปิดหน้านี้','ดัชนีเสี่ยงยังไม่รวมลม ความชื้น และฝน','ใช้ประกอบการตัดสินใจ ไม่แทนรายงานภาคสนาม']]];
+const e=(t,c,h)=>{const n=document.createElement(t);if(c)n.className=c;if(h!=null)n.innerHTML=h;return n};
+const RG='linear-gradient(90deg,#3fa96b,#ffd60a,#ff9f0a,#ff3b30)',HG='linear-gradient(90deg,#ffd60a,#ff9f0a,#ff3b30)';
+const VS={0:['แห้ง','เขียวสด','linear-gradient(90deg,#b08a3e,#3fa96b)'],1:['เย็น','ร้อน','linear-gradient(90deg,#3b6fd6,#ffd60a,#ff3b30)'],2:['อ่อน','แรง',HG],3:['ต่ำ','สูง',HG],5:['0 สบายใจ','100 ระวังที่สุด',RG],6:['ไม่เคย','บ่อย',HG],7:['มืด','สว่าง','linear-gradient(90deg,#0b1320,#ffd60a)'],9:['เมฆบังมาก','ใส','linear-gradient(90deg,#9aa5ad,#52c0e6)']};
+const ST=['ซื้อวัตถุดิบ','ล้างและคัด','ล้างและคัด','หั่นพอดีคำ','หั่นพอดีคำ','ปรุง','ปรุง','ปรุง','ปรุง','เสิร์ฟ','เสิร์ฟ'];
+document.getElementById('i1').innerHTML='<svg viewBox="0 0 800 300" role="img" aria-label="ดาวเทียมวัดต้นไม้ ความร้อน และไฟ แล้วรวมเป็นคะแนนเสี่ยง 0 ถึง 100"><defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" class="mk"/></marker></defs>'
++'<rect x="48" y="30" width="32" height="26" rx="4" fill="#8aa0b0"/><rect x="14" y="38" width="30" height="10" fill="#52c0e6"/><rect x="84" y="38" width="30" height="10" fill="#52c0e6"/><path class="ln" d="M64 30v-12"/><circle cx="64" cy="16" r="3" fill="#ff6b5e"/>'
++'<text class="t" x="64" y="86" text-anchor="middle">ดาวเทียม</text><text class="s" x="64" y="104" text-anchor="middle">มองจากฟ้า</text>'
++'<path class="ln" stroke-dasharray="5 4" d="M80 58L210 72M80 58L360 72M80 58L510 72"/>'
++[[145,'#b08a3e','NDVI','ต้นไม้เขียวหรือแห้ง?','แห้ง = เสี่ยง'],[295,'#e8863a','LST','พื้นดินร้อนแค่ไหน?','ร้อนมาก = เสี่ยง'],[445,'#ff3b30','FRP','มีไฟไหม้อยู่ไหม?','เจอไฟ = ระวังสุด']].map(([x,c,a,b,d])=>'<rect class="bx" x="'+x+'" y="72" width="130" height="150" rx="10"/><rect x="'+x+'" y="72" width="130" height="5" rx="2" fill="'+c+'"/><text class="t" x="'+(x+65)+'" y="156" text-anchor="middle">'+a+'</text><text class="s" x="'+(x+65)+'" y="176" text-anchor="middle">'+b+'</text><text class="s" x="'+(x+65)+'" y="204" text-anchor="middle" style="fill:'+c+'">'+d+'</text>').join('')
++'<rect x="195" y="108" width="7" height="20" fill="#7a5a2e"/><circle cx="198" cy="100" r="15" fill="#3fa96b"/><rect x="222" y="112" width="6" height="16" fill="#7a5a2e"/><circle cx="225" cy="105" r="12" fill="#b08a3e"/>'
++'<rect x="354" y="92" width="10" height="34" rx="5" fill="none" stroke="var(--mu)" stroke-width="2"/><circle cx="359" cy="132" r="10" fill="#ff3b30"/><rect x="357" y="104" width="4" height="26" fill="#ff3b30"/>'
++'<path d="M510 88c6 10 17 15 17 30a17 17 0 0 1-34 0c0-9 4-13 8-17 0 7 3 10 6 10 0-9-2-15 3-23z" fill="#ff3b30"/><path d="M510 112c3 5 8 7 8 13a8 8 0 0 1-16 0c0-4 2-6 4-8 0 3 2 5 4 5z" fill="#ffd60a"/>'
++'<text class="s" x="145" y="238">น้ำหนักของแต่ละเรื่องในคะแนนเสี่ยง</text><rect x="145" y="244" width="150.5" height="28" fill="#b08a3e"/><rect x="295.5" y="244" width="193.5" height="28" fill="#e8863a"/><rect x="489" y="244" width="86" height="28" fill="#ff3b30"/>'
++'<text class="w" x="220" y="263" text-anchor="middle">ความแห้ง 35%</text><text class="w" x="392" y="263" text-anchor="middle">ความร้อน 45%</text><text class="w" x="532" y="263" text-anchor="middle">ไฟ 20%</text>'
++'<path class="ar" d="M578 258C612 258 622 228 644 214"/>'
++'<text class="t" x="670" y="28" text-anchor="middle">คะแนนเสี่ยง 0–100</text>'
++[[40,55,'#ff3b30','สูงมาก ≥75'],[95,44,'#ff9f0a','สูง 55–74'],[139,44,'#ffd60a','ปานกลาง 35–54'],[183,77,'#3fa96b','ต่ำ &lt;35']].map(([y,h,c,l])=>'<rect x="650" y="'+y+'" width="40" height="'+h+'" fill="'+c+'"/><text class="s" x="698" y="'+(y+h/2+4)+'">'+l+'</text>').join('')+'</svg><div class="cap">อ่านจากซ้ายไปขวา: ดาวเทียมวัด 3 เรื่อง แต่ละเรื่องมีน้ำหนักไม่เท่ากัน แล้วรวมเป็นคะแนนเดียว สีของแท่งขวาบอกระดับความเสี่ยง (น้ำหนักเป็นค่าสาธิตของต้นแบบ)</div>';
+document.getElementById('i2').innerHTML='<div class="flow">'+[['1','ซื้อวัตถุดิบ','ดึงข้อมูลจากดาวเทียม'],['2','ล้างและคัด','กรองเมฆ · รวมหลายวัน'],['3','หั่นพอดีคำ','ทำ tile · สถิติตามพื้นที่'],['4','ปรุง','อนุกรมเวลา · ปรับเซนเซอร์ · จุดไฟ · ความเสี่ยง'],['5','เสิร์ฟ','แจ้งเตือน · แสดงผล']].map(([n,a,b])=>'<div class="st"><b>'+n+'. '+a+'</b>'+b+'</div>').join('')+'</div>'
++'<svg viewBox="0 0 800 230" role="img" aria-label="ข้อมูลเดินทางจากดาวเทียมผ่านเซิร์ฟเวอร์ไปยังเบราว์เซอร์และมือถือของผู้ใช้"><defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" class="mk"/></marker></defs>'
++'<rect class="bx" x="10" y="60" width="130" height="70" rx="10"/><text class="t" x="75" y="90" text-anchor="middle">ดาวเทียม</text><text class="s" x="75" y="110" text-anchor="middle">MODIS · VIIRS</text>'
++'<rect class="bx" x="215" y="40" width="210" height="110" rx="10" style="stroke:var(--ac);stroke-width:2"/><text class="t" x="320" y="66" text-anchor="middle">เซิร์ฟเวอร์</text><text class="s" x="320" y="90" text-anchor="middle">ดึง · กรองเมฆ · รวมวัน</text><text class="s" x="320" y="110" text-anchor="middle">ทำ tile · สถิติตามพื้นที่</text><text class="s" x="320" y="130" text-anchor="middle">ตรวจจุดไฟ · ส่งแจ้งเตือน</text>'
++'<rect class="bx" x="500" y="60" width="140" height="70" rx="10" style="stroke:var(--fire);stroke-width:2"/><text class="t" x="570" y="90" text-anchor="middle">เบราว์เซอร์</text><text class="s" x="570" y="110" text-anchor="middle">แผนที่ กราฟ ปฏิทิน</text>'
++'<rect class="bx" x="690" y="60" width="100" height="70" rx="10"/><text class="t" x="740" y="90" text-anchor="middle">มือถือ</text><text class="s" x="740" y="110" text-anchor="middle">ผู้ใช้งาน</text>'
++'<path class="ar" d="M140 95H212"/><path class="ar" d="M425 95H497"/><path class="ar" d="M640 95H687"/>'
++'<rect class="bx" x="215" y="168" width="210" height="50" rx="8" style="stroke:var(--ac)"/><text class="s" x="320" y="190" text-anchor="middle">ระบบจริง: ทำงานตลอดเวลา</text><text class="s" x="320" y="208" text-anchor="middle">แม้ไม่มีใครเปิดหน้าเว็บ</text>'
++'<rect class="bx" x="440" y="168" width="350" height="50" rx="8" style="stroke:var(--fire)"/><text class="s" x="615" y="190" text-anchor="middle">ต้นแบบ: สร้างข้อมูลจำลองและคำนวณทั้งหมด</text><text class="s" x="615" y="208" text-anchor="middle">ในเบราว์เซอร์นี้ ยังไม่มีเซิร์ฟเวอร์จริง</text></svg><div class="cap">กรอบน้ำเงินคือสิ่งที่ระบบจริงต้องมี กรอบแดงคือสิ่งที่ต้นแบบทำแทนทั้งหมดในหน้าเว็บ</div>';
+const g1=document.getElementById('g1');
+M.forEach(([n,k,w,u,y,t],i)=>{const c=e('div','card');c.append(e('h3','',n+'<span class="tag">'+t+'</span>'),e('div','k','พูดง่ายๆ: '+k),e('div','',VS[i]?'<div class="strip" style="background:'+VS[i][2]+'"></div><div class="sl"><span>'+VS[i][0]+'</span><span>'+VS[i][1]+'</span></div>':''),e('dl','', '<dt>คืออะไร</dt><dd>'+w+'</dd><dt>ใช้ทำอะไร</dt><dd>'+u+'</dd><dt>ทำไมต้องมี</dt><dd>'+y+'</dd>'));g1.append(c)});
+const g2=document.getElementById('g2');
+S.forEach(([n,k,r,p],i)=>{const c=e('div','step');c.append(e('h3','',n+'<span class="tag">ช่วง: '+ST[i]+'</span>'),e('div','mu','พูดง่ายๆ: '+k),e('div','cols','<div class="real"><b>ระบบจริงต้องทำ</b>'+r+'</div><div class="proto"><b>ต้นแบบนี้ทำ</b>'+p+'</div>'));g2.append(c)});
+const g3=document.getElementById('g3');
+F.forEach(([n,l])=>{const c=e('div','card');c.append(e('h3','',n),e('ul','',l.map(x=>'<li>'+x+'</li>').join('')));g3.append(c)});
+</script></body></html>
