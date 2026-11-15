@@ -18,6 +18,12 @@ export const LEVEL_TH: Record<WatchLevel, string> = {
   elevated: "เฝ้าระวัง",
   normal: "ปกติ",
 };
+export const LEVEL_EN: Record<WatchLevel, string> = {
+  active: "Hotspots detected",
+  high: "High alert",
+  elevated: "Elevated",
+  normal: "Normal",
+};
 
 export interface Hotspot {
   lat: number;
@@ -99,10 +105,10 @@ export function assessWatchpoint(args: { month: number; season?: Season; near: H
   const reasons: string[] = [];
   const n = args.near?.length ?? 0;
   const maxFrp = args.near ? Math.max(0, ...args.near.map((h) => h.frp)) : 0;
-  if (args.near && n > 0) reasons.push(`ดาวเทียม VIIRS พบจุดความร้อน ${n} จุดในรัศมีภายใน ${ACTIVE_HOURS} ชม. (FRP สูงสุด ${maxFrp.toFixed(1)} MW)`);
-  else if (args.near) reasons.push(`ไม่พบจุดความร้อนในรัศมีภายใน ${ACTIVE_HOURS} ชม.`);
-  if (sl === "high") reasons.push("อยู่ในช่วงพีคของฤดูไฟของภูมิภาค (สถิติ 2001–2024)");
-  else if (sl === "elevated") reasons.push("อยู่ในฤดูไฟของภูมิภาค (สถิติ 2001–2024)");
-  else reasons.push("นอกฤดูไฟของภูมิภาค");
+  if (args.near && n > 0) reasons.push(`VIIRS satellite detected ${n} hotspots within radius in the last ${ACTIVE_HOURS} hours (max FRP ${maxFrp.toFixed(1)} MW)`);
+  else if (args.near) reasons.push(`No hotspots detected within radius in the last ${ACTIVE_HOURS} hours.`);
+  if (sl === "high") reasons.push("In the peak of the region's fire season (2001–2024 statistics)");
+  else if (sl === "elevated") reasons.push("In the region's fire season (2001–2024 statistics)");
+  else reasons.push("Outside the region's fire season");
   return { level: n > 0 ? "active" : sl, seasonLevel: sl, hotspots: args.near, maxFrp, reasons };
 }

@@ -1,5 +1,5 @@
 import type { ErrorKind } from "./types";
-import { COVERED_COUNTRIES_TH } from "./config";
+import { COVERED_COUNTRIES_TH, COVERED_COUNTRIES_EN } from "./config";
 
 export class FireCalendarError extends Error {
   readonly kind: ErrorKind;
@@ -57,5 +57,21 @@ export function errorMessageTh(e: FireCalendarError): string {
       return "เชื่อมต่อไม่ได้";
     default:
       return "ระบบขัดข้อง";
+  }
+}
+
+/** English message for the UI. */
+export function errorMessageEn(e: FireCalendarError): string {
+  switch (e.kind) {
+    case "validation":
+      return e.message;
+    case "not_covered":
+      return `This area is not covered. This version covers ${COVERED_COUNTRIES_EN}`;
+    case "not_configured":
+      return "Raw fire point download not configured";
+    case "network":
+      return "Connection failed";
+    default:
+      return "System error";
   }
 }

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { Box, FirmsSource } from "../../lib/firecalendar";
 import { countCsvRows, validateFirmsDates } from "../../lib/firecalendar/firms";
-import { addDays, FIRMS_SOURCES, MAX_HOTSPOT_DAYS, saveText, useDataSource, validateDays, toFireCalendarError, errorMessageTh } from "../../lib/firecalendar";
+import { addDays, FIRMS_SOURCES, MAX_HOTSPOT_DAYS, saveText, useDataSource, validateDays, toFireCalendarError, errorMessageEn } from "../../lib/firecalendar";
 
 /** Raw NASA FIRMS hotspots for a box, ≤ 60 days. Hidden when the mode can't export. */
 export function DownloadCsvButton({ box }: { box: Box }) {
@@ -15,7 +15,7 @@ export function DownloadCsvButton({ box }: { box: Box }) {
   if (!ds.canDownloadHotspots)
     return (
       <p className="small muted">
-        ยังไม่เปิดใช้: ต้องตั้ง <code>VITE_FIRMS_MAP_KEY</code> ใน <code>.env.local</code> (ขอฟรีที่{" "}
+        Not enabled: must set <code>VITE_FIRMS_MAP_KEY</code> in <code>.env.local</code> (get a free key at{" "}
         <a href="https://firms.modaps.eosdis.nasa.gov/api/map_key">NASA FIRMS</a>)
       </p>
     );
@@ -39,12 +39,12 @@ export function DownloadCsvButton({ box }: { box: Box }) {
       const missing = csv.split("\n").filter((l) => l.startsWith("#")).length;
       const n = countCsvRows(csv);
       setMsg(
-        (n === 0 ? "ดาวน์โหลดแล้ว แต่ไม่พบจุดไฟในพื้นที่และช่วงวันนี้" : `ดาวน์โหลดแล้ว (${n.toLocaleString("en-US")} จุด)`) +
-          (missing ? ` · ${missing} ช่วงโหลดไม่สำเร็จ ดูบรรทัดที่ขึ้นต้นด้วย #` : ""),
+        (n === 0 ? "Downloaded but no fire points found in this area and date range" : `Downloaded (${n.toLocaleString("en-US")} points)`) +
+          (missing ? ` · ${missing} segments failed to load, see lines starting with #` : ""),
       );
     } catch (e) {
       const fe = toFireCalendarError(e);
-      setMsg(fe.kind === "validation" || fe.kind === "server" ? fe.message : errorMessageTh(fe));
+      setMsg(fe.kind === "validation" || fe.kind === "server" ? fe.message : errorMessageEn(fe));
     } finally {
       setBusy(false);
     }
@@ -54,15 +54,15 @@ export function DownloadCsvButton({ box }: { box: Box }) {
     <div className="stack">
       <div className="form-grid">
         <label className="field">
-          วันเริ่ม
+          Start date
           <input type="date" value={start} min="2000-11-01" onChange={(e) => setStart(e.target.value)} />
         </label>
         <label className="field">
-          วันสิ้นสุด (ไม่เกิน {MAX_HOTSPOT_DAYS} วัน)
+          End date (max {MAX_HOTSPOT_DAYS} days)
           <input type="date" value={end} max={addDays(start, MAX_HOTSPOT_DAYS - 1)} onChange={(e) => setEnd(e.target.value)} />
         </label>
         <label className="field">
-          ดาวเทียม (source)
+          Satellite (source)
           <select value={source} onChange={(e) => setSource(e.target.value as FirmsSource)}>
             {FIRMS_SOURCES.map((s) => (
               <option key={s}>{s}</option>
@@ -73,11 +73,11 @@ export function DownloadCsvButton({ box }: { box: Box }) {
       <div className="row">
         {href ? (
           <a className="btn" href={href} download={filename}>
-            ดาวน์โหลดจุดไฟดิบ NASA (CSV)
+            Download raw NASA fire points (CSV)
           </a>
         ) : (
           <button className="btn" type="button" disabled={busy || Boolean(rangeErr)} onClick={download}>
-            {busy ? "กำลังดาวน์โหลด…" : "ดาวน์โหลดจุดไฟดิบ NASA (CSV)"}
+            {busy ? "Downloading…" : "Download raw NASA fire points (CSV)"}
           </button>
         )}
         {rangeErr && <span className="error" role="alert">{rangeErr}</span>}

@@ -10,8 +10,8 @@ export function ModeSwitch() {
       type="button"
       role="switch"
       aria-checked={ff}
-      aria-label={`โหมด ${MODE_LABEL[mode].th} — กดเพื่อสลับเป็น${MODE_LABEL[ff ? "scientist" : "firefighter"].th}`}
-      title={`สลับเป็นโหมด ${MODE_LABEL[ff ? "scientist" : "firefighter"].en}`}
+      aria-label={`Mode: ${MODE_LABEL[mode].en} — press to switch to ${MODE_LABEL[ff ? "scientist" : "firefighter"].en}`}
+      title={`Switch to ${MODE_LABEL[ff ? "scientist" : "firefighter"].en} mode`}
       className={`fc-mode-switch${ff ? " is-ff" : ""}`}
       onClick={() => setMode(ff ? "scientist" : "firefighter")}
     >

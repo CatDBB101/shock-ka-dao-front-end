@@ -55,7 +55,7 @@ async function getJson<T>(url: string, init?: RequestInit): Promise<T> {
     r = await fetch(url, { signal: AbortSignal.timeout(FETCH_TIMEOUT_MS), ...init });
   } catch (e) {
     if (e instanceof DOMException && (e.name === "TimeoutError" || e.name === "AbortError"))
-      throw new FireCalendarError("network", "เซิร์ฟเวอร์ตอบช้าเกินไป");
+      throw new FireCalendarError("network", "Server took too long to respond");
     throw toFireCalendarError(e);
   }
   if (!r.ok) throw new FireCalendarError(kindFromStatus(r.status), await readApiError(r), r.status);
@@ -63,7 +63,7 @@ async function getJson<T>(url: string, init?: RequestInit): Promise<T> {
     return (await r.json()) as T;
   } catch {
     // e.g. an SPA fallback returning index.html when a data file is missing
-    throw new FireCalendarError("server", `ไฟล์ข้อมูลไม่ใช่ JSON: ${url.split("?")[0]}`);
+    throw new FireCalendarError("server", `Data file is not JSON: ${url.split("?")[0]}`);
   }
 }
 
@@ -164,10 +164,10 @@ export class StaticSource implements FireCalendarDataSource {
           polygon,
         ),
         AOI_TIMEOUT_MS,
-        "คำนวณนานเกินไป (เกิน 2 นาที) ลองกรอบที่เล็กลง หรือกดลองใหม่",
+        "Calculation took too long (>2 min). Try a smaller box or click Retry",
       );
     } catch (e) {
-      throw e instanceof FireCalendarError ? e : new FireCalendarError("network", `อ่านไฟล์ข้อมูลไม่สำเร็จ: ${e instanceof Error ? e.message : String(e)}`);
+      throw e instanceof FireCalendarError ? e : new FireCalendarError("network", `Failed to read data file: ${e instanceof Error ? e.message : String(e)}`);
     }
     if (res.cells === 0 || !res.region)
       throw new FireCalendarError("not_covered", "no covered cells in this box", 404);

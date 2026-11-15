@@ -23,7 +23,14 @@ export const SOURCE_LABEL_TH: Record<Source, string> = {
   backcast_terra: "แปลงจาก Terra (แม่นน้อยกว่า)",
 };
 
+export const SOURCE_LABEL_EN: Record<Source, string> = {
+  observed: "VIIRS measured",
+  backcast: "Converted from MODIS",
+  backcast_terra: "Converted from Terra (less accurate)",
+};
+
 export const LEVEL_LABEL_TH = ["ไม่มีไฟ", "น้อย", "ปานกลาง", "มาก", "มากที่สุด"] as const;
+export const LEVEL_LABEL_EN = ["No fire", "Low", "Medium", "High", "Highest"] as const;
 
 /** Thousands separator, no decimals, "~" prefix for computed values. */
 export function fmtCount(v: number, computed = false): string {

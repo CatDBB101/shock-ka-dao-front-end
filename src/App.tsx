@@ -17,7 +17,7 @@ const Watch = lazy(() => import("./pages/Watch"));
 const Guide = lazy(() => import("./prototype/Guide"));
 const Explorer = lazy(() => import("./prototype/Explorer"));
 
-const loading = <p role="status" style={{ padding: 16 }}>กำลังโหลด…</p>;
+const loading = <p role="status" style={{ padding: 16 }}>Loading…</p>;
 
 export default function App() {
   return (

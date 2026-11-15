@@ -31,12 +31,12 @@ export function joinCsvChunks(parts: { range: string; text: string | null }[]): 
     header ??= lines[0]!;
     out.push(...lines.slice(1));
   }
-  if (header == null) throw new FireCalendarError("server", "FIRMS ไม่ส่งข้อมูลกลับมา (ตรวจ MAP_KEY และช่วงวันที่)");
+  if (header == null) throw new FireCalendarError("server", "FIRMS returned no data (check MAP_KEY and date range)");
   return [header, ...out].join("\n");
 }
 
 export async function downloadFirmsCsv(key: string, box: Box, startDate: string, endDate: string, source: FirmsSource): Promise<string> {
-  if (!key) throw new FireCalendarError("not_configured", "ยังไม่ได้ตั้ง VITE_FIRMS_MAP_KEY", 503);
+  if (!key) throw new FireCalendarError("not_configured", "VITE_FIRMS_MAP_KEY not set", 503);
   validateBox(box);
   validateDays(startDate, endDate);
   validateFirmsDates(source, startDate, endDate);
@@ -76,10 +76,10 @@ const NRT_MAX_AGE_DAYS = 90;
 
 export function validateFirmsDates(source: FirmsSource, startDate: string, endDate: string, today = new Date().toISOString().slice(0, 10)): void {
   const min = FIRMS_MIN_DATE[source];
-  if (min && startDate < min) throw new FireCalendarError("validation", `${source} มีข้อมูลตั้งแต่ ${min}`, 400);
+  if (min && startDate < min) throw new FireCalendarError("validation", `${source} has data from ${min}`, 400);
   if (source.endsWith("_NRT") && source !== "VIIRS_NOAA21_NRT" && startDate < addDays(today, -NRT_MAX_AGE_DAYS))
-    throw new FireCalendarError("validation", `${source} เก็บเฉพาะข้อมูลล่าสุดราว ${NRT_MAX_AGE_DAYS} วัน ถ้าต้องการข้อมูลเก่าเลือกแบบ _SP`, 400);
-  if (endDate > today) throw new FireCalendarError("validation", "วันสิ้นสุดอยู่ในอนาคต", 400);
+    throw new FireCalendarError("validation", `${source} only keeps the most recent ~${NRT_MAX_AGE_DAYS} days; for older data use _SP`, 400);
+  if (endDate > today) throw new FireCalendarError("validation", "End date is in the future", 400);
 }
 
 /** Data rows only (excludes the header and "# missing" comment lines). */

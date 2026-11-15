@@ -58,12 +58,12 @@ export function pointInRing(lon: number, lat: number, ring: LonLat[]): boolean {
 
 export function validateHexagon(h: Hexagon): void {
   const bad = (m: string) => new FireCalendarError("validation", m, 400);
-  if (![h.lat, h.lon, h.radiusKm].every(Number.isFinite)) throw bad("หกเหลี่ยมไม่ถูกต้อง");
-  if (h.radiusKm < HEX_MIN_KM) throw bad(`หกเหลี่ยมเล็กเกินไป (รัศมีอย่างน้อย ${HEX_MIN_KM} กม.)`);
-  if (h.radiusKm > HEX_MAX_KM) throw bad(`หกเหลี่ยมใหญ่เกินไป (รัศมีไม่เกิน ${HEX_MAX_KM} กม.)`);
+  if (![h.lat, h.lon, h.radiusKm].every(Number.isFinite)) throw bad("Invalid hexagon");
+  if (h.radiusKm < HEX_MIN_KM) throw bad(`Hexagon too small (minimum radius ${HEX_MIN_KM} km)`);
+  if (h.radiusKm > HEX_MAX_KM) throw bad(`Hexagon too large (maximum radius ${HEX_MAX_KM} km)`);
   const b = ringBox(hexagonRing(h));
-  if (b.minLat < -90 || b.maxLat > 90) throw bad("หกเหลี่ยมเลยขั้วโลก");
-  if (b.maxLon - b.minLon > 180) throw bad("หกเหลี่ยมข้ามเส้นแบ่งเขตวัน (180°) ยังไม่รองรับ");
+  if (b.minLat < -90 || b.maxLat > 90) throw bad("Hexagon extends beyond the poles");
+  if (b.maxLon - b.minLon > 180) throw bad("Hexagon crosses the antimeridian (180°) — not yet supported");
 }
 
 /** URL: hex=lat,lon,radiusKm */

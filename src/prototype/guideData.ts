@@ -1,240 +1,240 @@
 // Content of reference/earth-pulse-guide.html (extracted verbatim)
 export const METRICS: [string, string, string, string, string, string][] = [
  [
-  "NDVI ดัชนีพืชพรรณ",
-  "วัดว่าต้นไม้เขียวสดแค่ไหน เขียวมาก = ชุ่มชื้น เขียวน้อย = แห้ง",
-  "ตัวเลขไม่มีหน่วย −1 ถึง 1 (แอปแสดง 0.1–0.9) คำนวณจากแสงแดงและอินฟราเรดใกล้ที่พืชสะท้อน ผลิตภัณฑ์ MOD13Q1 (250 ม. รวม 16 วัน) และ VNP13",
-  "เป็นส่วน “ความแห้งของพืช” น้ำหนัก 35% ในดัชนีเสี่ยง ค่ายิ่งต่ำยิ่งเสี่ยง",
-  "พืชแห้งคือเชื้อเพลิงของไฟ ช่วยรู้ล่วงหน้าว่าป่าตรงไหนติดง่าย",
-  "จริง/จำลอง"
+  "NDVI Vegetation Index",
+  "Measures how green/lush the trees are. Very green = moist. Less green = dry.",
+  "Unitless value −1 to 1 (app shows 0.1–0.9). Calculated from red and near-infrared light reflected by vegetation. Products: MOD13Q1 (250 m, 16-day composite) and VNP13.",
+  "The 'vegetation dryness' component, weight 35% in the risk index. Lower = more risk.",
+  "Dry vegetation is fire fuel. Helps know in advance which forest areas ignite easily.",
+  "Real/Mock"
  ],
  [
-  "LST อุณหภูมิพื้นผิว",
-  "เหมือนไข้ของพื้นดิน ยิ่งร้อนยิ่งแห้งและติดไฟง่าย",
-  "หน่วย °C วัดจากรังสีความร้อน MOD11A1 (1 กม. รายวัน) และ VNP21 (750 ม.)",
-  "น้ำหนัก 45% ในดัชนีเสี่ยง (สเกล 30–40 °C) และแสดงในการ์ดพื้นที่",
-  "อากาศร้อนทำให้เชื้อเพลิงแห้งเร็ว เป็นสัญญาณเตือนล่วงหน้า",
-  "จริง/จำลอง"
+  "LST Land Surface Temperature",
+  "Like a fever for the ground. Hotter = drier and easier to ignite.",
+  "Unit °C. Measured from thermal radiation. MOD11A1 (1 km, daily) and VNP21 (750 m).",
+  "Weight 45% in the risk index (scale 30–40 °C) and shown in area cards.",
+  "Hot air dries fuel faster. Early warning signal.",
+  "Real/Mock"
  ],
  [
-  "FRP กำลังแผ่รังสีของไฟ",
-  "ความแรงของกองไฟ ยิ่งมากยิ่งร้อนแรง",
-  "หน่วย MW (เมกะวัตต์) ต่อจุดที่ตรวจพบ ณ ตอนดาวเทียมผ่าน จาก MOD14 และ VNP14IMG ไม่ใช่อุณหภูมิ",
-  "ขนาดจุดบนแผนที่ อันดับ “จุดที่ FRP สูงสุด” และตัวกรอง FRP ขั้นต่ำ",
-  "ช่วยเลือกว่าจุดไหนควรไปดูก่อน",
-  "จริง/จำลอง"
+  "FRP Fire Radiative Power",
+  "Strength of a fire. Higher = more intense heat.",
+  "Unit MW (megawatts) per detected point at satellite overpass. From MOD14 and VNP14IMG. Not a temperature.",
+  "Point size on map, 'highest FRP' ranking, and minimum FRP filter.",
+  "Helps decide which fire points to investigate first.",
+  "Real/Mock"
  ],
  [
-  "ระดับความเชื่อมั่น",
-  "ดาวเทียมบอกว่ามั่นใจแค่ไหนว่านี่คือไฟจริง ไม่ใช่เงาหลอก",
-  "ป้าย 3 ขั้น ต่ำ/ปานกลาง/สูง (สีเหลือง/ส้ม/แดง) ผลิตภัณฑ์ไฟมีค่านี้มาให้ แต่กฎในต้นแบบเป็นการจำลอง",
-  "ตัวกรอง “เฉพาะความเชื่อมั่นสูง” และสีของจุด",
-  "ลดการแจ้งเตือนผิด คนไม่เสียเวลาไปดูไฟปลอม",
-  "จำลอง"
+  "Confidence Level",
+  "Satellite says how confident it is that this is a real fire, not a false alarm.",
+  "3 levels: low/medium/high (yellow/orange/red). Fire products include this, but rules in the prototype are simulated.",
+  'Filter "high confidence only" and point colour.',
+  "Reduces false alerts. People don't waste time checking fake fires.",
+  "Mock"
  ],
  [
-  "จำนวนจุดความร้อนและอายุข้อมูล",
-  "นับว่ามีกองไฟกี่กอง และดาวเทียมเห็นมาเมื่อไหร่",
-  "จำนวนจุด, FRP รวม (MW), วันที่ข้อมูล VIIRS ผ่านราว 01:30 และ 13:30 น. ได้ข้อมูลไฟทุก ≤12 ชม.",
-  "การ์ดสรุปในหน้านักผจญเพลิง และเงื่อนไขการแจ้งเตือน",
-  "ข้อมูลเก่าอาจไม่ตรงกับไฟตอนนี้ ต้องรู้ว่าเห็นเมื่อไหร่",
-  "จริง/จำลอง"
+  "Hotspot Count and Data Age",
+  "Count of active fires and when the satellite saw them.",
+  "Number of points, total FRP (MW), date. VIIRS passes around 01:30 and 13:30 local time. Fire data every ≤12 hours.",
+  "Summary cards on the Firefighter page and alert conditions.",
+  "Old data may not match the current fire situation. Need to know when it was observed.",
+  "Real/Mock"
  ],
  [
-  "ดัชนีเสี่ยงไฟป่า 0–100",
-  "คะแนนความน่ากลัวของป่าตรงนั้น 0 สบายใจ 100 ระวังที่สุด",
-  "0–100 = 45×ความร้อน + 35×ความแห้ง + 20×กิจกรรมไฟ (แต่ละส่วนปรับเป็น 0–1) ระดับ ต่ำ <35, ปานกลาง 35–54, สูง 55–74, สูงมาก ≥75 ถ้าพบไฟจะไม่ต่ำกว่า “สูง”",
-  "สีของพื้นที่เฝ้าระวัง การจัดอันดับ และเงื่อนไขแจ้งเตือน",
-  "รวมหลายเรื่องเป็นเลขเดียวช่วยตัดสินใจ แต่ตั้งน้ำหนักเอง ยังไม่ปรับเทียบกับข้อมูลจริง และไม่รวมลม ความชื้น ฝน",
-  "สูตรสาธิต"
+  "Fire Risk Index 0–100",
+  "A scariness score for that forest area. 0 = relaxed, 100 = maximum alert.",
+  "0–100 = 45×heat + 35×dryness + 20×fire activity (each scaled 0–1). Levels: Low <35, Moderate 35–54, High 55–74, Very High ≥75. If fire detected, never below 'High'.",
+  "Colour of watch areas, ranking, and alert triggers.",
+  "Combines multiple factors into one number for decisions. Weights are set manually, not calibrated to real data, and do not include wind, humidity, or rain.",
+  "Demo formula"
  ],
  [
-  "จำนวนวันที่พบไฟ ใน 90 วัน",
-  "ป่านี้ไฟมาบ่อยไหม",
-  "หน่วย วัน (จาก 90 วัน) นับวันที่มีจุดความร้อนในพื้นที่",
-  "การ์ดรายละเอียดพื้นที่",
-  "พื้นที่ที่ไฟมาบ่อยควรเฝ้าเป็นพิเศษ",
-  "จำลอง"
+  "Fire Days in 90 Days",
+  "Has this area had fires frequently?",
+  "Unit: days (out of 90). Counts days with at least one hotspot in the area.",
+  "Area detail cards.",
+  "Areas with frequent fires should be watched more closely.",
+  "Mock"
  ],
  [
-  "NTL แสงไฟกลางคืน",
-  "ที่ไหนสว่างตอนกลางคืน แปลว่ามีคนอยู่",
-  "หน่วย nW/cm²/sr จากแบนด์ Day/Night Band (0.5–0.9 µm) ผลิตภัณฑ์ VNP46A1/A2 (500 ม. รายวัน) MODIS ไม่มีแบนด์นี้",
-  "เป็นตัวแปรในมุมมองนักวิทยาศาสตร์ ยังไม่ใช้ในดัชนีเสี่ยง",
-  "บอกที่ตั้งชุมชนรอบป่า ใช้ประเมินคนที่อาจได้รับผลกระทบ",
-  "จริง/จำลอง"
+  "NTL Night-time Lights",
+  "Where is it bright at night? That means people live there.",
+  "Unit nW/cm²/sr from Day/Night Band (0.5–0.9 µm). Product VNP46A1/A2 (500 m, daily). MODIS has no equivalent band.",
+  "Variable in Scientist view, not yet used in risk index.",
+  "Shows settlements near forests. Helps assess who might be affected.",
+  "Real/Mock"
  ],
  [
-  "ความละเอียดและความถี่",
-  "ภาพละเอียดแค่ไหน และถ่ายบ่อยแค่ไหน",
-  "MODIS 250/500/1000 ม. ครอบคลุมโลกทุก 1–2 วัน แนวกวาด 2,330 กม. VIIRS I-band 375 ม. M-band 750 ม. แนวกวาด ~3,040 กม.",
-  "ใช้เลือกเซนเซอร์ VIIRS 375 ม. เหมาะกับตรวจไฟ",
-  "ไฟเล็กเห็นได้ต่อเมื่อภาพละเอียดพอ",
-  "จริง"
+  "Resolution and Frequency",
+  "How detailed is the imagery and how often is it captured?",
+  "MODIS 250/500/1000 m. Global coverage every 1–2 days. Swath 2,330 km. VIIRS I-band 375 m, M-band 750 m. Swath ~3,040 km.",
+  "Use VIIRS 375 m for fire detection.",
+  "Small fires only visible when resolution is sufficient.",
+  "Real"
  ],
  [
-  "QA: เปอร์เซ็นต์พิกเซลที่ผ่านเกณฑ์",
-  "ถ้าเมฆบังภาพ เราไม่ควรเชื่อตรงนั้น",
-  "หน่วย % ของพิกเซลที่ไม่ถูกเมฆบัง",
-  "สวิตช์ซ่อนพิกเซลถูกเมฆบัง และตัวเลข % ในมุมมองนักวิทยาศาสตร์",
-  "ค่าที่เมฆบังน้อยเชื่อถือได้กว่า (เมฆในต้นแบบเป็นข้อมูลจำลอง)",
-  "จำลอง"
+  "QA: Percentage of Pixels Passing Criteria",
+  "If clouds cover the image, we shouldn't trust that area.",
+  "Unit: % of pixels not covered by clouds.",
+  "Toggle to hide cloud-covered pixels and % value in Scientist view.",
+  "Values with less cloud cover are more reliable (clouds in prototype are simulated).",
+  "Mock"
  ],
  [
-  "Bias และ r (MODIS − VIIRS)",
-  "สองกล้องเห็นเหมือนกันไหม",
-  "Bias คือผลต่างเฉลี่ย (หน่วยเดียวกับตัวแปร) r คือสหสัมพันธ์ −1 ถึง 1 ไม่มีหน่วย",
-  "การ์ดเทียบเซนเซอร์",
-  "ต้องรู้ก่อนนำสองเซนเซอร์มาต่อกัน เพราะ MODIS จะทยอยปลดระวางปลายปี 2026 ถึง 2027",
-  "คำนวณจากข้อมูลจำลอง"
+  "Bias and r (MODIS − VIIRS)",
+  "Do the two cameras see the same thing?",
+  "Bias = mean difference (same units as variable). r = correlation −1 to 1, unitless.",
+  "Sensor comparison cards.",
+  "Must know before combining two sensors because MODIS retires in 2026–2027.",
+  "Calculated from mock data"
  ],
  [
-  "ส่วนเบี่ยงเบนจากค่าเฉลี่ย",
-  "วันนี้ผิดปกติจากปกติหรือเปล่า",
-  "ค่าวันที่เลือก ลบค่าเฉลี่ยของช่วงเวลาที่เลือก (หน่วยเดียวกับตัวแปร) ไม่ใช่ค่าเฉลี่ยหลายปีมาตรฐาน",
-  "การ์ดในมุมมองนักวิทยาศาสตร์",
-  "ช่วยแยกความผิดปกติออกจากการเปลี่ยนตามฤดูกาล",
-  "คำนวณจากข้อมูลจำลอง"
+  "Deviation from Mean",
+  "Is today abnormal compared to normal?",
+  "Selected day value minus mean of selected period (same units as variable). Not a standard multi-year climatological mean.",
+  "Cards in Scientist view.",
+  "Helps separate anomalies from seasonal changes.",
+  "Calculated from mock data"
  ],
  [
   "Harmonized",
-  "นำภาพจากสองกล้องมารวมเป็นภาพเดียว",
-  "เฉลี่ยค่า MODIS กับ VIIRS หลังปรับความต่าง (NDVI ±0.02, LST ±0.8, ไฟหารตามความละเอียด) เป็นค่าตัวอย่าง",
-  "ตัวเลือก Harmonized บนแผนที่",
-  "ทำให้ดูข้อมูลต่อเนื่องแม้เปลี่ยนเซนเซอร์ ของจริงต้องใช้วิธีทางสถิติที่ตรวจสอบแล้ว",
-  "สูตรสาธิต"
+  "Merge imagery from two cameras into one.",
+  "Average MODIS and VIIRS after adjusting differences (NDVI ±0.02, LST ±0.8, fire scaled by resolution). Sample values shown.",
+  "Harmonized toggle on map.",
+  "Makes data continuous even when switching sensors. Real implementation needs statistically validated methods.",
+  "Demo formula"
  ]
 ];
 export const STEPS: [string, string, string, string][] = [
  [
-  "ดึงและเตรียมข้อมูล",
-  "ไปเอาภาพจากดาวเทียมมาจัดให้อ่านง่าย",
-  "ดาวน์โหลดไฟล์จาก LAADS/Earthdata ปรับเป็นระบบพิกัดเดียวกัน (จากกริด sinusoidal เป็น WGS84) ใช้ scale factor และค่า fill",
-  "ไม่ทำ ใช้ข้อมูลสร้างจากสูตร"
+  "Fetch and Prepare Data",
+  "Go get imagery from satellites and make it readable.",
+  "Download files from LAADS/Earthdata. Reproject to common coordinate system (from sinusoidal grid to WGS84). Use scale factors and fill values.",
+  "Not done — uses formula-generated data"
  ],
  [
-  "กรองคุณภาพและเมฆ",
-  "ทิ้งภาพที่เมฆบังหรือเสียออก",
-  "อ่านบิต QA ของผลิตภัณฑ์ กรองเมฆ เงาเมฆ ละอองลอย แล้วนับสัดส่วนพิกเซลที่ใช้ได้",
-  "จำลองเมฆด้วยสูตรเสียงแบบราบเรียบ แล้วซ่อนพิกเซลตามสวิตช์"
+  "Quality and Cloud Filtering",
+  "Throw out cloudy or bad images.",
+  "Read product QA bits. Filter clouds, cloud shadows, aerosols. Then count usable pixel percentage.",
+  "Simulate clouds with smooth noise formula, then hide pixels via toggle"
  ],
  [
-  "รวมข้อมูลตามช่วงเวลา",
-  "หลายวันมารวมกันให้ภาพชัดขึ้น",
-  "สร้างภาพรวม (composite) เช่น 16 วันของ NDVI เลือกค่าที่ดีที่สุดในแต่ละพิกเซล",
-  "MODIS NDVI ใช้ค่าคงที่ทุก 16 วัน"
+  "Temporal Compositing",
+  "Merge multiple days for a clearer picture.",
+  "Create composites (e.g., 16-day NDVI) by picking best value per pixel.",
+  "MODIS NDVI uses constant value every 16 days"
  ],
  [
-  "จัดเป็นช่องและทำ tile",
-  "ตัดแผนที่เป็นแผ่นเล็กๆ เปิดเร็ว",
-  "สร้างพีระมิดหลายระดับซูม เก็บเป็น COG/tile บนที่เก็บไฟล์ แล้วให้เบราว์เซอร์โหลดเฉพาะที่เห็น",
-  "คำนวณกริดบนจอ (ละเอียดสุด 300 คอลัมน์) แล้ววาดเป็นภาพ"
+  "Tiling and Grid Creation",
+  "Cut the map into small tiles for fast loading.",
+  "Build multi-level zoom pyramid. Store as COG/tiles on file storage. Browser loads only what's visible.",
+  "Compute grid on screen (max 300 columns) and render as image"
  ],
  [
-  "สถิติตามพื้นที่ (zonal statistics)",
-  "ถามว่า “ในวงที่วาด ค่าเฉลี่ยเท่าไหร่”",
-  "ตัดภาพด้วย polygon คำนวณ ค่าเฉลี่ย มัธยฐาน จำนวนพิกเซล ถ่วงน้ำหนักตามพื้นที่ ที่ฝั่งเซิร์ฟเวอร์",
-  "เก็บตัวอย่างจุด 14×14 ในกรอบแล้วทดสอบว่าอยู่ในพื้นที่ (point-in-polygon)"
+  "Zonal Statistics",
+  'Ask: "What is the average inside the drawn circle?"',
+  "Clip image with polygon. Calculate mean, median, pixel count, area-weighted. Done server-side.",
+  "Store 14×14 sample points in bounding box, then test if inside area (point-in-polygon)"
  ],
  [
-  "อนุกรมเวลา ปฏิทิน และ anomaly",
-  "ดูว่าค่าเปลี่ยนไปอย่างไรวันต่อวัน",
-  "รวมค่ารายวัน เทียบกับ baseline หลายปี (2000–ปัจจุบัน) และทดสอบแนวโน้ม",
-  "ค่าเฉลี่ยของช่วงที่เลือกเป็นฐานเทียบ ข้อมูล 365 วัน"
+  "Time Series, Calendar, and Anomaly",
+  "See how values change day by day.",
+  "Aggregate daily values. Compare against multi-year baseline (2000–present) and test trends.",
+  "Mean of selected period as baseline. 365 days of data"
  ],
  [
-  "ปรับเซนเซอร์ให้ต่อกันได้",
-  "ทำให้สองกล้องพูดเรื่องเดียวกัน",
-  "ถดถอยในช่วงที่ทั้งสองเซนเซอร์ทับซ้อนกัน (VIIRS เริ่ม 2012) ประเมิน bias และ gain พร้อมค่าความไม่แน่นอน",
-  "ลบ bias ตัวอย่างแล้วเฉลี่ย"
+  "Sensor Harmonization",
+  "Make two cameras speak the same language.",
+  "Regress in overlap period (VIIRS started 2012). Estimate bias and gain with uncertainty.",
+  "Subtract sample bias then average"
  ],
  [
-  "ประมวลผลจุดความร้อน",
-  "คัดจุดไฟจริงและจัดอันดับ",
-  "รับข้อมูล NRT กรองตามความเชื่อมั่น ตัดแหล่งความร้อนคงที่ รวมจุดที่ใกล้กัน รวม FRP",
-  "จำลองจุดจากสนามไฟแบบเป็นหย่อม กรองตามความเชื่อมั่นและ FRP ขั้นต่ำ"
+  "Hotspot Processing",
+  "Identify real fire points and rank them.",
+  "Receive NRT data. Filter by confidence. Remove static heat sources. Cluster nearby points. Sum FRP.",
+  "Simulate fractal fire field. Filter by confidence and minimum FRP"
  ],
  [
-  "คำนวณความเสี่ยงไฟป่า",
-  "รวมเรื่องร้อน แห้ง และไฟ เป็นคะแนนเดียว",
-  "ใช้ตัวแปรอุตุนิยมวิทยา (ลม ความชื้น ฝน อุณหภูมิ) ดัชนีไฟป่ามาตรฐาน หรือโมเดลที่สอบเทียบด้วยประวัติไฟ",
-  "สูตรเชิงเส้นง่ายๆ: ความร้อน 45% ความแห้ง 35% กิจกรรมไฟ 20%"
+  "Fire Risk Calculation",
+  "Combine heat, dryness, and fire into one score.",
+  "Use meteorological variables (wind, humidity, rain, temperature). Standard fire indices or model validated against fire history.",
+  "Simple linear formula: heat 45%, dryness 35%, fire activity 20%"
  ],
  [
-  "ระบบแจ้งเตือน",
-  "เห็นเหตุแล้วบอกคนที่ต้องรู้ทันที",
-  "ซ้อนจุดไฟกับพื้นที่ที่ผู้ใช้ติดตาม ลดการเตือนซ้ำ ตั้งระดับความรุนแรง แล้วส่ง push, LINE หรือ SMS จากเซิร์ฟเวอร์ตลอดเวลา",
-  "ตรวจในหน้าเว็บ แสดงแถบเตือน และใช้ Notification ของเบราว์เซอร์ได้เฉพาะตอนเปิดหน้าอยู่"
+  "Alert System",
+  "See something, tell the right people immediately.",
+  "Overlay fire points with user-watched areas. Deduplicate alerts. Set severity levels. Send push, LINE, or SMS from always-on server.",
+  "Check in page. Show alert bar. Browser notifications only while page is open"
  ],
  [
-  "แสดงผลให้เร็ว",
-  "วาดภาพใหญ่ให้ไม่กระตุก",
-  "ให้เซิร์ฟเวอร์คำนวณหนักและเก็บแคช ใช้ tile และ GPU ตัดช่วงข้อมูลที่โหลด",
-  "ใช้ canvas และกริดที่ระยะเท่ากันบนแผนที่ Mercator และเก็บกริดทั้งโลกไว้ใช้ซ้ำ"
+  "Fast Rendering",
+  "Draw large visuals without lag.",
+  "Server does heavy compute and caches. Use tiles and GPU to cull loaded data ranges.",
+  "Use canvas and equally-spaced grid on Mercator map. Cache entire world grid for reuse"
  ]
 ];
 export const FEATURES: [string, string[]][] = [
  [
-  "แผนที่และการวาด",
+  "Map and Drawing",
   [
-   "แผนที่โลกพร้อมชายฝั่งและพรมแดน (Natural Earth 1:50m)",
-   "วาดและแก้ polygon ด้วย Terra Draw กดปุ่มแดงเพื่อยกเลิกการวาด",
-   "ซูมอัตโนมัติไปยังพื้นที่ที่วาด",
-   "ใช้ MapLibre ทำงานได้ทั้งบนจอกว้างและมือถือ"
+   "World map with coastlines and borders (Natural Earth 1:50m)",
+   "Draw and edit polygons with Terra Draw. Red button cancels drawing.",
+   "Auto-zoom to drawn area",
+   "MapLibre works on both wide screens and mobile"
   ]
  ],
  [
-  "ตัวแปรและเซนเซอร์",
+  "Variables and Sensors",
   [
-   "MODIS, VIIRS และ Harmonized",
-   "NDVI, LST, ไฟ (FRP), แสงไฟกลางคืน",
-   "Heatmap แบบภาพ raster เรียบ สีตรงกับสเกลสี"
+   "MODIS, VIIRS, and Harmonized",
+   "NDVI, LST, Fire (FRP), Night Lights",
+   "Smooth raster heatmaps. Colours match the colour scales"
   ]
  ],
  [
-  "เวลา",
+  "Time",
   [
-   "เลือกช่วงเวลาด้วยปุ่มลัดหรือเลือกวันเอง",
-   "slider เลื่อนดูวันภายในช่วง และปุ่มเล่นอัตโนมัติ",
-   "กราฟย้อนหลังและปฏิทิน เลื่อนแนวนอนได้ ขนาดช่องคงที่"
+   "Select time range with shortcut buttons or custom dates",
+   "Slider to scrub through days in range and auto-play button",
+   "Historical charts and calendar. Horizontal scroll. Fixed cell size"
   ]
  ],
  [
-  "มุมมองนักวิทยาศาสตร์",
+  "Scientist View",
   [
-   "สถิติ ค่าเฉลี่ย ต่ำสุด–สูงสุด ส่วนเบี่ยงเบนจากค่าเฉลี่ย",
-   "ซ่อนพิกเซลที่ถูกเมฆบัง และดู % ผ่านเกณฑ์",
-   "เทียบ MODIS กับ VIIRS (bias, r)",
-   "คัดลอกข้อมูลเป็น CSV"
+   "Stats: mean, min–max, deviation from mean",
+   "Hide cloud-covered pixels and show % passing QA",
+   "Compare MODIS vs VIIRS (bias, r)",
+   "Copy data as CSV"
   ]
  ],
  [
-  "มุมมองนักผจญเพลิง",
+  "Firefighter View",
   [
-   "จุดความร้อนรายจุด ขนาดตาม FRP สีตามความเชื่อมั่น",
-   "สรุปจำนวนจุด FRP รวม และตัวกรอง",
-   "พื้นที่เฝ้าระวังจากเซิร์ฟเวอร์ ค้นหาและกรองตามทวีปหรือประเทศ",
-   "กดติดตาม ดูรายละเอียด ดัชนีเสี่ยง และกราฟ 14 วัน",
-   "แจ้งเตือนในหน้า พร้อมคำแนะนำ และแจ้งเตือนเข้าเครื่องที่ทดลองได้"
+   "Per-point hotspots. Size by FRP. Colour by confidence",
+   "Summary: point count, total FRP, and filters",
+   "Watch areas from server. Search and filter by continent or country",
+   "Follow. View details, risk index, and 14-day chart",
+   "In-page alerts with recommendations. Device notifications (experimental)"
   ]
  ],
  [
-  "หน้าตาและการใช้งาน",
+  "UI and UX",
   [
-   "ปุ่มควบคุมบนแผนที่เป็นไอคอน ย่อและเปิดแต่ละแผงได้",
-   "แผงด้านซ้ายแยกเป็นหน้าย่อย ลากปรับความกว้างและพับได้",
-   "บนมือถือแผงเปิดเต็มจอ",
-   "รองรับโหมดสว่างและมืด"
+   "Map controls as icons. Panels collapse and expand.",
+   "Left panel splits into sub-panels. Drag to resize width and collapse.",
+   "Full-screen panels on mobile",
+   "Light and dark mode support"
   ]
  ],
  [
-  "ข้อจำกัดของต้นแบบ",
+  "Prototype Limitations",
   [
-   "ข้อมูลทั้งหมดเป็นข้อมูลจำลองและมีย้อนหลังแค่ 365 วัน",
-   "ยังไม่มีเซิร์ฟเวอร์จริง การแจ้งเตือนจึงทำงานเฉพาะตอนเปิดหน้านี้",
-   "ดัชนีเสี่ยงยังไม่รวมลม ความชื้น และฝน",
-   "ใช้ประกอบการตัดสินใจ ไม่แทนรายงานภาคสนาม"
+   "All data is mock and only goes back 365 days",
+   "No real server yet. Alerts only work while this page is open",
+   "Risk index does not yet include wind, humidity, or rain",
+   "For decision support only. Does not replace field reports"
   ]
  ]
 ];
-export const STAGE: string[] = ["ซื้อวัตถุดิบ", "ล้างและคัด", "ล้างและคัด", "หั่นพอดีคำ", "หั่นพอดีคำ", "ปรุง", "ปรุง", "ปรุง", "ปรุง", "เสิร์ฟ", "เสิร์ฟ"];
+export const STAGE: string[] = ["Get ingredients", "Wash and sort", "Wash and sort", "Cut to size", "Cut to size", "Cook", "Cook", "Cook", "Cook", "Serve", "Serve"];

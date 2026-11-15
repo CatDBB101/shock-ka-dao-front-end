@@ -101,13 +101,13 @@ export default function WatchMap({ points, hotspots, selectedId, onSelect }: Wat
     // eslint-disable-next-line react-hooks/exhaustive-deps -- only when the selection changes
   }, [selectedId, ready]);
 
-  if (err) return <p className="alert small">แสดงแผนที่ไม่ได้ ({err}) — ใช้รายการด้านล่างแทนได้</p>;
+  if (err) return <p className="alert small">Map unavailable ({err}) — use the list below instead</p>;
   return (
     <div className="aoi-map-wrap">
-      <div ref={el} className="aoi-map" role="region" aria-label="แผนที่จุดเฝ้าระวัง" />
+      <div ref={el} className="aoi-map" role="region" aria-label="Watchpoint map" />
       {!ready && (
         <p className="aoi-map-hint" role="status">
-          กำลังโหลดแผนที่…
+          Loading map…
         </p>
       )}
     </div>

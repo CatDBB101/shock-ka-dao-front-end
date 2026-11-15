@@ -19,13 +19,13 @@ export const normEmail = (e: string) => e.trim().toLowerCase();
 
 export function validateEmail(email: string): string {
   const e = normEmail(email);
-  if (!EMAIL_RE.test(e) || e.length > 254) throw new FireCalendarError("validation", "อีเมลไม่ถูกต้อง", 400);
+  if (!EMAIL_RE.test(e) || e.length > 254) throw new FireCalendarError("validation", "Invalid email address", 400);
   return e;
 }
 
 export function validateWatchpoints(f: unknown): Watchpoint[] {
   const list = (f as Partial<WatchpointFile> | null)?.watchpoints;
-  if (!Array.isArray(list)) throw new FireCalendarError("server", "ไฟล์จุดเฝ้าระวังไม่ถูกต้อง");
+  if (!Array.isArray(list)) throw new FireCalendarError("server", "Watchpoints file is invalid");
   return list.filter(
     (w): w is Watchpoint =>
       typeof w?.id === "string" &&
@@ -46,7 +46,7 @@ export class LocalAlertService implements AlertService {
 
   async listWatchpoints(): Promise<Watchpoint[]> {
     const r = await fetch(this.watchpointsUrl);
-    if (!r.ok) throw new FireCalendarError("server", `โหลดจุดเฝ้าระวังไม่สำเร็จ (HTTP ${r.status})`, r.status);
+    if (!r.ok) throw new FireCalendarError("server", `Failed to load watchpoints (HTTP ${r.status})`, r.status);
     return validateWatchpoints(await r.json());
   }
 
@@ -62,7 +62,7 @@ export class LocalAlertService implements AlertService {
     try {
       localStorage.setItem(SUBS_KEY, JSON.stringify(s));
     } catch {
-      throw new FireCalendarError("server", "เบราว์เซอร์นี้บันทึกข้อมูลไม่ได้ (โหมดส่วนตัว?)");
+      throw new FireCalendarError("server", "This browser cannot save data (private mode?)");
     }
   }
 
@@ -95,7 +95,7 @@ export class HttpAlertService implements AlertService {
     try {
       r = await fetch(`${this.base}${path}`, { ...init, headers: { "content-type": "application/json", ...init?.headers } });
     } catch {
-      throw new FireCalendarError("network", "เชื่อมต่อระบบแจ้งเตือนไม่ได้");
+      throw new FireCalendarError("network", "Could not connect to alert service");
     }
     if (!r.ok) {
       let detail = `HTTP ${r.status}`;

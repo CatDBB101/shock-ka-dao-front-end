@@ -1,11 +1,11 @@
-import { LEVEL_LABEL_TH, monthTh, type Season } from "../../lib/firecalendar";
+import { LEVEL_LABEL_EN, monthEn, type Season } from "../../lib/firecalendar";
 import type { Series } from "./CalendarGrid";
 
 export function Legend({ showModis = false, series: seriesProp }: { showModis?: boolean; series?: Series }) {
   const series: Series = seriesProp ?? (showModis ? "modis" : "harmonized");
   return (
-    <div className="fc-legend" aria-label="คำอธิบายสี">
-      {LEVEL_LABEL_TH.map((l, i) => (
+    <div className="fc-legend" aria-label="Color legend">
+      {LEVEL_LABEL_EN.map((l, i) => (
         <span key={l}>
           <i className={`fc-swatch fc-cell lvl-${i}`} aria-hidden="true" />
           {l}
@@ -15,30 +15,30 @@ export function Legend({ showModis = false, series: seriesProp }: { showModis?: 
         <>
           <span>
             <i className="fc-swatch fc-cell lvl-2" aria-hidden="true" />
-            VIIRS วัดจริง (observed)
+            VIIRS measured (observed)
           </span>
           <span>
             <i className="fc-swatch fc-cell lvl-2 src-backcast" aria-hidden="true" />
-            ลายห่าง = แปลงจาก MODIS (backcast)
+            Sparse hatch = Converted from MODIS (backcast)
           </span>
           <span>
             <i className="fc-swatch fc-cell lvl-2 src-backcast_terra" aria-hidden="true" />
-            ลายถี่ = แปลงจาก Terra (แม่นน้อยกว่า)
+            Dense hatch = Converted from Terra (less accurate)
           </span>
           <span>
             <i className="fc-swatch fc-cell lvl-2 critical" aria-hidden="true" />
-            กรอบหนา = เดือนวิกฤต (สูงกว่าเดือนเดียวกันใน 2013–2024 ≥ 90% ของปี)
+            Thick border = Critical month (higher than same month in 2013–2024 in ≥ 90% of years)
           </span>
         </>
       )}
-      {series === "modis" && <span>สีตามจำนวนจุด MODIS ดิบ (ก่อนปรับเทียบ) · สเกลสีคิดแยกจากชุดอื่น</span>}
+      {series === "modis" && <span>Color by raw MODIS point count (before harmonization) · Separate color scale from other series</span>}
       {series === "viirs" && (
         <>
           <span>
             <i className="fc-swatch fc-cell no-data" aria-hidden="true" />
-            ไม่มีข้อมูล VIIRS (ก่อน ก.พ. 2012)
+            No VIIRS data (before Feb 2012)
           </span>
-          <span>สีตามจำนวนจุดที่ VIIRS S-NPP วัดได้จริง</span>
+          <span>Color by points measured by VIIRS S-NPP</span>
         </>
       )}
     </div>
@@ -49,7 +49,7 @@ export function SeasonLine({ season }: { season?: Season }) {
   if (!season) return null;
   return (
     <p className="small muted">
-      ฤดูไฟ: {monthTh(season.start_month)}–{monthTh(season.end_month)} · พีค {monthTh(season.peak_month)}
+      Fire season: {monthEn(season.start_month)}–{monthEn(season.end_month)} · Peak {monthEn(season.peak_month)}
     </p>
   );
 }

@@ -8,17 +8,17 @@ import type { AppMode } from "../../lib/mode/mode";
 
 const NAV: Record<AppMode, [string, string][]> = {
   scientist: [
-    ["/", "หน้าแรก"],
-    ["/explore", "สำรวจพื้นที่"],
-    ["/evidence", "หลักฐาน"],
-    ["/data", "ข้อมูล"],
-    ...(config.featureAsk ? ([["/ask", "ถาม"]] as [string, string][]) : []),
-    ["/about", "เกี่ยวกับ"],
+    ["/", "Home"],
+    ["/explore", "Explore"],
+    ["/evidence", "Evidence"],
+    ["/data", "Data"],
+    ...(config.featureAsk ? ([["/ask", "Ask"]] as [string, string][]) : []),
+    ["/about", "About"],
   ],
   firefighter: [
-    ["/watch", "จุดเฝ้าระวัง"],
-    ["/evidence", "หลักฐาน"],
-    ["/about", "เกี่ยวกับ"],
+    ["/watch", "Watch"],
+    ["/evidence", "Evidence"],
+    ["/about", "About"],
   ],
 };
 
@@ -28,14 +28,14 @@ export function Layout() {
   return (
     <>
       <a href="#main" className="sr-only">
-        ข้ามไปเนื้อหา
+        Skip to content
       </a>
       <header className="fc-header">
         <div className="fc-header-inner">
           <Link to={mode === "firefighter" ? "/watch" : "/"} className="fc-brand">
             FireCalendar<span>+</span>
           </Link>
-          <nav className="fc-nav" aria-label="เมนูหลัก">
+          <nav className="fc-nav" aria-label="Main menu">
             {NAV[mode].map(([to, label]) => (
               <NavLink key={to} to={to} end={to === "/"}>
                 {label}
@@ -62,13 +62,13 @@ function Footer() {
     <footer className="fc-footer">
       <div className="fc-footer-inner">
         <span>
-          ข้อมูลรุ่น <span className="num">{meta.data?.data_version ?? "…"}</span> · โมเดล{" "}
+          Data version <span className="num">{meta.data?.data_version ?? "…"}</span> · Model{" "}
           <span className="num">{meta.data?.model_id ?? "…"}</span>
         </span>
-        <span>ข้อมูล: NASA FIRMS, MCD12C1</span>
-        <span>โหมดข้อมูล: {ds.mode}</span>
-        <Link to="/guide">คู่มือต้นแบบ Earth Pulse</Link>
-        <Link to="/prototype">ต้นแบบ MODIS · VIIRS Explorer</Link>
+        <span>Data: NASA FIRMS, MCD12C1</span>
+        <span>Data mode: {ds.mode}</span>
+        <Link to="/guide">Earth Pulse Prototype Guide</Link>
+        <Link to="/prototype">MODIS · VIIRS Explorer Prototype</Link>
       </div>
     </footer>
   );

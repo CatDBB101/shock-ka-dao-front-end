@@ -36,3 +36,4 @@ export const MIN_CELLS_FOR_CRITICAL = 20;
 export const MAX_HOTSPOT_DAYS = 60;
 
 export const COVERED_COUNTRIES_TH = "แองโกลา อาร์เจนตินา บราซิล แคนาดา สหรัฐฯ และออสเตรเลีย";
+export const COVERED_COUNTRIES_EN = "Angola, Argentina, Brazil, Canada, USA, and Australia";
