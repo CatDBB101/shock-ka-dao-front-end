@@ -11,6 +11,8 @@ import type {
   PaginationInfo,
 } from './types';
 
+export type { FilterParams };
+
 const API_BASE = '/api';
 
 export interface HotspotsApiResponse<T> {

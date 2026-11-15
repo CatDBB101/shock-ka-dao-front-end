@@ -13,6 +13,7 @@ const Data = lazy(() => import("./pages/Data"));
 const About = lazy(() => import("./pages/About"));
 const Ask = lazy(() => import("./pages/Ask"));
 const Watch = lazy(() => import("./pages/Watch"));
+const Hotspots = lazy(() => import("./pages/Hotspots"));
 // ports of the two reference HTML prototypes (standalone, outside the main layout)
 const Guide = lazy(() => import("./prototype/Guide"));
 const Explorer = lazy(() => import("./prototype/Explorer"));
@@ -32,6 +33,7 @@ export default function App() {
             <Route path="data" element={<Data />} />
             <Route path="about" element={<About />} />
             <Route path="watch" element={<Watch />} />
+            <Route path="hotspots" element={<Hotspots />} />
             {config.featureAsk && <Route path="ask" element={<Ask />} />}
             <Route path="*" element={<NotFound />} />
           </Route>
