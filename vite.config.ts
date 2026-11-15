@@ -63,4 +63,12 @@ function dataRangeServer(): Plugin {
 export default defineConfig({
   plugins: [react(), tailwindcss(), dataRangeServer()],
   build: { chunkSizeWarningLimit: 1200 },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+      },
+    },
+  },
 })
