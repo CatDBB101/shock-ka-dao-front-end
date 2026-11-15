@@ -26,44 +26,45 @@ export default function Home() {
         <div className="orbit-inner">
           <div className="orbit-copy">
             <h1 id="orbit-title" className="orbit-title">
-              <span className="t1" style={{ whiteSpace: "nowrap" }}> 24 Years of Fire</span>
-              <span className="t2">จาก MODIS และ VIIRS </span>
+              <span className="t1" style={{ whiteSpace: "nowrap" }}>24 Years of Fire</span>
+              <span className="t2">from MODIS and VIIRS</span>
             </h1>
             <p className="orbit-lede">
-             1 แท่ง = 1 เดือน ยิ่งสูง ยิ่งมีจุดไฟมาก ปี 2012 ดาวเทียม VIIRS ที่ละเอียดกว่าเข้ามาแทน MODIS ถ้าต่อข้อมูลตรงๆ ไฟจะดูเพิ่มขึ้นหลายเท่าในปีเดียว
+              1 bar = 1 month; the taller the bar, the more fires. In 2012 the sharper VIIRS sensor replaced MODIS. Splice the two directly and fire appears to
+              multiply within a single year.
             </p>
 
             <div className="orbit-controls">
                 <p className="orbit-lede " style={{ marginBottom: "1px" }}>
-             ตัวอย่างพื้นที่
+              Example areas
             </p>
               <RegionTabs value={region} onChange={setRegion} />
-              <div className="morph" role="group" aria-label="วิธีต่อข้อมูลสองดาวเทียม">
+              <div className="morph" role="group" aria-label="How the two satellite records are joined">
                 <button type="button" aria-pressed={mode === "spliced"} onClick={() => setMode("spliced")}>
-                  ต่อข้อมูลตรงๆ
+                  Naive splice
                 </button>
                 <button type="button" aria-pressed={mode === "harmonized"} onClick={() => setMode("harmonized")}>
-                  ปรับเทียบด้วย FireCalendar+
+                  Calibrated by FireCalendar+
                 </button>
               </div>
               <p className="orbit-caption">
                 {mode === "spliced"
-                  ? "ก่อน 2012 เป็น MODIS ดิบ หลังจากนั้นเป็น VIIRS สังเกตขั้นบันไดตรงเส้นประ"
-                  : "ปีก่อน 2012 ถูกแปลงให้เทียบเท่า VIIRS ขั้นบันไดหายไป แท่งลายทแยงคือค่าที่คำนวณ"}
+                  ? "Raw MODIS before 2012, VIIRS after. Note the step at the dashed line"
+                  : "Years before 2012 are converted to VIIRS-equivalent, so the step is gone. Hatched bars are computed values"}
               </p>
             </div>
 
             <Link to="/explore" className="btn primary">
-              เลือกพื้นที่ของคุณเอง
+              Choose your own area
             </Link>
           </div>
 
           <div className="orbit-stage">
-            {q.isPending && <div className="strata-wait" role="status">กำลังโหลดปฏิทิน…</div>}
+            {q.isPending && <div className="strata-wait" role="status">Loading calendar…</div>}
             {q.isError && <LoadError error={q.error} onRetry={() => void q.refetch()} />}
             {q.data && (
               <>
-                <HeatStrata rows={q.data.rows} mode={mode} label={`ปฏิทินไฟ 3 มิติ ${regionTh(region)} 2001–2024`} />
+                <HeatStrata rows={q.data.rows} mode={mode} label={`3D fire calendar, ${regionTh(region)}, 2001–2024`} />
                 <SeamMeter rows={q.data.rows} mode={mode} />
               </>
             )}
@@ -73,8 +74,8 @@ export default function Home() {
 
       <section className="band" aria-labelledby="flat">
         <div className="band-head">
-          <h2 id="flat">ตาราง ปี × เดือน</h2>
-          <p className="muted">แถวคือปี คอลัมน์คือเดือน สีเข้มแปลว่าไฟมากแสดงข้อมูลของภูมิภาคที่เลือกไว้ด้านบน</p>
+          <h2 id="flat">Year × month table</h2>
+          <p className="muted">Rows are years, columns are months; darker means more fire. Shows the region selected above.</p>
         </div>
         <div className="sheet">
           {q.isPending ? <CalendarSkeleton /> : <RegionView region={region} />}
@@ -83,20 +84,20 @@ export default function Home() {
 
       <section className="band" aria-labelledby="seam">
         <div className="band-head">
-          <h2 id="seam">ยอดรายปี ก่อนและหลังปรับเทียบ</h2>
-          <p className="muted">เส้นเทาคือ MODIS ดิบ เส้นส้มคือ FireCalendar+ ช่วงที่มี VIIRS แล้ว เส้นประฟ้าคือค่าที่โมเดลทาย ซึ่งทับค่าจริงเกือบสนิท</p>
+          <h2 id="seam">Annual totals before and after calibration</h2>
+          <p className="muted">Grey is raw MODIS, orange is FireCalendar+. Over the VIIRS years the dashed blue line is the model's prediction, which sits almost on top of the measurements.</p>
         </div>
-        <div className="sheet">{q.data ? <ContinuityChart rows={q.data.rows} title={regionTh(region)} /> : <p role="status">กำลังโหลด…</p>}</div>
+        <div className="sheet">{q.data ? <ContinuityChart rows={q.data.rows} title={regionTh(region)} /> : <p role="status">Loading…</p>}</div>
       </section>
 
       <section className="band" aria-labelledby="proof">
         <div className="band-head">
-          <h2 id="proof">เทียบความแม่นยำ กับข้อมูลที่ไม่เคยใช้</h2>
-          <p className="muted">Poisson deviance ยิ่งสั้นยิ่งดี วัดบนพื้นที่และปีที่กันไว้ตั้งแต่ต้น เปิดดูครั้งเดียวตอนจบ</p>
+          <h2 id="proof">Accuracy on data never used for training</h2>
+          <p className="muted">Poisson deviance, shorter is better, measured on areas and years held out from the start and opened once at the end.</p>
         </div>
-        <div className="proof" role="img" aria-label="วิธีคูณตัวเลขเดียว 5.17 เทียบกับ FireCalendar+ 1.09">
+        <div className="proof" role="img" aria-label="Single multiplier 5.17 versus FireCalendar+ 1.09">
           <div className="proof-row">
-            <span>คูณ MODIS ด้วยตัวเลขเดียว</span>
+            <span>MODIS × one multiplier</span>
             <i style={{ width: "100%" }} className="proof-bar base" />
             <b>5.17</b>
           </div>
@@ -107,26 +108,26 @@ export default function Home() {
           </div>
         </div>
         <p className="small">
-          <Link to="/evidence">ดูหลักฐานและข้อจำกัดทั้งหมด</Link>
+          <Link to="/evidence">See all evidence and limitations</Link>
         </p>
       </section>
 
       <section className="band" aria-labelledby="why">
         <h2 id="why" className="band-title-only">
-          สิ่งที่ข้อมูลนี้ให้
+          What this data gives you
         </h2>
         <dl className="facts">
           <div>
-            <dt>ไม่มีรอยหักปี 2012</dt>
-            <dd>โมเดลเรียนจากปีที่มีดาวเทียมทั้งสองดวง แล้วแปลง MODIS ย้อนไปถึงปี 2001 ให้อยู่ในหน่วยเดียวกับ VIIRS</dd>
+            <dt>No break in 2012</dt>
+            <dd>The model learns from the years when both satellites flew, then converts MODIS back to 2001 into VIIRS units.</dd>
           </div>
           <div>
-            <dt>บอกเสมอว่าวัดจริงหรือคำนวณ</dt>
-            <dd>ค่าคำนวณมีลายทแยงและช่วงที่น่าจะเป็นราว 80% ทุกเดือน</dd>
+            <dt>Always says measured or computed</dt>
+            <dd>Computed values are hatched and carry an ~80% likely range every month.</dd>
           </div>
           <div>
-            <dt>ดาวเทียมรุ่นเก่ากำลังปลดระวาง</dt>
-            <dd>Terra และ Aqua ทยอยหยุดทำงานปี 2026–2027 สะพานเชื่อมข้อมูลต้องสร้างตอนที่ยังมีช่วงเวลาซ้อนกันให้เรียน</dd>
+            <dt>The old satellites are retiring</dt>
+            <dd>Terra and Aqua shut down in 2026–2027. The bridge between the records has to be built while there is still overlap to learn from.</dd>
           </div>
         </dl>
       </section>

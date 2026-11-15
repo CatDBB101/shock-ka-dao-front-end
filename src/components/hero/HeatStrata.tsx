@@ -407,7 +407,8 @@ export function HeatStrata({ rows, mode, label, compact = false }: { rows: Strat
       cancelAnimationFrame(raf.current);
       raf.current = 0;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- draw/kick read refs
+    // draw/kick read refs
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [compact]);
 
   // morph to the new target (first load rises from the ground)
@@ -420,7 +421,8 @@ export function HeatStrata({ rows, mode, label, compact = false }: { rows: Strat
     }
     morph.current = { from: heights.current.slice(), to: target.slice(), t0: performance.now(), toward: mode };
     kick();
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- draw/kick read refs
+    // draw/kick read refs
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [target]);
 
   const stopSpin = () => {
@@ -458,7 +460,7 @@ export function HeatStrata({ rows, mode, label, compact = false }: { rows: Strat
       if (!c) return "";
       const v = strataValue(c, mode);
       const raw = mode === "spliced" && c.year * 12 + c.month < 2012 * 12 + 2;
-      return `${monthTh(c.month)} ${c.year}: ${fmtCount(v, !raw && c.source !== "observed")} จุด · ${raw ? "MODIS ดิบ (ยังไม่ปรับเทียบ)" : SOURCE_LABEL_TH[c.source]}`;
+      return `${monthTh(c.month)} ${c.year}: ${fmtCount(v, !raw && c.source !== "observed")} detections · ${raw ? "raw MODIS (not calibrated)" : SOURCE_LABEL_TH[c.source]}`;
     };
     const setHover = (i: number) => {
       if (i === hover.current) return;
@@ -503,7 +505,8 @@ export function HeatStrata({ rows, mode, label, compact = false }: { rows: Strat
       cv.removeEventListener("pointerup", up);
       cv.removeEventListener("pointerleave", leave);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- draw reads refs
+    // draw reads refs
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cells, mode]);
 
   return (
@@ -513,7 +516,7 @@ export function HeatStrata({ rows, mode, label, compact = false }: { rows: Strat
           ref={canvas}
           tabIndex={0}
           role="img"
-          aria-label={`${label}. แท่งละหนึ่งเดือน ความสูงตามจำนวนจุดไฟ กดลูกศรซ้ายขวาเพื่อหมุน`}
+          aria-label={`${label}. One bar per month, height by fire detections. Use the left and right arrow keys to rotate`}
           onKeyDown={(e) => {
             if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
             e.preventDefault();
@@ -533,12 +536,12 @@ export function HeatStrata({ rows, mode, label, compact = false }: { rows: Strat
               kick();
             }}
           >
-            {spinning ? "หยุดหมุน" : "หมุนอัตโนมัติ"}
+            {spinning ? "Stop rotating" : "Auto-rotate"}
           </button>
         )}
       </div>
       <p className="strata-tip" aria-live="polite">
-        {tip || "ลากเพื่อหมุน · แตะแท่งเพื่อดูตัวเลข"}
+        {tip || "Drag to rotate · tap a bar for its value"}
       </p>
     </div>
   );

@@ -7,7 +7,7 @@ const SERIES: readonly Series[] = ["harmonized", "modis", "viirs"];
 
 export function SeriesTabs({ value, onChange }: { value: Series; onChange: (s: Series) => void }) {
   return (
-    <div className="tabs" role="group" aria-label="ชุดข้อมูลที่ใช้ระบายสีปฏิทิน">
+    <div className="tabs" role="group" aria-label="Series used to colour the calendar">
       {SERIES.map((s) => (
         <button key={s} type="button" aria-pressed={value === s} onClick={() => onChange(s)}>
           {SERIES_LABEL_TH[s]}
@@ -45,7 +45,7 @@ export function AoiCalendarCsvButton({ rows, box, start, end }: { rows: AoiRow[]
   const tag = [box.minLat, box.minLon, box.maxLat, box.maxLon].map((n) => n.toFixed(2)).join("_");
   return (
     <button type="button" className="btn" onClick={() => saveText(aoiToCsv(rows), `firecalendar_aoi_${tag}_${start}_${end}.csv`)}>
-      ดาวน์โหลดปฏิทินพื้นที่นี้ (CSV · {rows.length} เดือน)
+      Download this area's calendar (CSV · {rows.length} months)
     </button>
   );
 }

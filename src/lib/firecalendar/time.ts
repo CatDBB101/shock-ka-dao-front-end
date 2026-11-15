@@ -1,7 +1,7 @@
 import type { AoiRow, Source, YearMonth } from "./types";
 import { FIRST_YM, LAST_YM } from "./config";
 
-export const MONTHS_TH = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."] as const;
+export const MONTHS_TH = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"] as const;
 
 export const monthTh = (m: number): string => MONTHS_TH[(m - 1 + 12) % 12] ?? "";
 
@@ -34,8 +34,25 @@ export function sourceFor(year: number, month: number): Source {
 }
 
 /**
+ * Months where the VIIRS record itself is incomplete (outages / partial months), from the
+ * research audit of the S-NPP archive. The backend still labels them `observed`, so the UI
+ * flags them: a low value here may be missing data, not a quiet fire month.
+ */
+export const VIIRS_GAP_MONTHS: Readonly<Record<YearMonth, string>> = {
+  "2012-01": "VIIRS data starts on 19 Jan 2012, so this month is partial",
+  "2012-03": "no VIIRS data for 25 Mar 2012",
+  "2022-07": "incomplete VIIRS S-NPP record this month",
+  "2022-08": "incomplete VIIRS S-NPP record this month",
+  "2024-06": "incomplete VIIRS S-NPP record this month",
+  "2024-07": "incomplete VIIRS S-NPP record this month",
+  "2024-11": "incomplete VIIRS S-NPP record this month",
+};
+
+/** Note for a month whose VIIRS data is incomplete, else null. */
+export const viirsGap = (year: number, month: number): string | null => VIIRS_GAP_MONTHS[ymOf(year, month)] ?? null;
+
+/**
  * AOI rows are sparse: months with no fire have no row. Build the full range and fill zeros.
- * ข้อมูล AOI แบบบาง ต้องผ่านฟังก์ชันนี้ก่อนแสดงเสมอ
  */
 export function fillMonths(rows: AoiRow[], start: YearMonth = FIRST_YM, end: YearMonth = LAST_YM): AoiRow[] {
   const byT = new Map(rows.map((r) => [tIndex(r.year, r.month), r]));

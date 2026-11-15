@@ -4,6 +4,7 @@
 //   2. season  = where this calendar month sits in the region's fire season (calendar_region.json)
 import type { Season } from "../firecalendar/types";
 import { haversineKm } from "../firecalendar/geo";
+import { keepVegetationFires } from "../firecalendar/firms";
 import type { Watchpoint } from "./types";
 
 export const ACTIVE_HOURS = 48;
@@ -13,10 +14,10 @@ export const NRT_SOURCES = ["VIIRS_NOAA20_NRT", "VIIRS_NOAA21_NRT"] as const;
 export type WatchLevel = "active" | "high" | "elevated" | "normal";
 export const LEVEL_ORDER: Record<WatchLevel, number> = { active: 3, high: 2, elevated: 1, normal: 0 };
 export const LEVEL_TH: Record<WatchLevel, string> = {
-  active: "พบจุดความร้อน",
-  high: "เฝ้าระวังสูง",
-  elevated: "เฝ้าระวัง",
-  normal: "ปกติ",
+  active: "Hotspot detected",
+  high: "High alert",
+  elevated: "Watch",
+  normal: "Normal",
 };
 
 export interface Hotspot {
@@ -30,7 +31,8 @@ export interface Hotspot {
 }
 
 /** FIRMS area CSV → hotspots. Skips the header, blank and "# missing" lines; tolerant of column order. */
-export function parseFirmsCsv(csv: string): Hotspot[] {
+export function parseFirmsCsv(raw: string): Hotspot[] {
+  const csv = keepVegetationFires(raw).csv; // SP files: drop volcano / static sources (type != 0); NRT has no type
   const lines = csv.split(/\r?\n/).filter((l) => l.trim() !== "" && !l.startsWith("#"));
   const head = lines[0]?.split(",").map((s) => s.trim());
   if (!head || !head.includes("latitude")) return [];
@@ -94,15 +96,16 @@ export interface WatchStatus {
   reasons: string[];
 }
 
-export function assessWatchpoint(args: { month: number; season?: Season; near: Hotspot[] | null }): WatchStatus {
+export function assessWatchpoint(args: { month: number; season?: Season; near: Hotspot[] | null; outsideCoverage?: boolean }): WatchStatus {
   const sl = seasonLevel(args.month, args.season);
   const reasons: string[] = [];
   const n = args.near?.length ?? 0;
   const maxFrp = args.near ? Math.max(0, ...args.near.map((h) => h.frp)) : 0;
-  if (args.near && n > 0) reasons.push(`ดาวเทียม VIIRS พบจุดความร้อน ${n} จุดในรัศมีภายใน ${ACTIVE_HOURS} ชม. (FRP สูงสุด ${maxFrp.toFixed(1)} MW)`);
-  else if (args.near) reasons.push(`ไม่พบจุดความร้อนในรัศมีภายใน ${ACTIVE_HOURS} ชม.`);
-  if (sl === "high") reasons.push("อยู่ในช่วงพีคของฤดูไฟของภูมิภาค (สถิติ 2001–2024)");
-  else if (sl === "elevated") reasons.push("อยู่ในฤดูไฟของภูมิภาค (สถิติ 2001–2024)");
-  else reasons.push("นอกฤดูไฟของภูมิภาค");
+  if (args.near && n > 0) reasons.push(`VIIRS detected ${n} hotspot${n === 1 ? "" : "s"} within the radius in the last ${ACTIVE_HOURS} h (max FRP ${maxFrp.toFixed(1)} MW)`);
+  else if (args.near) reasons.push(`No hotspots within the radius in the last ${ACTIVE_HOURS} h`);
+  if (args.outsideCoverage) reasons.push("No fire-season statistics here (outside the 6 countries the calendar covers), so the level depends on hotspots only");
+  else if (sl === "high") reasons.push("Peak of the regional fire season (2001–2024 statistics)");
+  else if (sl === "elevated") reasons.push("Within the regional fire season (2001–2024 statistics)");
+  else reasons.push("Outside the regional fire season");
   return { level: n > 0 ? "active" : sl, seasonLevel: sl, hotspots: args.near, maxFrp, reasons };
 }

@@ -50,12 +50,12 @@ export function errorMessageTh(e: FireCalendarError): string {
     case "validation":
       return e.message;
     case "not_covered":
-      return `พื้นที่นี้ยังไม่มีข้อมูล รุ่นนี้ครอบคลุม ${COVERED_COUNTRIES_TH}`;
+      return `No data for this area yet. This release covers ${COVERED_COUNTRIES_TH}`;
     case "not_configured":
-      return "ยังไม่ได้ตั้งค่าการดาวน์โหลดจุดไฟดิบ";
+      return "Raw hotspot download is not configured";
     case "network":
-      return "เชื่อมต่อไม่ได้";
+      return "Could not connect";
     default:
-      return "ระบบขัดข้อง";
+      return "Something went wrong on the server";
   }
 }

@@ -19,7 +19,7 @@ export async function searchPlaces(q: string, signal?: AbortSignal): Promise<Pla
   last = Date.now();
   const url = `${ENDPOINT}?${new URLSearchParams({ format: "jsonv2", q: query, limit: "6", "accept-language": "th,en" })}`;
   const r = await fetch(url, { signal: signal ?? AbortSignal.timeout(15_000) });
-  if (!r.ok) throw new Error(`ค้นหาไม่สำเร็จ (HTTP ${r.status})`);
+  if (!r.ok) throw new Error(`Search failed (HTTP ${r.status})`);
   const rows = (await r.json()) as { display_name: string; lat: string; lon: string; boundingbox: [string, string, string, string] }[];
   return rows.map((x) => ({
     name: x.display_name,

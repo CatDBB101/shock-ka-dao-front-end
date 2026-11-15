@@ -100,35 +100,35 @@ export default function Explore() {
     [data, small],
   );
   const allZero = data ? data.rows.every((r) => r.value === 0) : false;
-  const placeName = hex ? `หกเหลี่ยมรัศมี ${Math.round(hex.radiusKm).toLocaleString("en-US")} กม.` : (exampleName(box) ?? "พื้นที่ที่เลือก");
+  const placeName = hex ? `hexagon, radius ${Math.round(hex.radiusKm).toLocaleString("en-US")} km` : (exampleName(box) ?? "the selected area");
   const validationMsg = q.error?.kind === "validation" ? q.error.message : null;
 
   return (
     <>
-      <h1>สำรวจพื้นที่</h1>
-      <p className="muted">พื้นที่นี้ไฟมาเดือนไหน ปีนี้ผิดปกติไหม — ค้นหาสถานที่แล้ววาดหกเหลี่ยมบนแผนที่ หรือกรอกกรอบพิกัด</p>
+      <h1>Explore an area</h1>
+      <p className="muted">When does this area burn, and is this year unusual? Search for a place and draw a hexagon on the map, or enter a bounding box.</p>
 
-      <section className="panel stack" aria-label="แผนที่">
-        <Suspense fallback={<div className="aoi-map-wrap"><div className="aoi-map" /><p className="aoi-map-hint" role="status">กำลังโหลดแผนที่…</p></div>}>
+      <section className="panel stack" aria-label="Map">
+        <Suspense fallback={<div className="aoi-map-wrap"><div className="aoi-map" /><p className="aoi-map-hint" role="status">Loading map…</p></div>}>
           <AoiMap hexagon={ring ? hex : null} box={ring ? null : urlBox} cells={q.data?.h3} onHexagon={setHex} />
         </Suspense>
         {hexErr && <p className="error" role="alert">{hexErr}</p>}
       </section>
 
-      <section className="panel stack" aria-label="เลือกพื้นที่และช่วงเวลา" style={{ marginTop: 16 }}>
+      <section className="panel stack" aria-label="Area and period" style={{ marginTop: 16 }}>
         <details open={!hex}>
-          <summary className="small" style={{ cursor: "pointer" }}>หรือกรอกกรอบพิกัด / เลือกพื้นที่ตัวอย่าง</summary>
+          <summary className="small" style={{ cursor: "pointer" }}>Or enter a bounding box / pick an example area</summary>
           <div style={{ marginTop: 10 }}>
             <AoiForm value={urlBox} onSubmit={setBox} externalError={validationMsg} />
           </div>
         </details>
         <div className="form-grid" style={{ maxWidth: 420 }}>
           <label className="field">
-            ตั้งแต่เดือน
+            From month
             <input type="month" min="2001-01" max="2024-12" value={start} onChange={(e) => e.target.value && update({ start: e.target.value })} />
           </label>
           <label className="field">
-            ถึงเดือน
+            To month
             <input type="month" min="2001-01" max="2024-12" value={end} onChange={(e) => e.target.value && update({ end: e.target.value })} />
           </label>
         </div>
@@ -138,7 +138,7 @@ export default function Explore() {
       <section aria-live="polite" style={{ marginTop: 24 }}>
         {!box && (
           <div className="panel">
-            <p>ยังไม่ได้เลือกพื้นที่ วาดหกเหลี่ยมบนแผนที่ กรอกพิกัด หรือกดพื้นที่ตัวอย่าง:</p>
+            <p>No area selected yet. Draw a hexagon on the map, enter coordinates, or pick an example:</p>
             <div className="row">
               {EXAMPLE_AREAS.map((a) => (
                 <button key={a.id} className="btn ghost" type="button" onClick={() => setBox(a.box)}>
@@ -149,13 +149,13 @@ export default function Explore() {
           </div>
         )}
 
-        {box && !rangeErr && q.isPending && <CalendarSkeleton message="กำลังคำนวณ… ครั้งแรกอาจใช้เวลาสักครู่ (โหลดตัวประมวลผลและไฟล์ข้อมูล)" />}
+        {box && !rangeErr && q.isPending && <CalendarSkeleton message="Calculating… the first run takes a moment (loading the query engine and data files)" />}
 
         {q.isError && q.error.kind !== "validation" && (
           <LoadError error={q.error} onRetry={() => void q.refetch()}>
             {q.error.kind === "not_covered" && (
               <div className="row" style={{ marginTop: 8 }}>
-                <span className="small">ลองพื้นที่ตัวอย่าง:</span>
+                <span className="small">Try an example area:</span>
                 {EXAMPLE_AREAS.map((a) => (
                   <button key={a.id} className="btn ghost" type="button" onClick={() => setBox(a.box)}>
                     {a.name}
@@ -169,38 +169,38 @@ export default function Explore() {
         {data && (
           <div className="stack">
             <p>
-              <b className="num">{fmtCount(data.cells)}</b> ช่อง H3 · ภูมิภาคหลัก <b>{regionTh(data.region)}</b> · {start} ถึง {end}
+              <b className="num">{fmtCount(data.cells)}</b> H3 cells · main region <b>{regionTh(data.region)}</b> · {start} to {end}
             </p>
             {small && (
               <p className="alert small">
-                พื้นที่เล็ก ({data.cells} ช่อง) ตัวเลขผันผวน จึงไม่ทำเครื่องหมายเดือนวิกฤต
+                Small area ({data.cells} cells): values are noisy, so critical months are not marked
               </p>
             )}
-            {allZero && <p className="alert small">ไม่พบไฟในพื้นที่นี้ตลอดช่วงที่เลือก</p>}
+            {allZero && <p className="alert small">No fire detected in this area during the selected period</p>}
 
             <div className="grid-2">
               <div className="panel stack">
                 <div className="row" style={{ justifyContent: "space-between" }}>
-                  <div className="tabs" role="group" aria-label="มุมมองปฏิทิน">
+                  <div className="tabs" role="group" aria-label="Calendar view">
                     <button type="button" aria-pressed={!view3d} onClick={() => setView("grid")}>
-                      ตาราง
+                      Table
                     </button>
                     <button type="button" aria-pressed={view3d} onClick={() => setView("3d")}>
-                      3 มิติ
+                      3D
                     </button>
                   </div>
                 </div>
                 {view3d ? (
                   <div className="strata-panel">
-                    <div className="morph" role="group" aria-label="วิธีต่อข้อมูลสองดาวเทียม">
+                    <div className="morph" role="group" aria-label="How the two satellite records are joined">
                       <button type="button" aria-pressed={morph === "spliced"} onClick={() => setMorph("spliced")}>
-                        ต่อข้อมูลตรงๆ
+                        Naive splice
                       </button>
                       <button type="button" aria-pressed={morph === "harmonized"} onClick={() => setMorph("harmonized")}>
-                        ปรับเทียบแล้ว
+                        Calibrated
                       </button>
                     </div>
-                    <HeatStrata rows={data.rows} mode={morph} compact label={`ปฏิทินไฟ 3 มิติของ${placeName}`} />
+                    <HeatStrata rows={data.rows} mode={morph} compact label={`3D fire calendar of ${placeName}`} />
                   </div>
                 ) : (
                   <>
@@ -211,7 +211,7 @@ export default function Explore() {
                       onPick={setPicked}
                       selected={picked}
                       markCritical={!small}
-                      label={`ปฏิทินไฟของ${placeName}`}
+                      label={`Fire calendar of ${placeName}`}
                     />
                     <Legend series={series} />
                   </>
@@ -219,19 +219,19 @@ export default function Explore() {
               </div>
               <div className="stack">
                 <div className="panel" aria-live="polite">
-                  <h3>รายละเอียด</h3>
+                  <h3>Details</h3>
                   {picked ? (
                     <CellDetail row={picked} place={placeName} cells={data.cells} small={small} />
                   ) : (
-                    <p className="small muted">คลิกช่องในปฏิทินเพื่อดูรายละเอียดเดือนนั้น</p>
+                    <p className="small muted">Click a calendar cell to see that month</p>
                   )}
                 </div>
                 <div className="panel">
-                  <h3>เดือนวิกฤต</h3>
+                  <h3>Critical months</h3>
                   {small ? (
-                    <p className="small muted">ไม่แสดงสำหรับพื้นที่ที่เล็กกว่า {MIN_CELLS_FOR_CRITICAL} ช่อง</p>
+                    <p className="small muted">Not shown for areas smaller than {MIN_CELLS_FOR_CRITICAL} cells</p>
                   ) : crit.length === 0 ? (
-                    <p className="small muted">ไม่มีเดือนวิกฤตในช่วงที่เลือก</p>
+                    <p className="small muted">No critical months in the selected period</p>
                   ) : (
                     <>
                       <ul className="small" style={{ paddingLeft: 18, margin: 0 }}>
@@ -240,42 +240,42 @@ export default function Explore() {
                             <button type="button" className="btn ghost" style={{ padding: "2px 8px", margin: "2px 0" }} onClick={() => setPicked(r)}>
                               {monthTh(r.month)} {r.year}
                             </button>{" "}
-                            <span className="num">{fmtCount(r.value, r.source !== "observed")}</span> จุด · สูงกว่า {Math.round(r.pct_vs_ref ?? 0)}% ของปี
+                            <span className="num">{fmtCount(r.value, r.source !== "observed")}</span> detections · above {Math.round(r.pct_vs_ref ?? 0)}% of years
                           </li>
                         ))}
                       </ul>
                       {crit.length > 10 && (
                         <button type="button" className="btn ghost" style={{ marginTop: 8 }} onClick={() => setShowAllCrit((x) => !x)}>
-                          {showAllCrit ? "แสดงน้อยลง" : `ดูทั้งหมด (${crit.length})`}
+                          {showAllCrit ? "Show fewer" : `Show all (${crit.length})`}
                         </button>
                       )}
                     </>
                   )}
                 </div>
                 <div className="panel">
-                  <h3>ดาวน์โหลด</h3>
+                  <h3>Download</h3>
                   <p className="small muted">
-                    ปฏิทินรายเดือนของพื้นที่นี้ช่วง {start} ถึง {end} มีทั้งค่า Harmonized, MODIS ดิบ และ VIIRS วัดจริง ในไฟล์เดียว
+                    This area's monthly calendar for {start} to {end}, with harmonized, raw MODIS and measured VIIRS values in one file.
                   </p>
                   {box && <AoiCalendarCsvButton rows={data.rows} box={box} start={start} end={end} />}
                   <hr style={{ border: 0, borderTop: "1px solid var(--fc-line)", margin: "12px 0" }} />
                   <p className="small muted">
-                    จุดไฟดิบจาก NASA FIRMS ในกรอบนี้ ครั้งละไม่เกิน 60 วัน · ข้อมูลปฏิทินทั้งหมดอยู่ที่ <Link to="/data">หน้าข้อมูล</Link>
+                    Raw NASA FIRMS hotspots in this box, up to 60 days at a time · the full calendar data is on the <Link to="/data">Data page</Link>
                   </p>
-                  {hex && <p className="small muted">FIRMS รับเฉพาะกรอบสี่เหลี่ยม จึงดาวน์โหลดตามกรอบที่ครอบหกเหลี่ยมไว้</p>}
+                  {hex && <p className="small muted">FIRMS accepts rectangles only, so the download uses the box around the hexagon</p>}
                   {box && <DownloadCsvButton box={box} />}
                 </div>
               </div>
             </div>
-            {data.note && <p className="note">หมายเหตุ: {data.note}</p>}
+            {data.note && <p className="note">Note: {data.note}</p>}
             <p className="small">
-              <Link to="/evidence">ดูหลักฐานว่าตัวเลขเชื่อได้แค่ไหน →</Link>
+              <Link to="/evidence">How far can these numbers be trusted? →</Link>
             </p>
           </div>
         )}
       </section>
       <p className="small muted" style={{ marginTop: 24 }}>
-        รุ่นนี้ครอบคลุม {COVERED_COUNTRIES_TH}
+        This release covers {COVERED_COUNTRIES_TH}
       </p>
     </>
   );
@@ -285,19 +285,19 @@ function CellDetail({ row, place, cells, small }: { row: AoiRow; place: string; 
   const computed = row.source !== "observed";
   const lines = [
     computed
-      ? `${fmtCount(row.value, true)} จุด · ${SOURCE_LABEL_TH[row.source]} · ช่วงที่น่าจะเป็น ${fmtCount(row.p_lo)}–${fmtCount(row.p_hi)}`
-      : `${fmtCount(row.value)} จุด · ${SOURCE_LABEL_TH[row.source]}`,
-    `ค่าปกติเดือนนี้ (2013–2024): ${row.clim_median == null ? "–" : `${fmtCount(row.clim_median)} จุด`}`,
+      ? `${fmtCount(row.value, true)} detections · ${SOURCE_LABEL_TH[row.source]} · likely range ${fmtCount(row.p_lo)}–${fmtCount(row.p_hi)}`
+      : `${fmtCount(row.value)} detections · ${SOURCE_LABEL_TH[row.source]}`,
+    `Typical for this month (2013–2024): ${row.clim_median == null ? "–" : `${fmtCount(row.clim_median)} detections`}`,
     row.pct_vs_ref == null
-      ? "เทียบกับปีอ้างอิง: –"
-      : `สูงกว่า ${monthTh(row.month)} ปีอื่น ${Math.round(row.pct_vs_ref)}% ของปี${!small && isCritical(row) ? " → เดือนวิกฤต" : ""}`,
-    `MODIS ดิบ: ${fmtCount(row.modis)} จุด`,
-    `VIIRS วัดจริง: ${computed ? "– (ยังไม่มี VIIRS ก่อน ก.พ. 2012)" : `${fmtCount(row.value)} จุด`}`,
+      ? "Versus reference years: –"
+      : `Above ${Math.round(row.pct_vs_ref)}% of other years' ${monthTh(row.month)}${!small && isCritical(row) ? " → critical month" : ""}`,
+    `Raw MODIS: ${fmtCount(row.modis)} detections`,
+    `Measured VIIRS: ${computed ? "– (no VIIRS before Feb 2012)" : `${fmtCount(row.value)} detections`}`,
   ];
   return (
     <div className="detail">
       <b>
-        {monthTh(row.month)} {row.year} · {place} ({fmtCount(cells)} ช่อง)
+        {monthTh(row.month)} {row.year} · {place} ({fmtCount(cells)} cells)
       </b>
       {"\n"}
       {lines.join("\n")}

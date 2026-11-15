@@ -4,11 +4,11 @@ import { Link } from "react-router-dom";
 export default function Ask() {
   return (
     <>
-      <h1>ถาม FireCalendar+</h1>
+      <h1>Ask FireCalendar+</h1>
       <div className="panel">
-        <p>เร็วๆ นี้: ถามเป็นภาษาคน เช่น "ส.ค. 2022 ที่โรซาริโอไฟเยอะผิดปกติไหม" แล้วได้คำตอบที่ตัวเลขทุกตัวมาจากข้อมูลจริง</p>
+        <p>Coming soon: ask in plain language, for example "Was August 2022 unusually active around Rosario?", and get an answer where every number comes from the data.</p>
         <Link to="/explore" className="btn">
-          เปิดใน Explore
+          Open in Explore
         </Link>
       </div>
     </>

@@ -15,7 +15,7 @@ export function DownloadCsvButton({ box }: { box: Box }) {
   if (!ds.canDownloadHotspots)
     return (
       <p className="small muted">
-        ยังไม่เปิดใช้: ต้องตั้ง <code>VITE_FIRMS_MAP_KEY</code> ใน <code>.env.local</code> (ขอฟรีที่{" "}
+        Not enabled: set <code>VITE_FIRMS_MAP_KEY</code> in <code>.env.local</code> (free key from{" "}
         <a href="https://firms.modaps.eosdis.nasa.gov/api/map_key">NASA FIRMS</a>)
       </p>
     );
@@ -36,11 +36,11 @@ export function DownloadCsvButton({ box }: { box: Box }) {
     try {
       const csv = await ds.downloadHotspotsCsv(box, start, end, source);
       saveText(csv, filename);
-      const missing = csv.split("\n").filter((l) => l.startsWith("#")).length;
+      const missing = csv.split("\n").filter((l) => l.startsWith("# missing")).length;
       const n = countCsvRows(csv);
       setMsg(
-        (n === 0 ? "ดาวน์โหลดแล้ว แต่ไม่พบจุดไฟในพื้นที่และช่วงวันนี้" : `ดาวน์โหลดแล้ว (${n.toLocaleString("en-US")} จุด)`) +
-          (missing ? ` · ${missing} ช่วงโหลดไม่สำเร็จ ดูบรรทัดที่ขึ้นต้นด้วย #` : ""),
+        (n === 0 ? "Downloaded, but there were no detections in this area and date range" : `Downloaded (${n.toLocaleString("en-US")} detections)`) +
+          (missing ? ` · ${missing} range${missing === 1 ? "" : "s"} failed, see lines starting with #` : ""),
       );
     } catch (e) {
       const fe = toFireCalendarError(e);
@@ -54,15 +54,15 @@ export function DownloadCsvButton({ box }: { box: Box }) {
     <div className="stack">
       <div className="form-grid">
         <label className="field">
-          วันเริ่ม
+          Start date
           <input type="date" value={start} min="2000-11-01" onChange={(e) => setStart(e.target.value)} />
         </label>
         <label className="field">
-          วันสิ้นสุด (ไม่เกิน {MAX_HOTSPOT_DAYS} วัน)
+          End date (max {MAX_HOTSPOT_DAYS} days)
           <input type="date" value={end} max={addDays(start, MAX_HOTSPOT_DAYS - 1)} onChange={(e) => setEnd(e.target.value)} />
         </label>
         <label className="field">
-          ดาวเทียม (source)
+          Satellite source
           <select value={source} onChange={(e) => setSource(e.target.value as FirmsSource)}>
             {FIRMS_SOURCES.map((s) => (
               <option key={s}>{s}</option>
@@ -73,11 +73,11 @@ export function DownloadCsvButton({ box }: { box: Box }) {
       <div className="row">
         {href ? (
           <a className="btn" href={href} download={filename}>
-            ดาวน์โหลดจุดไฟดิบ NASA (CSV)
+            Download NASA raw hotspots (CSV)
           </a>
         ) : (
           <button className="btn" type="button" disabled={busy || Boolean(rangeErr)} onClick={download}>
-            {busy ? "กำลังดาวน์โหลด…" : "ดาวน์โหลดจุดไฟดิบ NASA (CSV)"}
+            {busy ? "Downloading…" : "Download NASA raw hotspots (CSV)"}
           </button>
         )}
         {rangeErr && <span className="error" role="alert">{rangeErr}</span>}

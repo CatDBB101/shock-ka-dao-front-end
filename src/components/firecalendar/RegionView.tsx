@@ -6,7 +6,7 @@ import { LoadError } from "./States";
 
 export function RegionTabs({ value, onChange }: { value: Region; onChange: (r: Region) => void }) {
   return (
-    <div className="tabs" role="tablist" aria-label="ภูมิภาค">
+    <div className="tabs" role="tablist" aria-label="Region">
       {REGIONS.map((r) => (
         <button key={r} role="tab" type="button" aria-selected={value === r} onClick={() => onChange(r)}>
           {regionTh(r)}
@@ -23,7 +23,7 @@ export function RegionView({ region, showModis = false }: { region: Region; show
   return (
     <div role="tabpanel" aria-label={regionTh(region)}>
       <SeasonLine season={q.data.season} />
-      <CalendarGrid rows={q.data.rows} showModis={showModis} label={`ปฏิทินไฟ ${regionTh(region)} 2001–2024`} />
+      <CalendarGrid rows={q.data.rows} showModis={showModis} label={`Fire calendar ${regionTh(region)} 2001–2024`} />
       <Legend showModis={showModis} />
     </div>
   );

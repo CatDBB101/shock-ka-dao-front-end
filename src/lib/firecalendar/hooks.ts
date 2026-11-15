@@ -1,4 +1,4 @@
-// Layer 1 — the ONLY way UI code gets data. ห้าม fetch / DuckDB / API ตรงจากคอมโพเนนต์
+// Layer 1 — the ONLY way UI code gets data. components must not fetch / query DuckDB / call the API directly
 import { useQuery } from "@tanstack/react-query";
 import type { AoiCalendar, Box, Region, YearMonth } from "./types";
 import { useDataSource } from "./provider";

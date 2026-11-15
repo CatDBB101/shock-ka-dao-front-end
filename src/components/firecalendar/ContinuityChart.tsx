@@ -2,10 +2,10 @@ import { useMemo } from "react";
 import type { CalendarRow } from "../../lib/firecalendar";
 
 const REGION_TH: Record<string, string> = {
-  africa: "แอฟริกา (แองโกลา)",
-  south_america: "อเมริกาใต้ (อาร์เจนตินา + บราซิล)",
-  canada_usa: "แคนาดา + สหรัฐฯ",
-  australia: "ออสเตรเลีย",
+  africa: "Africa (Angola)",
+  south_america: "South America (Argentina + Brazil)",
+  canada_usa: "Canada + United States",
+  australia: "Australia",
 };
 export const regionTh = (r: string) => REGION_TH[r] ?? r;
 
@@ -48,7 +48,7 @@ export function ContinuityChart({ rows, title }: { rows: CalendarRow[]; title?: 
   return (
     <figure className="fc-chart" style={{ margin: 0 }}>
       {title && <figcaption className="small" style={{ fontWeight: 600, marginBottom: 4 }}>{title}</figcaption>}
-      <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`จำนวนจุดไฟรายปี ${title ?? ""}: เส้นส้มคือค่าที่ปรับเทียบแล้ว เส้นเทาคือ MODIS ดิบ เส้นประแนวตั้งคือปี 2012 ที่ VIIRS เริ่มใช้งาน`}>
+      <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`Annual fire detections ${title ?? ""}: orange line is calibrated, grey line is raw MODIS, dashed vertical line marks 2012 when VIIRS starts`}>
         {ticks.map((t) => (
           <g key={t}>
             <line x1={L} x2={W - R} y1={y(t)} y2={y(t)} stroke="var(--fc-line)" />
@@ -61,7 +61,7 @@ export function ContinuityChart({ rows, title }: { rows: CalendarRow[]; title?: 
           <g>
             <line x1={x(seam)} x2={x(seam)} y1={T} y2={H - B} stroke="var(--fc-muted)" strokeDasharray="4 4" />
             <text x={x(seam) + 4} y={T + 10}>
-              2012 VIIRS เริ่ม
+              2012 VIIRS starts
             </text>
           </g>
         )}
@@ -77,15 +77,15 @@ export function ContinuityChart({ rows, title }: { rows: CalendarRow[]; title?: 
       <div className="fc-legend">
         <span>
           <i className="fc-swatch" style={{ background: "var(--fc-ember)", height: 3 }} />
-          หลังปรับเทียบ (value)
+          Calibrated (value)
         </span>
         <span>
           <i className="fc-swatch" style={{ background: "var(--fc-modis)", height: 3 }} />
-          MODIS ดิบ (ก่อน)
+          Raw MODIS (before)
         </span>
         <span>
           <i className="fc-swatch" style={{ background: "var(--fc-viirs)", height: 3 }} />
-          โมเดลในช่วงที่มี VIIRS (ตรวจความต่อเนื่อง)
+          Model during the VIIRS era (continuity check)
         </span>
       </div>
     </figure>

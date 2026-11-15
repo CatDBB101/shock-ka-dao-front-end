@@ -18,12 +18,12 @@ export function colourSteps(values: number[]): (v: number) => Level {
 }
 
 export const SOURCE_LABEL_TH: Record<Source, string> = {
-  observed: "VIIRS วัดจริง",
-  backcast: "แปลงจาก MODIS",
-  backcast_terra: "แปลงจาก Terra (แม่นน้อยกว่า)",
+  observed: "Measured by VIIRS",
+  backcast: "Converted from MODIS",
+  backcast_terra: "Converted from Terra (less accurate)",
 };
 
-export const LEVEL_LABEL_TH = ["ไม่มีไฟ", "น้อย", "ปานกลาง", "มาก", "มากที่สุด"] as const;
+export const LEVEL_LABEL_TH = ["No fire", "Low", "Moderate", "High", "Very high"] as const;
 
 /** Thousands separator, no decimals, "~" prefix for computed values. */
 export function fmtCount(v: number, computed = false): string {

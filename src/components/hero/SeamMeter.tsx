@@ -52,7 +52,7 @@ export function SeamMeter({ rows, mode }: { rows: StrataRow[]; mode: StrataMode 
   return (
     <div className={`seam-meter${healed ? " healed" : ""}`}>
       <span className="sr-only" role="status">
-        รอยต่อปี 2012: ยอดเฉลี่ยปี 2012–16 เป็น {ratio.toFixed(1)} เท่าของปี 2007–11
+        The 2012 seam: the 2012–16 average is {ratio.toFixed(1)}× the 2007–11 average
       </span>
       <div className="seam-figure" aria-hidden="true">
         <span className="seam-x">×</span>
@@ -60,7 +60,7 @@ export function SeamMeter({ rows, mode }: { rows: StrataRow[]; mode: StrataMode 
       </div>
       <div className="seam-text">
         <p>
-          {healed ? "หลังปรับเทียบ ไฟเฉลี่ยปี 2012–16 เทียบปี 2007–11 ต่างกันตามธรรมชาติของแต่ละปีเท่านั้น" : "ถ้าต่อข้อมูลตรงๆ ไฟเฉลี่ยปี 2012–16 จะดูมากกว่าปี 2007–11 หลายเท่า ทั้งที่เป็นเพราะเปลี่ยนดาวเทียม"}
+          {healed ? "After calibration, 2012–16 and 2007–11 differ only by natural year-to-year variation" : "Spliced naively, 2012–16 looks several times more active than 2007–11, only because the satellite changed"}
         </p>
         <div className="seam-gauge" aria-hidden="true">
           <i style={{ left: `${pos * 100}%` }} />

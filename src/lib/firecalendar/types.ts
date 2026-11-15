@@ -1,5 +1,5 @@
 // Data contract — field names and enum values match the backend files and the REST API exactly.
-// ห้ามเปลี่ยนชื่อฟิลด์ ถ้าต้องการชื่ออื่นให้แปลงในชั้น view (docs/02-data-contract.md)
+// Do not rename fields; map names in the view layer instead (docs/02-data-contract.md)
 
 export type Region = "africa" | "south_america" | "canada_usa" | "australia";
 export type Source = "observed" | "backcast" | "backcast_terra";
@@ -54,11 +54,15 @@ export interface Manifest {
   model_id: string;
   model_version: string;
   generated: string;
-  /** อย่า hardcode ชื่อไฟล์ — อ่านจากตรงนี้ (มี fallback ใน config.ts) */
+  /** Don't hardcode file names — read them from here (fallback in config.ts) */
   files: Partial<Record<"calendar_region" | "cell_month" | "cell_index", string>>;
   final_test_poisson_dev: number;
   known_limitations: string[];
   calendar_interval_ratios: Record<Region, IntervalRatio>;
+  /** Years the MODIS→VIIRS model was trained on, inclusive. Optional: older manifests don't record it. */
+  training_years?: [number, number];
+  /** Bounding box of each region as used by the backend, [minLon, minLat, maxLon, maxLat]. Optional. */
+  region_bbox?: Partial<Record<Region, [number, number, number, number]>>;
 }
 
 export interface CoverageBbox {

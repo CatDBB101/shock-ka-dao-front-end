@@ -6,7 +6,13 @@ export interface Watchpoint {
   name: string;
   /** country / area, Thai */
   area: string;
-  region: Region;
+  /**
+   * FireCalendar region whose fire-season statistics apply here. null = the point lies outside
+   * the 6 countries the calendar covers (e.g. South Sudan): no season level, hotspots still checked.
+   */
+  region: Region | null;
+  /** country name as sent by the backend (English) */
+  country?: string;
   lat: number;
   lon: number;
   /** watch circle radius */

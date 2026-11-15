@@ -51,6 +51,9 @@
   --fc-viirs: var(--aurora-400);
   --fc-modis: var(--sand-500);
   --fc-focus: var(--aurora-400);
+  --fc-viirs-ink: #08161f;
+  --fc-sim: #e3cf9f;
+  --fc-sim-ink: #1c1608;
   /* heat ramp, low → white-hot */
   --fc-h0: #1a3349;
   --fc-h1: var(--heat-1);
@@ -58,9 +61,9 @@
   --fc-h3: var(--heat-3);
   --fc-h4: var(--heat-4);
   --fc-hatch: rgba(8, 22, 31, 0.6);
-  --fc-font-head: "Trirong", "Noto Serif Thai", Georgia, serif;
-  --fc-font-body: "Anuphan", "Noto Sans Thai", system-ui, sans-serif;
-  --fc-font-num: "Anuphan", "Noto Sans Thai", system-ui, sans-serif;
+  --fc-font-head: "Newsreader", "Source Serif 4", Georgia, serif;
+  --fc-font-body: "Public Sans", "Segoe UI", system-ui, sans-serif;
+  --fc-font-num: "Public Sans", "Segoe UI", system-ui, sans-serif;
   --r-lg: 20px;
   --r-md: 10px;
   --r-sm: 5px;
@@ -80,6 +83,9 @@
     --fc-viirs: #127a6e;
     --fc-modis: #7c705f;
     --fc-focus: #127a6e;
+    --fc-viirs-ink: #ffffff;
+    --fc-sim: #5c4a26;
+    --fc-sim-ink: #ffffff;
     --fc-h0: #e1e8ea;
     --fc-h1: #f6d58a;
     --fc-h2: #f09a4a;
@@ -102,6 +108,9 @@
   --fc-viirs: #127a6e;
   --fc-modis: #7c705f;
   --fc-focus: #127a6e;
+  --fc-viirs-ink: #ffffff;
+  --fc-sim: #5c4a26;
+  --fc-sim-ink: #ffffff;
   --fc-h0: #e1e8ea;
   --fc-h1: #f6d58a;
   --fc-h2: #f09a4a;
@@ -125,8 +134,8 @@ body {
   background: var(--fc-bg);
   color: var(--fc-text);
   font-family: var(--fc-font-body);
-  font-size: 16px;
-  line-height: 1.65;
+  font-size: 17px;
+  line-height: 1.6;
   overflow-x: hidden;
 }
 h1,
@@ -141,16 +150,16 @@ h4 {
   text-wrap: balance;
 }
 h1 {
-  font-size: clamp(30px, 4.4vw, 44px);
+  font-size: clamp(32px, 4.6vw, 48px);
 }
 h2 {
-  font-size: clamp(22px, 2.6vw, 28px);
+  font-size: clamp(24px, 2.8vw, 30px);
 }
 h3 {
-  font-size: 19px;
+  font-size: 21px;
 }
 h4 {
-  font-size: 16px;
+  font-size: 17px;
 }
 p {
   margin: 0 0 1em;
@@ -182,7 +191,7 @@ code {
   color: var(--fc-muted);
 }
 .small {
-  font-size: 14px;
+  font-size: 15px;
 }
 .sr-only:not(:focus) {
   position: absolute;
@@ -256,7 +265,7 @@ code {
   color: var(--fc-muted);
   text-decoration: none;
   white-space: nowrap;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 500;
 }
 .fc-nav a:hover {
@@ -275,7 +284,7 @@ code {
 .fc-footer {
   border-top: 1px solid var(--fc-line);
   color: var(--fc-muted);
-  font-size: 14px;
+  font-size: 15px;
   background: var(--fc-bg-deep);
 }
 .fc-footer-inner {
@@ -328,7 +337,7 @@ section + section {
   padding: 8px 16px;
   border-radius: var(--r-md);
   font: inherit;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
   cursor: pointer;
   text-decoration: none;
@@ -339,8 +348,9 @@ section + section {
   border-color: var(--fc-ember);
   color: var(--fc-ember-ink);
 }
+/* hover moves toward the text colour, so it darkens on light pages and lightens on dark ones without losing contrast with the ink */
 .btn.primary:hover {
-  background: color-mix(in srgb, var(--fc-ember) 85%, white);
+  background: color-mix(in srgb, var(--fc-ember) 86%, var(--fc-ember-ink));
 }
 .btn.ghost {
   background: transparent;
@@ -352,7 +362,7 @@ section + section {
   border-color: var(--fc-muted);
 }
 .btn:disabled {
-  opacity: 0.45;
+  opacity: 0.55;
   cursor: not-allowed;
 }
 .tabs {
@@ -367,7 +377,7 @@ section + section {
   padding: 6px 13px;
   border-radius: var(--r-md);
   font: inherit;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 500;
   cursor: pointer;
 }
@@ -387,14 +397,15 @@ section + section {
 label.field {
   display: flex;
   flex-direction: column;
-  gap: 3px;
-  font-size: 13px;
-  color: var(--fc-muted);
+  gap: 4px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--fc-text);
 }
 input,
 select {
   font: inherit;
-  font-size: 15px;
+  font-size: 16px;
   padding: 8px 10px;
   border-radius: var(--r-sm);
   border: 1px solid var(--fc-line);
@@ -413,7 +424,7 @@ select:focus-visible {
 }
 .error {
   color: var(--fc-ember);
-  font-size: 14px;
+  font-size: 15px;
 }
 .alert {
   border: 1px solid var(--fc-ember);
@@ -425,12 +436,19 @@ select:focus-visible {
   border-left: 3px solid var(--fc-viirs);
   padding: 2px 0 2px 12px;
   color: var(--fc-muted);
-  font-size: 14px;
+  font-size: 15px;
 }
 
 /* ---------- home: orbit hero ---------- */
 .orbit {
-  /* always night, whatever the page theme */
+  /* always night, whatever the page theme — backgrounds included, so light-theme
+     surfaces never end up under the hero's light text */
+  --fc-bg: #0d2130;
+  --fc-bg-deep: #08161f;
+  --fc-panel: #12293a;
+  --fc-focus: #7fd6c9;
+  --fc-viirs-ink: #08161f;
+  color-scheme: dark;
   --fc-text: #ede6d6;
   --fc-muted: #a6b6c0;
   --fc-line: #2a4b64;
@@ -506,7 +524,7 @@ select:focus-visible {
   text-shadow: none;
 }
 .orbit-lede {
-  font-size: 17px;
+  font-size: 18px;
   max-width: 44ch;
   color: #d8d1c2;
 }
@@ -525,8 +543,8 @@ select:focus-visible {
   width: fit-content;
   max-width: 100%;
   padding: 4px;
-  border-radius: 14px;
-  background: rgba(8, 22, 31, 0.6);
+  border-radius: 12px;
+  background: var(--fc-bg-deep);
   border: 1px solid var(--fc-line);
 }
 .morph button {
@@ -534,7 +552,7 @@ select:focus-visible {
   background: transparent;
   color: var(--fc-muted);
   font: inherit;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
   padding: 9px 14px;
   border-radius: 10px;
@@ -545,11 +563,11 @@ select:focus-visible {
   color: #fff;
 }
 .morph button[aria-pressed="true"]:last-child {
-  background: linear-gradient(120deg, #c2412d, #f08a3c 70%, #ffd36e);
+  background: #f08a3c;
   color: #1a0d06;
 }
 .orbit-caption {
-  font-size: 14px;
+  font-size: 15px;
   color: var(--fc-muted);
   min-height: 3em;
   margin: 0;
@@ -574,7 +592,7 @@ select:focus-visible {
 }
 .strata-tip {
   text-align: center;
-  font-size: 14px;
+  font-size: 15px;
   color: #e9e2d3;
   min-height: 1.7em;
   margin: 4px auto 28px;
@@ -685,7 +703,7 @@ select:focus-visible {
   min-width: 2.3ch;
 }
 .seam-text p {
-  font-size: 14px;
+  font-size: 15px;
   color: #d8d1c2;
   margin: 0 0 10px;
 }
@@ -709,7 +727,7 @@ select:focus-visible {
 .seam-gauge span {
   position: absolute;
   top: 10px;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--fc-muted);
 }
 .seam-gauge span:last-child {
@@ -750,7 +768,7 @@ select:focus-visible {
   background: rgba(8, 22, 31, 0.7);
   color: #d8d1c2;
   font: inherit;
-  font-size: 12px;
+  font-size: 13px;
   padding: 4px 10px;
   border-radius: 8px;
   cursor: pointer;
@@ -773,7 +791,7 @@ select:focus-visible {
   margin-bottom: 8px;
 }
 .band-head p {
-  font-size: 15px;
+  font-size: 16px;
 }
 .band > .small {
   grid-column: 2;
@@ -806,7 +824,7 @@ select:focus-visible {
   grid-template-columns: minmax(0, 15em) 1fr 3.5em;
   align-items: center;
   gap: 14px;
-  font-size: 15px;
+  font-size: 16px;
 }
 .proof-row b {
   font-family: var(--fc-font-head);
@@ -849,7 +867,7 @@ select:focus-visible {
 .facts dt {
   font-family: var(--fc-font-head);
   font-weight: 600;
-  font-size: 18px;
+  font-size: 19px;
 }
 .facts dd {
   margin: 0;
@@ -869,7 +887,7 @@ select:focus-visible {
   padding: 24px 0 8px;
 }
 .hero p {
-  font-size: 18px;
+  font-size: 19px;
 }
 .claims {
   display: grid;
@@ -898,7 +916,7 @@ select:focus-visible {
   grid-template-columns: 44px repeat(12, minmax(24px, 1fr));
   gap: 2px;
   min-width: 420px;
-  font-size: 12px;
+  font-size: 13px;
 }
 .fc-cal [role="columnheader"],
 .fc-cal [role="rowheader"] {
@@ -950,6 +968,11 @@ select:focus-visible {
 .fc-cell.critical {
   box-shadow: inset 0 0 0 2px var(--fc-text);
 }
+/* observed month with an incomplete VIIRS record: dashed ring, so a low value isn't read as "quiet" */
+.fc-cell.viirs-gap {
+  outline: 2px dashed var(--fc-ember);
+  outline-offset: -2px;
+}
 .fc-cell.selected {
   outline: 2px solid var(--fc-focus);
   outline-offset: 1px;
@@ -972,7 +995,7 @@ select:focus-visible {
 }
 .fc-tip {
   min-height: 1.6em;
-  font-size: 14px;
+  font-size: 15px;
   margin-top: 10px;
   font-variant-numeric: tabular-nums;
 }
@@ -982,7 +1005,7 @@ select:focus-visible {
   display: flex;
   flex-wrap: wrap;
   gap: 6px 18px;
-  font-size: 13px;
+  font-size: 14px;
   color: var(--fc-muted);
   margin-top: 12px;
 }
@@ -1006,7 +1029,7 @@ select:focus-visible {
 }
 .fc-chart text {
   font-family: var(--fc-font-num);
-  font-size: 11px;
+  font-size: 12px;
   fill: var(--fc-muted);
 }
 
@@ -1017,7 +1040,7 @@ select:focus-visible {
 table.fc-table {
   border-collapse: collapse;
   width: 100%;
-  font-size: 15px;
+  font-size: 16px;
 }
 .fc-table th,
 .fc-table td {
@@ -1028,20 +1051,20 @@ table.fc-table {
 .fc-table th {
   color: var(--fc-muted);
   font-weight: 500;
-  font-size: 13px;
+  font-size: 14px;
 }
 .fc-table td.num,
 .fc-table th.num {
   text-align: right;
 }
 .detail {
-  font-size: 14px;
+  font-size: 15px;
   white-space: pre-line;
   font-variant-numeric: tabular-nums;
 }
 .detail b {
   font-family: var(--fc-font-head);
-  font-size: 17px;
+  font-size: 18px;
 }
 .figs {
   display: grid;
@@ -1059,7 +1082,7 @@ table.fc-table {
   background: #fff;
 }
 .figs figcaption {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--fc-muted);
   margin-top: 6px;
 }
@@ -1093,7 +1116,7 @@ ol.steps li {
   color: #ede6d6;
   padding: 6px 12px;
   border-radius: var(--r-md);
-  font-size: 13px;
+  font-size: 14px;
   pointer-events: none;
   max-width: calc(100% - 100px);
   text-align: center;
@@ -1121,14 +1144,14 @@ ol.steps li {
 .place-list .btn {
   min-height: 0;
   padding: 4px 10px;
-  font-size: 13px;
+  font-size: 14px;
 }
 
 /* ---------- mode switch (Scientist ⇄ Firefighter) ---------- */
 .fc-mode-switch {
   position: relative;
   display: inline-grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   margin-left: auto;
   flex: none;
   padding: 3px;
@@ -1136,37 +1159,60 @@ ol.steps li {
   border-radius: 12px;
   background: var(--fc-bg-deep);
   color: var(--fc-muted);
-  font: inherit;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
-  cursor: pointer;
 }
 .fc-mode-thumb {
   position: absolute;
   top: 3px;
   bottom: 3px;
   left: 3px;
-  width: calc(50% - 3px);
+  width: calc((100% - 6px) / 3);
   border-radius: 9px;
   background: var(--fc-viirs);
+  transform: translateX(calc(var(--mode-i, 0) * 100%));
   transition: transform 0.25s cubic-bezier(0.3, 0.7, 0.2, 1), background 0.25s;
 }
-.fc-mode-switch.is-ff .fc-mode-thumb {
-  transform: translateX(100%);
-  background: linear-gradient(120deg, var(--fc-h2), var(--fc-h3));
+.fc-mode-switch.is-firefighter .fc-mode-thumb {
+  background: var(--fc-ember);
+}
+.fc-mode-switch.is-simulator .fc-mode-thumb {
+  background: var(--fc-sim);
 }
 .fc-mode-opt {
   position: relative;
+  appearance: none;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
   padding: 5px 12px;
   text-align: center;
   white-space: nowrap;
+  cursor: pointer;
+  border-radius: 9px;
   transition: color 0.25s;
 }
-.fc-mode-switch:not(.is-ff) .fc-mode-opt:nth-of-type(2) {
-  color: var(--fc-bg);
+.fc-mode-switch.is-scientist .fc-mode-opt[aria-checked="true"] {
+  color: var(--fc-viirs-ink);
 }
-.fc-mode-switch.is-ff .fc-mode-opt:nth-of-type(3) {
-  color: #fff;
+.fc-mode-switch.is-firefighter .fc-mode-opt[aria-checked="true"] {
+  color: var(--fc-ember-ink);
+}
+.fc-mode-switch.is-simulator .fc-mode-opt[aria-checked="true"] {
+  color: var(--fc-sim-ink);
+}
+.fc-mode-opt:focus-visible {
+  outline: 2px solid var(--fc-focus);
+  outline-offset: 1px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .fc-mode-thumb {
+    transition: none;
+  }
+}
+.fc-role-bar.is-simulator {
+  background: color-mix(in srgb, var(--fc-sim) 14%, var(--fc-panel-2));
 }
 @media (max-width: 560px) {
   .fc-header-inner {
@@ -1235,7 +1281,7 @@ ol.steps li {
   display: inline-block;
   padding: 2px 10px;
   border-radius: var(--r-sm);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   white-space: nowrap;
   border: 1px solid var(--ff-c);
@@ -1243,9 +1289,9 @@ ol.steps li {
   color: var(--fc-text);
 }
 .ff-badge.lvl-active {
-  background: linear-gradient(120deg, var(--fc-h2), var(--fc-h3));
-  border-color: transparent;
-  color: #fff;
+  background: var(--fc-ember);
+  border-color: var(--fc-ember);
+  color: var(--fc-ember-ink);
 }
 .ff-bars {
   display: grid;
@@ -1260,7 +1306,7 @@ ol.steps li {
   justify-content: flex-end;
   align-items: center;
   height: 100%;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--fc-muted);
 }
 .ff-bar i {
@@ -1372,7 +1418,7 @@ ol.steps li {
 .bias-bar b {
   position: relative;
   margin-left: auto;
-  font-size: 14px;
+  font-size: 15px;
 }
 
 /* ---------- evidence: light-table gallery ---------- */
@@ -1407,7 +1453,7 @@ ol.steps li {
 }
 .lt-head p {
   margin: 0;
-  font-size: 15px;
+  font-size: 16px;
 }
 .lt-grid {
   list-style: none;
@@ -1467,7 +1513,7 @@ ol.steps li {
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
-  font-size: 13px;
+  font-size: 14px;
 }
 .lt-step {
   display: inline-grid;
@@ -1479,7 +1525,7 @@ ol.steps li {
   color: var(--ocean-900);
   font-family: var(--fc-font-head);
   font-weight: 700;
-  font-size: 14px;
+  font-size: 15px;
 }
 .lt-chapter {
   color: var(--ch);
@@ -1520,7 +1566,7 @@ ol.steps li {
 }
 .lt-take {
   color: var(--fc-muted);
-  font-size: 15px;
+  font-size: 16px;
   max-width: 70ch;
 }
 @media (max-width: 760px) {
@@ -1591,7 +1637,7 @@ ol.steps li {
 }
 .lt-count {
   color: #a6b6c0;
-  font-size: 14px;
+  font-size: 15px;
 }
 .lt-close,
 .lt-nav {
@@ -1605,7 +1651,7 @@ ol.steps li {
   cursor: pointer;
 }
 .lt-close {
-  font-size: 16px;
+  font-size: 17px;
 }
 .lt-nav {
   font-size: 22px;
@@ -1656,19 +1702,19 @@ ol.steps li {
   background: rgba(8, 22, 31, 0.82);
   color: #ede6d6;
   font: inherit;
-  font-size: 12px;
+  font-size: 13px;
   padding: 4px 10px;
   border-radius: 8px;
   cursor: pointer;
 }
 .lt-notes h3 {
-  font-size: 16px;
+  font-size: 17px;
   margin: 18px 0 6px;
 }
 .lt-notes ul {
   margin: 0;
   padding-left: 18px;
-  font-size: 14px;
+  font-size: 15px;
   color: #d8d1c2;
 }
 .lt-notes li + li {
@@ -1676,7 +1722,7 @@ ol.steps li {
 }
 .lt-take-lg {
   font-family: var(--fc-font-head);
-  font-size: 19px;
+  font-size: 21px;
   line-height: 1.45;
   margin: 0;
   padding-left: 12px;
@@ -1686,7 +1732,7 @@ ol.steps li {
   margin: 18px 0 12px;
   display: grid;
   gap: 8px;
-  font-size: 13px;
+  font-size: 14px;
 }
 .lt-prov div {
   display: grid;
@@ -1743,6 +1789,231 @@ ol.steps li {
   .lt-card,
   .lt-card::after,
   .lt-print {
+    transition: none;
+  }
+}
+
+/* ---- fire spread simulator (/spread) ---- */
+.spread-layout {
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  align-items: start;
+}
+@media (max-width: 860px) {
+  .spread-layout {
+    grid-template-columns: 1fr;
+  }
+}
+.field-inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+}
+.spread-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 1px;
+  background: var(--fc-line);
+  border: 1px solid var(--fc-line);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+}
+.spread-stats > div {
+  background: var(--fc-panel);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.spread-stats b {
+  font-size: 1.35rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.spread-stats span {
+  font-size: 0.85rem;
+  color: var(--fc-muted);
+}
+
+/* ---- role bar: says which role's pages you are on ---- */
+.fc-role-bar {
+  border-bottom: 1px solid var(--fc-line);
+  background: var(--fc-panel-2);
+  font-size: 0.88rem;
+}
+.fc-role-bar.is-firefighter {
+  background: color-mix(in srgb, var(--fc-ember) 14%, var(--fc-panel-2));
+}
+.fc-role-bar-inner {
+  max-width: 1200px;
+  margin: auto;
+  padding: 6px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  align-items: baseline;
+}
+.fc-role-bar-inner span {
+  color: var(--fc-muted);
+}
+
+/* ---- simulator (/simulator) ---- */
+.sim-map {
+  height: min(70vh, 620px);
+}
+.sim-time {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+.sim-time input {
+  width: 100%;
+}
+.sim-slider input {
+  width: 100%;
+}
+.sim-weather {
+  border: 1px solid var(--fc-line);
+  border-radius: var(--r-md);
+  padding: 10px 12px;
+  margin: 0;
+}
+.sim-weather legend {
+  padding: 0 6px;
+  font-weight: 600;
+}
+.sim-stats {
+  grid-template-columns: repeat(auto-fit, minmax(118px, 1fr));
+}
+
+/* ---- site loader (once per session) — a single dark look on purpose, every colour set explicitly ---- */
+.fc-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px))
+    max(16px, env(safe-area-inset-left, 0px));
+  background: radial-gradient(120% 90% at 50% 110%, #2a1410 0%, #0b1a26 55%, #071219 100%);
+  color: #ede6d6;
+  color-scheme: dark;
+  transition: opacity 0.45s var(--ease-out), visibility 0.45s;
+}
+.fc-loader.is-leaving {
+  opacity: 0;
+  visibility: hidden;
+}
+.fc-loader-inner {
+  width: min(440px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.fc-loader-brand {
+  margin: 0 0 6px;
+  font-family: var(--fc-font-head);
+  font-size: clamp(34px, 7vw, 46px);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.fc-loader-brand span {
+  color: #f0703a;
+}
+.fc-loader-bar {
+  appearance: none;
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 10px;
+  padding: 0;
+  border: 1px solid #2a4b64;
+  border-radius: 999px;
+  background: #0d2130;
+  overflow: hidden;
+  cursor: pointer;
+}
+.fc-loader-fill {
+  position: absolute;
+  inset: 0;
+  transform-origin: left center;
+  background: linear-gradient(90deg, #c2412d, #f08a3c 70%, #ffd36e);
+  transition: transform 0.55s cubic-bezier(0.3, 0.7, 0.2, 1);
+}
+.fc-loader-bar.slipped .fc-loader-fill {
+  transition-duration: 0.25s;
+  animation: fc-loader-shake 0.32s ease-in-out;
+}
+/* the stall: a little glint keeps sweeping the bar at 99 % as if trying */
+.fc-loader-stuck {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 245, 226, 0.55) 50%, transparent 100%);
+  width: 30%;
+  animation: fc-loader-glint 0.9s linear infinite;
+}
+.fc-loader-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+}
+.fc-loader-msg {
+  margin: 0;
+  min-height: 2.6em;
+  font-size: 17px;
+  color: #d9d2c2;
+}
+.fc-loader-pct {
+  flex: none;
+  font-size: 17px;
+  font-weight: 600;
+  color: #ffd36e;
+}
+.fc-loader-skip {
+  align-self: flex-start;
+  margin-top: 6px;
+  appearance: none;
+  border: 1px solid #3b5a72;
+  background: transparent;
+  color: #ede6d6;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 7px 14px;
+  border-radius: var(--r-md);
+  cursor: pointer;
+}
+.fc-loader-skip:hover {
+  border-color: #a6b6c0;
+}
+.fc-loader-skip:focus-visible {
+  outline: 3px solid #7fd6c9;
+  outline-offset: 2px;
+}
+@keyframes fc-loader-glint {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(340%);
+  }
+}
+@keyframes fc-loader-shake {
+  0%,
+  100% {
+    translate: 0;
+  }
+  25% {
+    translate: -4px;
+  }
+  75% {
+    translate: 3px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fc-loader,
+  .fc-loader-fill {
     transition: none;
   }
 }

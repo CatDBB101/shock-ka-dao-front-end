@@ -17,11 +17,11 @@ export class PageErrorBoundary extends Component<{ children: ReactNode }, State>
     if (!this.state.error) return this.props.children;
     return (
       <div className="alert" role="alert">
-        <h2>เกิดข้อผิดพลาด</h2>
-        <p>หน้านี้แสดงผลไม่สำเร็จ ลองโหลดใหม่อีกครั้ง</p>
+        <h2>Something went wrong</h2>
+        <p>This page failed to render. Try reloading it.</p>
         <p className="small muted">{this.state.error.message}</p>
         <button className="btn" type="button" onClick={() => window.location.reload()}>
-          โหลดหน้าใหม่
+          Reload page
         </button>
       </div>
     );

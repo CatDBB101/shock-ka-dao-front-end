@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { DEFAULT_MODE, MODE_LABEL, modeForPath, parseMode, readStoredMode, storeMode, type AppMode } from "./mode";
+import { DEFAULT_MODE, homeRedirect, MODE_LABEL, modeForPath, parseMode, readStoredMode, storeMode, type AppMode } from "./mode";
 
 interface ModeCtx {
   mode: AppMode;
@@ -20,12 +20,22 @@ export function ModeProvider({ children }: { children: ReactNode }) {
   // follow the route: /watch → firefighter, /explore and /data → scientist; shared pages keep the chosen mode
   const forcedNow = modeForPath(loc.pathname);
   const mode = forcedNow ?? chosen;
-  if (forcedNow && forcedNow !== chosen) setState(forcedNow); // remember it for shared pages (render-phase update, no effect loop)
+  // remember the route's mode for shared pages — only when the route changes. A render-phase update
+  // here used to undo a switch made on a role page (it ran before the navigation to the new home landed).
+  useEffect(() => {
+    if (forcedNow) setState(forcedNow);
+  }, [forcedNow]);
 
   useEffect(() => {
     storeMode(mode);
     document.documentElement.dataset.mode = mode;
   }, [mode]);
+
+  // the root is the scientist home; a firefighter landing there goes to their own home
+  const redirect = homeRedirect(loc.pathname, mode);
+  useEffect(() => {
+    if (redirect) navigate(`${redirect}${loc.search}`, { replace: true });
+  }, [redirect, loc.search, navigate]);
 
   const setMode = useCallback(
     (m: AppMode, go = true) => {

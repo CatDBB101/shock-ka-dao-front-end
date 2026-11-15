@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "typecheck": "tsc -b --noEmit",
     "test": "vitest run",
-    "data:sync": "node scripts/sync-data.mjs"
+    "data:sync": "node scripts/sync-data.mjs",
+    "canopy:build": "node scripts/canopy/build-canopy.mjs"
   },
   "dependencies": {
     "@duckdb/duckdb-wasm": "^1.29.0",

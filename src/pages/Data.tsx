@@ -59,60 +59,60 @@ export default function Data() {
 
   return (
     <>
-      <h1>ข้อมูล</h1>
-      <p className="muted">เอาข้อมูลไปใช้ต่อได้ทันที ทุกตัวเลขเป็นจำนวนจุดไฟที่ VIIRS S-NPP (375 ม.) น่าจะตรวจพบ เฉพาะไฟพืชพรรณ รวมกลางวันและกลางคืน</p>
+      <h1>Data</h1>
+      <p className="muted">Ready to reuse. Every number is the count of vegetation-fire detections VIIRS S-NPP (375 m) would make, day and night combined.</p>
       <div className="table-scroll">
         <table className="fc-table">
           <thead>
             <tr>
-              <th>รายการ</th>
-              <th>ลิงก์ / ปุ่ม</th>
-              <th>หมายเหตุ</th>
+              <th>Item</th>
+              <th>Link / action</th>
+              <th>Notes</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>ปฏิทินภูมิภาค (JSON)</td>
+              <td>Regional calendar (JSON)</td>
               <td>{base ? <a href={`${base}/${file("calendar_region")}`}>{file("calendar_region")}</a> : <a href={`${config.api}/v1/calendar/region?region=africa`}>/v1/calendar/region</a>}</td>
-              <td>340 KB · 1,152 แถว</td>
+              <td>340 KB · 1,152 rows</td>
             </tr>
             <tr>
-              <td>ปฏิทินภูมิภาค (CSV)</td>
+              <td>Regional calendar (CSV)</td>
               <td>
                 <button className="btn" type="button" disabled={want} onClick={failed ? retry : () => setWant(true)}>
-                  {want ? "กำลังเตรียม…" : failed ? "ลองใหม่" : "ดาวน์โหลด CSV"}
+                  {want ? "Preparing…" : failed ? "Retry" : "Download CSV"}
                 </button>
-                {failed && !want && <span className="error" role="alert"> โหลดไม่สำเร็จ ({errorMessageTh(toFireCalendarError(regions.find((q) => q.error)?.error))})</span>}
+                {failed && !want && <span className="error" role="alert"> Failed to load ({errorMessageTh(toFireCalendarError(regions.find((q) => q.error)?.error))})</span>}
               </td>
-              <td>สร้างในเบราว์เซอร์ เปิดใน Excel ได้</td>
+              <td>Built in the browser, opens in Excel</td>
             </tr>
             <tr>
-              <td>ข้อมูลรายช่อง (Parquet)</td>
+              <td>Per-cell data (Parquet)</td>
               <td>
                 {base ? (
                   <>
                     <a href={`${base}/${file("cell_month")}`}>{file("cell_month")}</a> · <a href={`${base}/${file("cell_index")}`}>{file("cell_index")}</a>
                   </>
                 ) : (
-                  "ใช้ /v1/calendar/aoi"
+                  "Use /v1/calendar/aoi"
                 )}
               </td>
-              <td>41 MB · H3 r5 × เดือน (เก็บแบบบาง)</td>
+              <td>41 MB · H3 r5 × month (sparse)</td>
             </tr>
             <tr>
               <td>API</td>
-              <td>{ds.mode === "api" ? <a href={`${config.api}/docs`}>{config.api}/docs</a> : <span className="muted">ยังไม่ deploy (โหมด {ds.mode})</span>}</td>
-              <td>FastAPI · GET อย่างเดียว</td>
+              <td>{ds.mode === "api" ? <a href={`${config.api}/docs`}>{config.api}/docs</a> : <span className="muted">Not deployed yet (mode {ds.mode})</span>}</td>
+              <td>FastAPI · GET only</td>
             </tr>
             <tr>
-              <td>เลขรุ่น</td>
+              <td>Version</td>
               <td className="num">
                 {meta.data ? `${meta.data.data_version} · ${meta.data.model_id} · ${meta.data.generated}` : "…"}
               </td>
-              <td>ต่อท้าย URL เพื่อล้าง cache เมื่อข้อมูลเปลี่ยน</td>
+              <td>Append to URLs to bust caches when the data changes</td>
             </tr>
             <tr>
-              <td>การอ้างอิง</td>
+              <td>Citation</td>
               <td colSpan={2}>NASA FIRMS (MODIS C6.1, VIIRS 375 m), MCD12C1 · FireCalendar+ v3</td>
             </tr>
           </tbody>
@@ -120,10 +120,10 @@ export default function Data() {
       </div>
 
       <section aria-labelledby="raw" className="panel stack" style={{ marginTop: 32 }}>
-        <h2 id="raw">จุดไฟดิบ NASA (CSV)</h2>
+        <h2 id="raw">NASA raw hotspots (CSV)</h2>
         {ds.canDownloadHotspots && (
           <label className="field" style={{ maxWidth: 360 }}>
-            พื้นที่
+            Area
             <select
               value={EXAMPLE_AREAS.findIndex((a) => a.box === area)}
               onChange={(e) => setArea(EXAMPLE_AREAS[Number(e.target.value)]!.box)}

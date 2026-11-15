@@ -11,7 +11,7 @@ import { hotspotsNear, NRT_SOURCES, parseFirmsCsv, type Hotspot } from "./risk";
 import type { Subscription, Watchpoint } from "./types";
 
 let service: ReturnType<typeof createAlertService> | null = null;
-export const alertService = () => (service ??= createAlertService(config.alertsApi));
+export const alertService = () => (service ??= createAlertService(config.alertsApi, config.backendApi, config.watchRadiusKm));
 
 const EMAIL_KEY = "fc.ff.email.v1";
 
@@ -38,7 +38,7 @@ export function useStoredEmail(): [string, (e: string) => void] {
 
 export function useWatchpoints() {
   return useQuery<Watchpoint[], FireCalendarError>({
-    queryKey: ["watch", "points", alertService().kind],
+    queryKey: ["watch", "points", alertService().kind, alertService().watchpointSource],
     queryFn: async () => {
       try {
         return await alertService().listWatchpoints();
@@ -127,6 +127,7 @@ export function useRecentHotspots(points: Watchpoint[]) {
       });
     });
     return { byId: m, enabled };
+    // results is a new array every render; key on what changes
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [points, enabled, ...results.map((r) => r.dataUpdatedAt), ...results.map((r) => r.status)]);
+  }, [points, enabled, results.map((r) => `${r.status}:${r.dataUpdatedAt}`).join(",")]);
 }

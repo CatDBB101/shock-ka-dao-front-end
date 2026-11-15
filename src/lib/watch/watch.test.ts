@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { assessWatchpoint, hotspotsNear, inSeason, monthDist, parseFirmsCsv, seasonLevel } from "./risk";
 import { validateEmail, validateWatchpoints } from "./alerts";
 import { circleBox } from "./hooks";
-import { modeForPath, parseMode } from "../mode/mode";
+import { homeRedirect, modeForPath, parseMode } from "../mode/mode";
 import { haversineKm } from "../firecalendar/geo";
 import { aoiToCsv } from "../../components/firecalendar/SeriesTools";
 import { seriesValue } from "../../components/firecalendar/CalendarGrid";
@@ -72,7 +72,7 @@ describe("assessWatchpoint", () => {
     const s = assessWatchpoint({ month: 11, season: SOUTH_AMERICA, near: null });
     expect(s.level).toBe("elevated");
     expect(s.hotspots).toBeNull();
-    expect(s.reasons.some((r) => r.includes("จุดความร้อน"))).toBe(false);
+    expect(s.reasons.some((r) => r.includes("detected"))).toBe(false);
   });
 });
 
@@ -106,7 +106,17 @@ describe("mode", () => {
     expect(modeForPath("/watch")).toBe("firefighter");
     expect(modeForPath("/explore/")).toBe("scientist");
     expect(modeForPath("/evidence")).toBeNull();
-    expect(modeForPath("/")).toBeNull();
+    expect(modeForPath("/")).toBeNull(); // scientist home, but must not override a firefighter's mode
+    expect(homeRedirect("/", "firefighter")).toBe("/watch");
+    expect(homeRedirect("/", "scientist")).toBeNull();
+    expect(homeRedirect("/watch", "firefighter")).toBeNull();
+    expect(parseMode("simulator")).toBe("simulator");
+    expect(modeForPath("/simulator")).toBe("simulator");
+    expect(homeRedirect("/", "simulator")).toBe("/simulator");
+    expect(modeForPath("/data")).toBe("scientist");
+    expect(modeForPath("/spread")).toBe("firefighter");
+    expect(modeForPath("/about")).toBeNull();
+    expect(modeForPath("/nope")).toBeNull();
   });
 });
 

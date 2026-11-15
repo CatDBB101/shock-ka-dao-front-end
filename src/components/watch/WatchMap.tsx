@@ -98,16 +98,17 @@ export default function WatchMap({ points, hotspots, selectedId, onSelect }: Wat
     const m = mapRef.current;
     const p = points.find((x) => x.id === selectedId);
     if (m && ready && p) m.flyTo({ center: [p.lon, p.lat], zoom: Math.max(5, 9 - Math.log2(p.radiusKm / 10)), duration: 800 });
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- only when the selection changes
+    // only when the selection changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedId, ready]);
 
-  if (err) return <p className="alert small">แสดงแผนที่ไม่ได้ ({err}) — ใช้รายการด้านล่างแทนได้</p>;
+  if (err) return <p className="alert small">Can't show the map ({err}). Use the list below instead</p>;
   return (
     <div className="aoi-map-wrap">
-      <div ref={el} className="aoi-map" role="region" aria-label="แผนที่จุดเฝ้าระวัง" />
+      <div ref={el} className="aoi-map" role="region" aria-label="Watchpoint map" />
       {!ready && (
         <p className="aoi-map-hint" role="status">
-          กำลังโหลดแผนที่…
+          Loading map…
         </p>
       )}
     </div>

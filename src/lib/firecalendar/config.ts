@@ -18,6 +18,10 @@ export const config = {
   featureAsk: env.VITE_FC_FEATURE_ASK === "true",
   /** Firefighter alerts backend (docs/adr/ADR-016). Empty → demo mode: subscriptions kept in this browser, no email. */
   alertsApi: (env.VITE_FC_ALERTS_API || "").replace(/\/+$/, ""),
+  /** Main backend (Node, e.g. http://localhost:3000/api). Set → watchpoints come from `GET {backendApi}/watchpoint`. */
+  backendApi: (env.VITE_FC_BACKEND_API || "").replace(/\/+$/, ""),
+  /** Watch radius for backend watchpoints, which are bare points (km). */
+  watchRadiusKm: Number(env.VITE_FC_WATCH_RADIUS_KM) > 0 ? Number(env.VITE_FC_WATCH_RADIUS_KM) : 25,
 } as const;
 
 /** Default file names, used when manifest.files is missing a key or points at a glob. */
@@ -35,4 +39,4 @@ export const CRITICAL_PCT = 90;
 export const MIN_CELLS_FOR_CRITICAL = 20;
 export const MAX_HOTSPOT_DAYS = 60;
 
-export const COVERED_COUNTRIES_TH = "แองโกลา อาร์เจนตินา บราซิล แคนาดา สหรัฐฯ และออสเตรเลีย";
+export const COVERED_COUNTRIES_TH = "Angola, Argentina, Brazil, Canada, the United States and Australia";

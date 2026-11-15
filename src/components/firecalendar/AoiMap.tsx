@@ -131,7 +131,8 @@ export default function AoiMap({ hexagon, box, cells, onHexagon }: AoiMapProps) 
     map.on("mouseup", end);
     map.on("touchend", end);
     return () => map.remove();
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- create once
+    // create once
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // ---- cursor + satellite toggle
@@ -163,7 +164,8 @@ export default function AoiMap({ hexagon, box, cells, onHexagon }: AoiMapProps) 
       const lats = ring.map((p) => p[1]);
       m.fitBounds([[Math.min(...lons), Math.min(...lats)], [Math.max(...lons), Math.max(...lats)]], { padding: 40, duration: 600, maxZoom: 10 });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- keyed on aoiKey
+    // keyed on aoiKey
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [aoiKey, ready]);
 
   // ---- H3 cell outlines of the result
@@ -218,23 +220,23 @@ export default function AoiMap({ hexagon, box, cells, onHexagon }: AoiMapProps) 
             type="search"
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="ค้นหาสถานที่ เช่น Rosario, Mato Grosso, Alberta"
-            aria-label="ค้นหาสถานที่บนแผนที่"
+            placeholder="Search a place, e.g. Rosario, Mato Grosso, Alberta"
+            aria-label="Search for a place on the map"
             style={{ flex: 1, minWidth: 0 }}
           />
           <button className="btn ghost" type="submit" disabled={searching || !q.trim()}>
-            {searching ? "กำลังค้นหา…" : "ค้นหา"}
+            {searching ? "Searching…" : "Search"}
           </button>
         </form>
         <button className={`btn${drawing ? " primary" : ""}`} type="button" aria-pressed={drawing} onClick={() => setDrawing((d) => !d)} disabled={!ready}>
-          {drawing ? "ยกเลิกการวาด" : "⬡ วาดหกเหลี่ยม"}
+          {drawing ? "Cancel drawing" : "Draw hexagon"}
         </button>
-        <div className="tabs" role="group" aria-label="พื้นหลังแผนที่">
+        <div className="tabs" role="group" aria-label="Basemap">
           <button type="button" aria-pressed={!satellite} onClick={() => setSatellite(false)}>
-            แผนที่
+            Map
           </button>
           <button type="button" aria-pressed={satellite} onClick={() => setSatellite(true)}>
-            ดาวเทียม
+            Satellite
           </button>
         </div>
       </div>
@@ -243,36 +245,36 @@ export default function AoiMap({ hexagon, box, cells, onHexagon }: AoiMapProps) 
       {results && (
         <div className="panel" style={{ padding: 8 }}>
           {results.length === 0 ? (
-            <p className="small muted" style={{ margin: 4 }}>ไม่พบสถานที่</p>
+            <p className="small muted" style={{ margin: 4 }}>No places found</p>
           ) : (
             <ul className="place-list">
               {results.map((p) => (
                 <li key={`${p.lat},${p.lon},${p.name}`}>
                   <span className="small">{p.name}</span>
                   <span className="row">
-                    <button type="button" className="btn ghost" onClick={() => flyTo(p)}>ไปที่นี่</button>
-                    <button type="button" className="btn ghost" onClick={() => useAsHexagon(p)}>ใช้เป็นพื้นที่</button>
+                    <button type="button" className="btn ghost" onClick={() => flyTo(p)}>Go here</button>
+                    <button type="button" className="btn ghost" onClick={() => useAsHexagon(p)}>Use as area</button>
                   </span>
                 </li>
               ))}
             </ul>
           )}
-          <p className="small muted" style={{ margin: "4px 4px 0" }}>ค้นหาโดย OpenStreetMap Nominatim</p>
+          <p className="small muted" style={{ margin: "4px 4px 0" }}>Search by OpenStreetMap Nominatim</p>
         </div>
       )}
 
       <div className="aoi-map-wrap">
-        <div ref={el} className="aoi-map" role="application" aria-label="แผนที่ กดปุ่มวาดหกเหลี่ยม แล้วกดค้างที่จุดศูนย์กลางและลากออกเพื่อกำหนดขนาด" />
-        {mapErr && <div className="aoi-map-msg alert">แผนที่ใช้ไม่ได้ในเบราว์เซอร์นี้ ({mapErr}) ใช้ช่องกรอกพิกัดด้านล่างแทนได้</div>}
+        <div ref={el} className="aoi-map" role="application" aria-label="Map. Press Draw hexagon, then press and hold at the centre and drag outward to set the size" />
+        {mapErr && <div className="aoi-map-msg alert">The map can't run in this browser ({mapErr}). Use the coordinate form below instead</div>}
         {drawing && (
           <div className="aoi-map-hint" role="status">
-            {liveKm ? `รัศมี ${Math.round(liveKm).toLocaleString("en-US")} กม.` : "กดค้างที่จุดศูนย์กลาง แล้วลากออกเพื่อกำหนดขนาดหกเหลี่ยม"}
+            {liveKm ? `Radius ${Math.round(liveKm).toLocaleString("en-US")} km` : "Press and hold at the centre, then drag outward to size the hexagon"}
           </div>
         )}
       </div>
       <p className="small muted" style={{ margin: 0 }}>
-        เลือกช่องข้อมูล H3 ที่จุดกึ่งกลางอยู่ในหกเหลี่ยม (เส้นสีส้มบนแผนที่) · รัศมี {HEX_MIN_KM}–{HEX_MAX_KM} กม. · มีข้อมูลเฉพาะ{" "}
-        แองโกลา อาร์เจนตินา บราซิล แคนาดา สหรัฐฯ และออสเตรเลีย
+        Selects the H3 data cells whose centres fall inside the hexagon (orange outline) · radius {HEX_MIN_KM}–{HEX_MAX_KM} km · data available only for{" "}
+        Angola, Argentina, Brazil, Canada, the United States and Australia
       </p>
     </div>
   );

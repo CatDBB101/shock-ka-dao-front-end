@@ -25,10 +25,10 @@ export function EvidenceGallery() {
 
   return (
     <>
-      <ol className="lt-grid" aria-label="กราฟหลักฐาน เรียงตามลำดับเรื่อง">
+      <ol className="lt-grid" aria-label="Evidence figures, in story order">
         {FIGURES.map((f, i) => (
           <li key={f.id} className={`lt-item ${f.w / f.h > 3 ? "is-wide" : "is-narrow"} ch-${f.chapter}`}>
-            <button type="button" className="lt-card" onClick={(e) => show(i, e.currentTarget)} aria-label={`เปิดกราฟ ${i + 1}: ${f.title}`}>
+            <button type="button" className="lt-card" onClick={(e) => show(i, e.currentTarget)} aria-label={`Open figure ${i + 1}: ${f.title}`}>
               <span className="lt-meta">
                 <span className="lt-step">{i + 1}</span>
                 <span className="lt-chapter">{CHAPTER_TH[f.chapter]}</span>
@@ -85,7 +85,7 @@ function Viewer({ index, onIndex, onClose }: { index: number; onIndex: (i: numbe
         </span>
         <span className="lt-chapter">{CHAPTER_TH[f.chapter]}</span>
         <h2 id="lt-box-title">{f.title}</h2>
-        <button type="button" className="lt-close" onClick={onClose} aria-label="ปิด">
+        <button type="button" className="lt-close" onClick={onClose} aria-label="Close">
           ✕
         </button>
       </header>
@@ -93,16 +93,16 @@ function Viewer({ index, onIndex, onClose }: { index: number; onIndex: (i: numbe
       <div className="lt-view-body">
         <div className={`lt-stage${zoom ? " is-zoom" : ""}`}>
           <button type="button" className="lt-zoom" onClick={() => setZoom((z) => !z)} aria-pressed={zoom}>
-            {zoom ? "ย่อให้พอดี" : "ขยายขนาดจริง"}
+            {zoom ? "Fit to view" : "Actual size"}
           </button>
-          <div className="lt-stage-scroll" tabIndex={zoom ? 0 : -1} aria-label={zoom ? "เลื่อนดูกราฟขนาดจริง" : undefined}>
+          <div className="lt-stage-scroll" tabIndex={zoom ? 0 : -1} aria-label={zoom ? "Scroll the full-size figure" : undefined}>
             <img key={f.id} src={src(f)} alt={f.alt} width={f.w} height={f.h} />
           </div>
         </div>
 
         <aside className="lt-notes">
           <p className="lt-take-lg">{f.takeaway}</p>
-          <h3>ดูตรงไหน</h3>
+          <h3>What to look at</h3>
           <ul>
             {f.look.map((t) => (
               <li key={t}>{t}</li>
@@ -110,26 +110,26 @@ function Viewer({ index, onIndex, onClose }: { index: number; onIndex: (i: numbe
           </ul>
           <dl className="lt-prov">
             <div>
-              <dt>การทดสอบ</dt>
+              <dt>Test</dt>
               <dd>{f.validation}</dd>
             </div>
             <div>
-              <dt>โมเดลในกราฟ</dt>
+              <dt>Models shown</dt>
               <dd>{f.models}</dd>
             </div>
             <div>
-              <dt>ที่มา</dt>
+              <dt>Source</dt>
               <dd>{f.source}</dd>
             </div>
           </dl>
           <a className="small" href={src(f)} target="_blank" rel="noreferrer">
-            เปิดไฟล์ภาพต้นฉบับ
+            Open the original image
           </a>
         </aside>
       </div>
 
-      <nav className="lt-strip" aria-label="เลือกกราฟ">
-        <button type="button" className="lt-nav" onClick={() => go(-1)} aria-label="กราฟก่อนหน้า">
+      <nav className="lt-strip" aria-label="Choose a figure">
+        <button type="button" className="lt-nav" onClick={() => go(-1)} aria-label="Previous figure">
           ‹
         </button>
         {FIGURES.map((g, i) => (
@@ -144,7 +144,7 @@ function Viewer({ index, onIndex, onClose }: { index: number; onIndex: (i: numbe
             <img src={src(g)} alt="" />
           </button>
         ))}
-        <button type="button" className="lt-nav" onClick={() => go(1)} aria-label="กราฟถัดไป">
+        <button type="button" className="lt-nav" onClick={() => go(1)} aria-label="Next figure">
           ›
         </button>
       </nav>

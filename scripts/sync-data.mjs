@@ -1,6 +1,6 @@
 // Put the 4 real data files into public/data.
 //   npm run data:sync                  → download from the public Hugging Face bucket (no hf CLI needed)
-//   npm run data:sync -- <local dir>   → copy from a local folder (e.g. after `hf sync hf://buckets/… ./local`)
+//   node scripts/sync-data.mjs <local dir> → copy from a local folder (e.g. after `hf sync hf://buckets/… ./local`)
 // FC_DATA_SRC can also be set to a local folder or another bucket URL.
 import { copyFileSync, existsSync, mkdirSync, statSync, writeFileSync } from "node:fs";
 import { join } from "node:path";

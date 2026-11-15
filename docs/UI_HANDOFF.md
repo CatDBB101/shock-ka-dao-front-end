@@ -3,8 +3,6 @@
 เอกสารนี้สำหรับคนที่จะมาปรับหน้าตาและประสบการณ์ใช้งาน (UX/UI) ของเว็บ
 อ่านจบแล้วควรรู้ว่าไฟล์ไหนคุมหน้าไหน สี/ฟอนต์มาจากไหน ใช้ Tailwind ยังไง และอะไรห้ามแตะ
 
----
-
 ## 1. เริ่มรัน
 
 ```bash
@@ -14,7 +12,7 @@ npm run dev         # http://localhost:5173
 ```
 
 ข้อมูลจริงอยู่ที่ HF bucket สาธารณะ [`Ploychomphoo/firecalendar-data`](https://huggingface.co/buckets/Ploychomphoo/firecalendar-data) ซึ่ง `npm run data:sync` ดึงให้อัตโนมัติ
-ถ้าอยากใช้ hf CLI เองก็ได้: `hf sync hf://buckets/Ploychomphoo/firecalendar-data ./local` แล้วตามด้วย `npm run data:sync -- ./local`
+ถ้าอยากใช้ hf CLI เองก็ได้: `hf sync hf://buckets/Ploychomphoo/firecalendar-data ./local` แล้วตามด้วย `node scripts/sync-data.mjs ./local`
 ถ้าไม่มีเน็ตหรือแค่จะปรับหน้าตา ให้ตั้ง `VITE_FC_DATA_MODE=mock` ใน `.env.local`
 
 ก่อนส่งงานให้รันอย่างน้อย `npm run build` (มี typecheck อยู่ในนั้น) และ `npm test`
@@ -26,8 +24,6 @@ npm run dev         # http://localhost:5173
 { "files.associations": { "*.css": "tailwindcss" }, "editor.quickSuggestions": { "strings": "on" } }
 ```
 
----
-
 ## 2. ภาพรวมโปรดักต์ (สิ่งที่ UX ต้องรู้)
 
 - **ผลิตภัณฑ์**: ปฏิทินไฟป่ารายเดือน ปี 2001–2024 ที่ต่อข้อมูลดาวเทียม MODIS (เก่า) กับ VIIRS (ใหม่) ให้เป็นเส้นเดียว จุดเด่นคือ "รอยต่อปี 2012" ที่หายไปหลังปรับเทียบ
@@ -38,8 +34,6 @@ npm run dev         # http://localhost:5173
   - เมนูเปลี่ยนตามโหมด (`NAV` ใน `src/components/layout/Layout.tsx`)
 - **ธีม**: ค่าเริ่มต้นคือ **ธีมมืด** (โทน "Thermal Strata" กลางคืนสีน้ำเงินมหาสมุทร + สีความร้อน) ถ้าเครื่องผู้ใช้ตั้งเป็น light จะสลับเป็นธีมสว่าง ("ice survey") ให้เอง
 - **ข้อมูลหนัก**: หน้า Explore โหลด DuckDB-WASM และไฟล์ parquet ครั้งแรกอาจช้า สถานะ loading/error จึงสำคัญ
-
----
 
 ## 3. หน้าไหนอยู่ไฟล์ไหน
 
@@ -56,8 +50,6 @@ npm run dev         # http://localhost:5173
 
 คอมโพเนนต์ที่ใช้ซ้ำหลายหน้า: `src/components/firecalendar/`
 (`CalendarGrid` ตารางปฏิทิน, `Legend` คำอธิบายสี, `ContinuityChart` กราฟ SVG, `States` loading/error)
-
----
 
 ## 4. Tailwind CSS (ติดตั้งแล้ว)
 
@@ -130,8 +122,6 @@ npm run dev         # http://localhost:5173
 4. ถ้า utility ชุดเดียวกันซ้ำเกิน 3 ที่ ให้ทำเป็นคอมโพเนนต์ React แทนการใช้ `@apply`
 5. breakpoint มาตรฐานของ Tailwind (`sm` 640, `md` 768, `lg` 1024) ไม่ตรงกับ CSS เดิม (560 / 760 / 860 / 900px) ถ้าต้องให้ตรงของเดิม ใช้ `max-[860px]:` ได้
 
----
-
 ## 5. ระบบสไตล์เดิม (`src/styles/firecalendar.css`)
 
 ### 5.1 โครงสร้าง token 2 ชั้น
@@ -179,8 +169,6 @@ npm run dev         # http://localhost:5173
 - `:focus-visible`: วงโฟกัส 3px สี `--fc-focus`, **ห้ามลบ**
 - ความกว้างเนื้อหาสูงสุด 1200px (`.fc-main`)
 
----
-
 ## 6. สีที่อยู่นอก CSS (ต้องแก้ใน TSX)
 
 สิ่งเหล่านี้วาดด้วย canvas หรือ MapLibre ซึ่งอ่าน CSS variable ไม่ได้ จึง hardcode สีไว้:
@@ -194,8 +182,6 @@ npm run dev         # http://localhost:5173
 
 ถ้าเปลี่ยนสีแบรนด์ อย่าลืมแก้ที่นี่ให้ตรงกับ token ส่วน `ContinuityChart.tsx` (SVG) ใช้ `var(--fc-*)` อยู่แล้ว ไม่ต้องแก้
 
----
-
 ## 7. สิ่งที่ห้ามแตะ / ต้องระวัง
 
 - **`src/lib/**`** คือชั้นข้อมูล (DuckDB, API, hooks, การคำนวณระดับสี) งาน UI ไม่ควรต้องแก้ที่นี่ ถ้าต้องการข้อมูลเพิ่มให้คุยกับทีม dev
@@ -204,8 +190,6 @@ npm run dev         # http://localhost:5173
 - **`role`, `aria-*`** ใน `CalendarGrid` (grid/row/gridcell) และ `ModeSwitch` (`role="switch"`) ใช้กับคีย์บอร์ดและ screen reader ห้ามลบ
 - **Animation**: ทุกอนิเมชันต้องอยู่ใต้ `prefers-reduced-motion: no-preference` (Tailwind ใช้ `motion-safe:` ได้) โดยเฉพาะการกะพริบเตือนภัยในโหมด Firefighter
 - `/guide`, `/prototype` เป็นต้นแบบแยก แก้ได้อิสระ แต่ไม่ได้ใช้ token หลัก
-
----
 
 ## 8. เช็กลิสต์ก่อนส่งงาน
 
@@ -216,8 +200,6 @@ npm run dev         # http://localhost:5173
 - [ ] contrast ตัวอักษรอย่างน้อย 4.5:1 (ข้อความ `fc-muted` บน `fc-panel` ด้วย)
 - [ ] สถานะ loading / error / ไม่มีข้อมูล ยังดูดี (ลองตั้ง `VITE_FC_DATA_MODE=mock`)
 - [ ] `npm run build` และ `npm test` ผ่าน
-
----
 
 ## 9. อ้างอิงไฟล์
 

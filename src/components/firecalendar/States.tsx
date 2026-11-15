@@ -11,7 +11,7 @@ export function LoadError({ error, onRetry, children }: { error: FireCalendarErr
       </p>
       {retryable && onRetry && (
         <button className="btn ghost" type="button" style={{ marginTop: 8 }} onClick={onRetry}>
-          ลองใหม่
+          Retry
         </button>
       )}
       {children}

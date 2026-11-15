@@ -158,7 +158,8 @@ export function EarthLimb({ region }: { region: Region }) {
       alive = false;
       ro.disconnect();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- draw reads refs
+    // draw reads refs
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // turn to the selected region
@@ -183,7 +184,8 @@ export function EarthLimb({ region }: { region: Region }) {
     };
     raf.current = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf.current);
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- draw reads refs
+    // draw reads refs
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [region]);
 
   return <canvas ref={cv} className="earth-limb" aria-hidden="true" />;

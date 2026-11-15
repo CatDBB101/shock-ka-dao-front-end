@@ -43,7 +43,7 @@ export default function Watch() {
   const rows = useMemo(() => {
     const out = points.map((wp) => {
       const n = nrt.byId.get(wp.id);
-      const status = assessWatchpoint({ month, season: meta.data?.season[wp.region], near: n?.data ?? null });
+      const status = assessWatchpoint({ month, season: wp.region ? meta.data?.season[wp.region] : undefined, near: n?.data ?? null, outsideCoverage: wp.region === null });
       return { wp, status, subscribed: subscribed.has(wp.id), nrtLoading: n?.loading ?? false, nrtError: n?.error ?? null };
     });
     return out.sort((a, b) => Number(b.subscribed) - Number(a.subscribed) || LEVEL_ORDER[b.status.level] - LEVEL_ORDER[a.status.level] || a.wp.name.localeCompare(b.wp.name, "th"));
@@ -57,38 +57,42 @@ export default function Watch() {
 
   return (
     <>
-      <h1>จุดเฝ้าระวัง</h1>
+      <h1>Watchpoints</h1>
       <p className="muted">
-        เลือกจุดเฝ้าระวังที่ผู้ดูแลระบบกำหนดไว้ แล้วกดติดตาม เมื่อดาวเทียมพบจุดความร้อนในรัศมีหรือเข้าช่วงพีคของฤดูไฟ ระบบจะแจ้งเตือนทางอีเมล
+        Follow the watchpoints set up by your administrator. When a satellite detects a hotspot within the radius, or the fire season peaks, you get an email alert.
       </p>
 
       <div className="stack" style={{ marginBottom: 16 }}>
+        <p className="small muted">
+          Watchpoint source:{" "}
+          {svc.watchpointSource === "backend" ? "backend (GET /watchpoint)" : svc.watchpointSource === "alerts" ? "alert service (GET /v1/watchpoints)" : "bundled example file (no backend connected; set VITE_FC_BACKEND_API)"}
+        </p>
         {!svc.sendsEmail && (
           <p className="note small">
-            <b>โหมดเดโม:</b> การติดตามบันทึกไว้ในเบราว์เซอร์นี้เท่านั้น และยังไม่ส่งอีเมลจริง ต้องเชื่อมระบบแจ้งเตือนก่อน (ตั้ง <code>VITE_FC_ALERTS_API</code> ดู ADR-016)
+            <b>Demo mode:</b> follows are saved in this browser only and no email is sent. Connect the alert service first (set <code>VITE_FC_ALERTS_API</code>, see ADR-016).
           </p>
         )}
         {!ds.canDownloadHotspots && (
           <p className="note small">
-            ยังตรวจจุดความร้อนล่าสุดไม่ได้ เพราะยังไม่ได้ตั้ง <code>VITE_FIRMS_MAP_KEY</code> ตอนนี้จึงแสดงเฉพาะระดับตามฤดูไฟ
+            Latest hotspots can't be checked because <code>VITE_FIRMS_MAP_KEY</code> is not set, so only the seasonal level is shown.
           </p>
         )}
         {activeMine.length > 0 && (
           <div className="alert" role="alert">
-            <b>พบจุดความร้อนใน {activeMine.length} จุดที่คุณติดตาม:</b> {activeMine.map((r) => r.wp.name).join(", ")}
+            <b>Hotspots at {activeMine.length} of your watchpoints:</b> {activeMine.map((r) => r.wp.name).join(", ")}
           </div>
         )}
       </div>
 
       <section className="panel stack" aria-labelledby="ff-email">
         <h2 id="ff-email" style={{ margin: 0, fontSize: 18 }}>
-          อีเมลรับการแจ้งเตือน
+          Alert email
         </h2>
         <EmailForm email={email} onSave={(e) => { setEmail(e); if (e) setFilter("mine"); }} />
       </section>
 
-      <section className="panel stack" aria-label="แผนที่จุดเฝ้าระวัง" style={{ marginTop: 16 }}>
-        <Suspense fallback={<div className="aoi-map-wrap"><div className="aoi-map" /><p className="aoi-map-hint" role="status">กำลังโหลดแผนที่…</p></div>}>
+      <section className="panel stack" aria-label="Watchpoint map" style={{ marginTop: 16 }}>
+        <Suspense fallback={<div className="aoi-map-wrap"><div className="aoi-map" /><p className="aoi-map-hint" role="status">Loading map…</p></div>}>
           <WatchMap points={mapPoints} hotspots={mapHotspots} selectedId={selectedId} onSelect={setSelectedId} />
         </Suspense>
         <LevelLegend />
@@ -97,19 +101,19 @@ export default function Watch() {
       <section style={{ marginTop: 24 }} aria-labelledby="ff-list">
         <div className="row" style={{ justifyContent: "space-between" }}>
           <h2 id="ff-list" style={{ margin: 0 }}>
-            รายการจุดเฝ้าระวัง
+            All watchpoints
           </h2>
-          <div className="tabs" role="group" aria-label="กรองรายการ">
+          <div className="tabs" role="group" aria-label="Filter">
             <button type="button" aria-pressed={filter === "all"} onClick={() => setFilter("all")}>
-              ทั้งหมด ({rows.length})
+              All ({rows.length})
             </button>
             <button type="button" aria-pressed={filter === "mine"} onClick={() => setFilter("mine")} disabled={!email}>
-              ที่ติดตาม ({subscribed.size})
+              Following ({subscribed.size})
             </button>
           </div>
         </div>
 
-        {wps.isPending && <p role="status">กำลังโหลดจุดเฝ้าระวัง…</p>}
+        {wps.isPending && <p role="status">Loading watchpoints…</p>}
         {wps.isError && <LoadError error={wps.error} onRetry={() => void wps.refetch()} />}
         {subs.toggle.isError && (
           <p className="error" role="alert">
@@ -118,12 +122,12 @@ export default function Watch() {
         )}
         {wps.data && shown.length === 0 && (
           <p className="muted" style={{ marginTop: 12 }}>
-            {filter === "mine" ? "ยังไม่ได้ติดตามจุดไหน กด “ติดตาม” ที่จุดในแท็บทั้งหมด" : "ยังไม่มีจุดเฝ้าระวัง"}
+            {filter === "mine" ? "You aren't following any watchpoints yet. Choose Follow on a watchpoint in the All tab" : "No watchpoints yet"}
           </p>
         )}
 
         <div className="grid-2" style={{ marginTop: 12 }}>
-          <ul className="ff-list" aria-label="จุดเฝ้าระวัง">
+          <ul className="ff-list" aria-label="Watchpoints">
             {shown.map((r) => (
               <li key={r.wp.id}>
                 <WatchCard
@@ -142,26 +146,26 @@ export default function Watch() {
             ))}
           </ul>
           <div className="panel" aria-live="polite" style={{ alignSelf: "start" }}>
-            {selected ? <WatchDetail wp={selected.wp} status={selected.status} month={month} /> : <p className="small muted">เลือกจุดบนแผนที่หรือในรายการเพื่อดูรายละเอียด</p>}
+            {selected ? <WatchDetail wp={selected.wp} status={selected.status} month={month} /> : <p className="small muted">Select a watchpoint on the map or in the list to see details</p>}
           </div>
         </div>
       </section>
 
       <section className="panel small" style={{ marginTop: 24 }} aria-labelledby="ff-how">
         <h3 id="ff-how" style={{ marginTop: 0 }}>
-          ระบบตัดสินระดับอย่างไร
+          How levels are decided
         </h3>
         <ul style={{ paddingLeft: 18, margin: 0 }}>
           <li>
-            <b>{LEVEL_TH.active}</b>: ดาวเทียม VIIRS (NOAA-20, NOAA-21 แบบใกล้เวลาจริง) พบจุดความร้อนในรัศมีภายใน {ACTIVE_HOURS} ชม. ไม่นับจุดความมั่นใจต่ำ
+            <b>{LEVEL_TH.active}</b>: VIIRS (NOAA-20, NOAA-21 near real time) detected a hotspot within the radius in the last {ACTIVE_HOURS} h, excluding low-confidence detections
           </li>
           <li>
-            <b>{LEVEL_TH.high}</b>: เดือนนี้อยู่ใกล้เดือนพีคของฤดูไฟของภูมิภาค (±1 เดือน)
+            <b>{LEVEL_TH.high}</b>: this month is within ±1 month of the regional fire-season peak
           </li>
           <li>
-            <b>{LEVEL_TH.elevated}</b>: เดือนนี้อยู่ในฤดูไฟ (ช่วงสะสม 10–90% ของจุดไฟทั้งปี)
+            <b>{LEVEL_TH.elevated}</b>: this month is inside the fire season (10–90% of the year's cumulative detections)
           </li>
-          <li>ระดับตามฤดูกาลมาจากสถิติ 2001–2024 ไม่ใช่ความน่าจะเป็นที่จะเกิดไฟ จุดความร้อนจากดาวเทียมอาจเป็นไฟที่ตั้งใจเผา ควรตรวจสอบในพื้นที่</li>
+          <li>Seasonal levels come from 2001–2024 statistics, not a probability of fire. Satellite hotspots can be planned burns; confirm on the ground.</li>
         </ul>
       </section>
     </>
@@ -184,21 +188,21 @@ function EmailForm({ email, onSave }: { email: string; onSave: (e: string) => vo
     return (
       <div className="row">
         <span>
-          รับการแจ้งเตือนที่ <b>{email}</b>
+          Alerts go to <b>{email}</b>
         </span>
         <button type="button" className="btn ghost" onClick={() => { setDraft(""); onSave(""); }}>
-          เปลี่ยนอีเมล
+          Change email
         </button>
       </div>
     );
   return (
     <form className="row" onSubmit={submit} noValidate>
       <label className="field" style={{ flex: "1 1 240px" }}>
-        อีเมล
+        Email
         <input type="email" autoComplete="email" inputMode="email" value={draft} onChange={(e) => setDraft(e.target.value)} placeholder="name@example.org" />
       </label>
       <button className="btn primary" type="submit" style={{ alignSelf: "end" }}>
-        ใช้อีเมลนี้
+        Use this email
       </button>
       {err && (
         <span className="error" role="alert">
@@ -215,13 +219,13 @@ function LevelBadge({ level }: { level: WatchStatus["level"] }) {
 
 function LevelLegend() {
   return (
-    <div className="fc-legend" aria-label="คำอธิบายสีระดับ">
+    <div className="fc-legend" aria-label="Level legend">
       {(["active", "high", "elevated", "normal"] as const).map((l) => (
         <span key={l}>
           <LevelBadge level={l} />
         </span>
       ))}
-      <span>เส้นหนา = จุดที่ติดตาม · จุดแดงเล็ก = จุดความร้อนล่าสุด</span>
+      <span>Thick outline = following · small red dots = latest hotspots</span>
     </div>
   );
 }
@@ -244,7 +248,7 @@ function WatchCard(p: {
         <div>
           <h3 style={{ margin: 0, fontSize: 17 }}>{p.wp.name}</h3>
           <p className="small muted" style={{ margin: "2px 0 0" }}>
-            {p.wp.area} · {regionTh(p.wp.region)} · รัศมี {p.wp.radiusKm} กม.
+            {p.wp.area}{p.wp.region ? ` · ${regionTh(p.wp.region)}` : ""} · radius {p.wp.radiusKm} km
           </p>
         </div>
         <LevelBadge level={p.status.level} />
@@ -253,9 +257,9 @@ function WatchCard(p: {
         {p.status.reasons.map((r) => (
           <li key={r}>{r}</li>
         ))}
-        {p.nrtLoading && <li className="muted">กำลังตรวจจุดความร้อนล่าสุด…</li>}
-        {p.nrtError && <li className="error">ตรวจจุดความร้อนล่าสุดไม่สำเร็จ ({p.nrtError})</li>}
-        {!p.subscribed && !p.selected && p.status.hotspots == null && <li className="muted">ติดตามหรือเลือกจุดนี้เพื่อตรวจจุดความร้อนล่าสุด</li>}
+        {p.nrtLoading && <li className="muted">Checking latest hotspots…</li>}
+        {p.nrtError && <li className="error">Could not check latest hotspots ({p.nrtError})</li>}
+        {!p.subscribed && !p.selected && p.status.hotspots == null && <li className="muted">Follow or select this watchpoint to check the latest hotspots</li>}
       </ul>
       <div className="row">
         <button
@@ -263,13 +267,13 @@ function WatchCard(p: {
           className={`btn${p.subscribed ? " ghost" : " primary"}`}
           aria-pressed={p.subscribed}
           disabled={!p.canSubscribe || p.busy}
-          title={p.canSubscribe ? undefined : "กรอกอีเมลก่อน"}
+          title={p.canSubscribe ? undefined : "Enter your email first"}
           onClick={p.onToggle}
         >
-          {p.busy ? "กำลังบันทึก…" : p.subscribed ? "✓ ติดตามอยู่ (กดเพื่อเลิก)" : "ติดตาม"}
+          {p.busy ? "Saving…" : p.subscribed ? "Following · unfollow" : "Follow"}
         </button>
         <button type="button" className="btn ghost" aria-pressed={p.selected} onClick={p.onSelect}>
-          รายละเอียด
+          Details
         </button>
       </div>
     </article>
@@ -280,7 +284,8 @@ function WatchDetail({ wp, status, month }: { wp: Watchpoint; status: WatchStatu
   const hex = { lat: wp.lat, lon: wp.lon, radiusKm: wp.radiusKm };
   const ring = useMemo(() => hexagonRing(hex), [wp.lat, wp.lon, wp.radiusKm]); // eslint-disable-line react-hooks/exhaustive-deps
   const box = useMemo(() => ringBox(ring), [ring]);
-  const hist = useAoiCalendar(box, "2013-01", "2024-12", ring);
+  const covered = wp.region !== null;
+  const hist = useAoiCalendar(covered ? box : null, "2013-01", "2024-12", ring);
 
   // typical (median) fire count per calendar month, 2013–2024, VIIRS-measured
   const clim = useMemo(() => {
@@ -299,24 +304,24 @@ function WatchDetail({ wp, status, month }: { wp: Watchpoint; status: WatchStatu
         <LevelBadge level={status.level} />
       </div>
       <p className="small muted" style={{ margin: 0 }}>
-        {wp.area} · <span className="num">{wp.lat.toFixed(2)}, {wp.lon.toFixed(2)}</span> · รัศมี {wp.radiusKm} กม.
+        {wp.area} · <span className="num">{wp.lat.toFixed(2)}, {wp.lon.toFixed(2)}</span> · radius {wp.radiusKm} km
         {wp.note ? ` · ${wp.note}` : ""}
       </p>
 
       <div>
-        <h4 style={{ margin: "8px 0 4px" }}>จุดความร้อนล่าสุด ({ACTIVE_HOURS} ชม.)</h4>
+        <h4 style={{ margin: "8px 0 4px" }}>Latest hotspots ({ACTIVE_HOURS} h)</h4>
         {status.hotspots == null ? (
-          <p className="small muted">ยังไม่ได้ตรวจ</p>
+          <p className="small muted">Not checked yet</p>
         ) : hs.length === 0 ? (
-          <p className="small">ไม่พบจุดความร้อนในรัศมี</p>
+          <p className="small">No hotspots within the radius</p>
         ) : (
           <div className="table-scroll">
             <table className="fc-table small">
               <thead>
                 <tr>
-                  <th>เวลา (UTC)</th>
-                  <th className="num">ละติจูด</th>
-                  <th className="num">ลองจิจูด</th>
+                  <th>Time (UTC)</th>
+                  <th className="num">Latitude</th>
+                  <th className="num">Longitude</th>
                   <th className="num">FRP (MW)</th>
                 </tr>
               </thead>
@@ -331,18 +336,19 @@ function WatchDetail({ wp, status, month }: { wp: Watchpoint; status: WatchStatu
                 ))}
               </tbody>
             </table>
-            {hs.length > 10 && <p className="small muted">และอีก {hs.length - 10} จุด</p>}
+            {hs.length > 10 && <p className="small muted">and {hs.length - 10} more</p>}
           </div>
         )}
       </div>
 
       <div>
-        <h4 style={{ margin: "8px 0 4px" }}>ไฟตามฤดูกาลของจุดนี้ (ค่ามัธยฐาน 2013–2024)</h4>
-        {hist.isPending && <p className="small muted" role="status">กำลังคำนวณ… ครั้งแรกอาจใช้เวลาสักครู่</p>}
+        <h4 style={{ margin: "8px 0 4px" }}>Seasonal fire here (median 2013–2024)</h4>
+        {!covered && <p className="small muted">No history: this watchpoint is outside the 6 countries the FireCalendar+ calendar covers. Satellite hotspots are still checked as usual.</p>}
+        {covered && hist.isPending && <p className="small muted" role="status">Calculating… the first run takes a moment</p>}
         {hist.isError && <LoadError error={hist.error} onRetry={() => void hist.refetch()} />}
         {clim && (
           <>
-            <div className="ff-bars" role="img" aria-label={`จุดไฟปกติรายเดือน: ${clim.map((v, i) => `${MONTHS_TH[i]} ${Math.round(v)}`).join(", ")}`}>
+            <div className="ff-bars" role="img" aria-label={`Typical monthly detections: ${clim.map((v, i) => `${MONTHS_TH[i]} ${Math.round(v)}`).join(", ")}`}>
               {clim.map((v, i) => (
                 <div key={i} className={`ff-bar${i + 1 === month ? " now" : ""}`}>
                   <i style={{ height: `${Math.max(2, (v / maxClim) * 100)}%` }} />
@@ -351,15 +357,22 @@ function WatchDetail({ wp, status, month }: { wp: Watchpoint; status: WatchStatu
               ))}
             </div>
             <p className="small">
-              ปกติเดือน{monthTh(month)}พบไฟราว <b className="num">{fmtCount(clim[month - 1] ?? 0)}</b> จุด/เดือนในพื้นที่นี้ ({fmtCount(hist.data?.cells ?? 0)} ช่อง H3)
+              A typical {monthTh(month)} has about <b className="num">{fmtCount(clim[month - 1] ?? 0)}</b> detections in this area ({fmtCount(hist.data?.cells ?? 0)} H3 cells)
             </p>
           </>
         )}
       </div>
 
-      <Link className="btn ghost" to={`/explore?hex=${hexToParam(hex)}`}>
-        ดูข้อมูลย้อนหลัง 24 ปีในโหมด Scientist →
-      </Link>
+      <div className="row">
+        <Link className="btn" to={`/spread?lat=${wp.lat.toFixed(4)}&lon=${wp.lon.toFixed(4)}`}>
+          Forecast fire spread from here →
+        </Link>
+        {covered && (
+          <Link className="btn ghost" to={`/explore?hex=${hexToParam(hex)}`}>
+            See 24 years of history (switches to Scientist) →
+          </Link>
+        )}
+      </div>
     </div>
   );
 }

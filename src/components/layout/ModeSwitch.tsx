@@ -1,27 +1,34 @@
-import { MODE_LABEL } from "../../lib/mode/mode";
+import type { KeyboardEvent } from "react";
+import { MODE_LABEL, MODES } from "../../lib/mode/mode";
 import { useMode } from "../../lib/mode/provider";
 
-/** Two-position switch: Scientist ⇄ Firefighter. */
+/** Three-way segmented switch: Scientist · Firefighter · Simulator (radio group, arrow keys move). */
 export function ModeSwitch() {
   const { mode, setMode } = useMode();
-  const ff = mode === "firefighter";
+  const idx = MODES.indexOf(mode);
+  const onKey = (e: KeyboardEvent) => {
+    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+    e.preventDefault();
+    const next = MODES[(idx + (e.key === "ArrowRight" ? 1 : MODES.length - 1)) % MODES.length]!;
+    setMode(next);
+  };
   return (
-    <button
-      type="button"
-      role="switch"
-      aria-checked={ff}
-      aria-label={`โหมด ${MODE_LABEL[mode].th} — กดเพื่อสลับเป็น${MODE_LABEL[ff ? "scientist" : "firefighter"].th}`}
-      title={`สลับเป็นโหมด ${MODE_LABEL[ff ? "scientist" : "firefighter"].en}`}
-      className={`fc-mode-switch${ff ? " is-ff" : ""}`}
-      onClick={() => setMode(ff ? "scientist" : "firefighter")}
-    >
+    <div className={`fc-mode-switch is-${mode}`} role="radiogroup" aria-label="Choose a mode" onKeyDown={onKey} style={{ ["--mode-i" as string]: idx }}>
       <span className="fc-mode-thumb" aria-hidden="true" />
-      <span className="fc-mode-opt" aria-hidden="true">
-        {MODE_LABEL.scientist.en}
-      </span>
-      <span className="fc-mode-opt" aria-hidden="true">
-        {MODE_LABEL.firefighter.en}
-      </span>
-    </button>
+      {MODES.map((m) => (
+        <button
+          key={m}
+          type="button"
+          role="radio"
+          aria-checked={m === mode}
+          tabIndex={m === mode ? 0 : -1}
+          title={`${MODE_LABEL[m].th} mode: ${MODE_LABEL[m].tagline}`}
+          className="fc-mode-opt"
+          onClick={() => m !== mode && setMode(m)}
+        >
+          {MODE_LABEL[m].en}
+        </button>
+      ))}
+    </div>
   );
 }
