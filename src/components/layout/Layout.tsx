@@ -12,12 +12,14 @@ const NAV: Record<AppMode, [string, string][]> = {
     ["/explore", "สำรวจพื้นที่"],
     ["/evidence", "หลักฐาน"],
     ["/data", "ข้อมูล"],
+    ["/hotspots", "Hotspots"],
     ...(config.featureAsk ? ([["/ask", "ถาม"]] as [string, string][]) : []),
     ["/about", "เกี่ยวกับ"],
   ],
   firefighter: [
     ["/watch", "จุดเฝ้าระวัง"],
     ["/evidence", "หลักฐาน"],
+    ["/hotspots", "Hotspots"],
     ["/about", "เกี่ยวกับ"],
   ],
 };
