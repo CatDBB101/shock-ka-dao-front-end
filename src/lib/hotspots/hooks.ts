@@ -1,6 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { hotspotsApi, hotspotsQueryKeys, type FilterParams } from './api-client';
-import type { HotspotStats, TimeSeriesPoint, Watchpoint } from './types';
 
 // ==================== Query Hooks ====================
 

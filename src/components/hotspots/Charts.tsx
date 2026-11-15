@@ -40,13 +40,15 @@ export function TimeSeriesChart({ data, height = 300 }: TimeSeriesChartProps) {
     return date.toLocaleDateString('th-TH', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
   };
 
-  const tooltipFormatter = (value: number | undefined, name: string) => {
-    if (value === undefined) return [0, name];
-    if (name === 'count') return [value.toLocaleString(), 'จุดไฟ'];
-    if (name === 'totalFrp') return [value.toFixed(1), 'MW'];
-    if (name === 'avgFrp') return [value.toFixed(1), 'MW (เฉลี่ย)'];
-    if (name === 'maxFrp') return [value.toFixed(1), 'MW (สูงสุด)'];
-    return [value, name];
+  const tooltipFormatter = (value: unknown, name: unknown) => {
+    const numValue = value as number | undefined;
+    const key = name as string | undefined ?? '';
+    if (numValue === undefined) return [0, key];
+    if (key === 'count') return [numValue.toLocaleString(), 'จุดไฟ'];
+    if (key === 'totalFrp') return [numValue.toFixed(1), 'MW'];
+    if (key === 'avgFrp') return [numValue.toFixed(1), 'MW (เฉลี่ย)'];
+    if (key === 'maxFrp') return [numValue.toFixed(1), 'MW (สูงสุด)'];
+    return [numValue, key];
   };
 
   const legendFormatter = (value: string) => {
@@ -109,7 +111,6 @@ export function TimeSeriesChart({ data, height = 300 }: TimeSeriesChartProps) {
                 boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
               }}
               labelFormatter={(label: React.ReactNode) => formatTooltipDate(String(label))}
-              // @ts-expect-error - Recharts type complexity
               formatter={tooltipFormatter}
             />
             <Legend
@@ -198,8 +199,8 @@ export function BreakdownChart({ stats, height = 300 }: BreakdownChartProps) {
     return `${name} ${(p * 100).toFixed(1)}%`;
   };
 
-  const tooltipNumberFormatter = (value: number | undefined) => [value?.toLocaleString() || '0', 'จุดไฟ'];
-  const tooltipFrpFormatter = (value: number | undefined) => [value?.toFixed(1) || '0', 'MW'];
+  const tooltipNumberFormatter = (value: unknown) => [(value as number | undefined)?.toLocaleString() || '0', 'จุดไฟ'];
+  const tooltipFrpFormatter = (value: unknown) => [(value as number | undefined)?.toFixed(1) || '0', 'MW'];
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
@@ -223,7 +224,7 @@ export function BreakdownChart({ stats, height = 300 }: BreakdownChartProps) {
                 paddingAngle={2}
                 dataKey="value"
                 nameKey="name"
-                label={({ name, percent }) => pieLabelFormatter(String(name), percent ?? 0)}
+                label={({ name, percent }: { name?: string; percent?: number }) => pieLabelFormatter(String(name ?? ''), percent ?? 0)}
                 labelLine={false}
               >
                 {confidenceData.map((entry, index) => (
@@ -236,7 +237,6 @@ export function BreakdownChart({ stats, height = 300 }: BreakdownChartProps) {
                   border: '1px solid #e5e7eb',
                   borderRadius: '8px',
                 }}
-                // @ts-expect-error - Recharts type complexity
                 formatter={tooltipNumberFormatter}
               />
               <Legend
@@ -267,7 +267,7 @@ export function BreakdownChart({ stats, height = 300 }: BreakdownChartProps) {
                 paddingAngle={2}
                 dataKey="value"
                 nameKey="name"
-                label={({ name, percent }) => pieLabelFormatter(String(name), percent ?? 0)}
+                label={({ name, percent }: { name?: string; percent?: number }) => pieLabelFormatter(String(name ?? ''), percent ?? 0)}
                 labelLine={false}
               >
                 {daynightData.map((entry, index) => (
@@ -280,7 +280,6 @@ export function BreakdownChart({ stats, height = 300 }: BreakdownChartProps) {
                   border: '1px solid #e5e7eb',
                   borderRadius: '8px',
                 }}
-                // @ts-expect-error - Recharts type complexity
                 formatter={tooltipNumberFormatter}
               />
               <Legend
@@ -318,7 +317,6 @@ export function BreakdownChart({ stats, height = 300 }: BreakdownChartProps) {
                   border: '1px solid #e5e7eb',
                   borderRadius: '8px',
                 }}
-                // @ts-expect-error - Recharts type complexity
                 formatter={tooltipNumberFormatter}
               />
               <Bar dataKey="value" fill="#3b82f6" radius={[0, 4, 4, 0]} maxBarSize={30} />
@@ -360,7 +358,6 @@ export function BreakdownChart({ stats, height = 300 }: BreakdownChartProps) {
                   border: '1px solid #e5e7eb',
                   borderRadius: '8px',
                 }}
-                // @ts-expect-error - Recharts type complexity
                 formatter={tooltipFrpFormatter}
               />
               <Bar dataKey="value" fill="#ef4444" radius={[4, 4, 0, 0]} maxBarSize={40} />
