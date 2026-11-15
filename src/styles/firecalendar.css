@@ -237,21 +237,15 @@ code {
   text-decoration: none;
   white-space: nowrap;
   display: inline-flex;
-  align-items: baseline;
-  gap: 1px;
+  align-items: center;
+  gap: 10px;
 }
-.fc-brand::before {
-  /* a tiny heat column as the mark */
-  content: "";
-  width: 10px;
-  height: 16px;
-  margin-right: 8px;
-  align-self: center;
-  border-radius: 2px;
-  background: linear-gradient(to top, var(--fc-h1), var(--fc-h3) 60%, var(--fc-h4));
-}
-.fc-brand span {
-  color: var(--fc-ember);
+/* FireFirm emblem (public/brand/firefirm-mark.png) */
+.fc-brand img {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  flex: none;
 }
 .fc-nav {
   display: flex;
@@ -714,15 +708,36 @@ select:focus-visible {
   background: linear-gradient(90deg, var(--aurora-400), var(--heat-2) 55%, var(--heat-4));
   margin-bottom: 18px;
 }
+/* fixed scale ticks at ×2, ×3, ×4 (log positions) so it reads as a gauge, not a slider */
+.seam-gauge b {
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  width: 1px;
+  background: rgba(8, 22, 31, 0.55);
+  pointer-events: none;
+}
+/* read-only needle: thin line + downward pointer, no draggable-looking knob */
 .seam-gauge i {
   position: absolute;
-  top: 50%;
-  width: 14px;
-  height: 14px;
-  margin: -7px 0 0 -7px;
-  border-radius: 50%;
+  top: -7px;
+  width: 2px;
+  height: 20px;
+  margin-left: -1px;
+  border-radius: 1px;
   background: #fff;
-  box-shadow: 0 0 10px #fff;
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.7);
+  pointer-events: none;
+}
+.seam-gauge i::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  margin-left: -5px;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid #fff;
 }
 .seam-gauge span {
   position: absolute;
@@ -1916,9 +1931,15 @@ ol.steps li {
   font-size: clamp(34px, 7vw, 46px);
   font-weight: 600;
   letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
-.fc-loader-brand span {
-  color: #f0703a;
+.fc-loader-brand img {
+  width: 1.1em;
+  height: 1.1em;
+  object-fit: contain;
+  flex: none;
 }
 .fc-loader-bar {
   appearance: none;

@@ -3,10 +3,10 @@ import { Link } from "react-router-dom";
 export default function About() {
   return (
     <>
-      <h1>About FireCalendar+</h1>
+      <h1>About FireFirm</h1>
       <section>
         <p>
-          FireCalendar+ is an entry for the NASA Space Apps Challenge 2026, MODIS/VIIRS Harmonization. We convert MODIS fire detections (2001–2012)
+          FireFirm is an entry for the NASA Space Apps Challenge 2026, MODIS/VIIRS Harmonization. We convert MODIS fire detections (2001–2012)
           into VIIRS S-NPP 375 m equivalents with a LightGBM model, giving one continuous 24-year monthly fire calendar.
         </p>
         <p>
@@ -24,8 +24,8 @@ export default function About() {
       <section>
         <h2>NASA data sources</h2>
         <ul>
-          <li>NASA FIRMS — MODIS Collection 6.1 (Terra + Aqua) and VIIRS 375 m (S-NPP)</li>
-          <li>MCD12C1 — MODIS land cover</li>
+          <li>NASA FIRMS: MODIS Collection 6.1 (Terra + Aqua) and VIIRS 375 m (S-NPP)</li>
+          <li>MCD12C1: MODIS land cover</li>
           <li>LAADS DAAC / Earthdata</li>
         </ul>
       </section>

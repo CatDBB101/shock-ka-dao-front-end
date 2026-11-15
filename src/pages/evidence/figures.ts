@@ -115,7 +115,7 @@ export const FIGURES: EvidenceFigure[] = [
     title: "The seam disappears",
     takeaway: "After calibration the annual line runs continuously through 2012 in all 4 regions, and the model's VIIRS-era predictions overlay the measurements",
     look: [
-      "Grey is raw MODIS, orange is FireCalendar+, with no jump at the dashed 2012 line",
+      "Grey is raw MODIS, orange is FireFirm, with no jump at the dashed 2012 line",
       "The pale orange band before 2012 is the ~80% uncertainty range",
       "The dotted blue line is the model over years with real VIIRS; overlaying orange means the model is not drifting",
     ],

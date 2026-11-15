@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 export default function Ask() {
   return (
     <>
-      <h1>Ask FireCalendar+</h1>
+      <h1>Ask FireFirm</h1>
       <div className="panel">
         <p>Coming soon: ask in plain language, for example "Was August 2022 unusually active around Rosario?", and get an answer where every number comes from the data.</p>
         <Link to="/explore" className="btn">

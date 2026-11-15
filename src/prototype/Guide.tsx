@@ -146,7 +146,7 @@ export default function Guide() {
     <div className="ep-guide">
       <header>
         <p className="crumbs">
-          <Link to="/">FireCalendar+</Link>
+          <Link to="/">FireFirm</Link>
           <span aria-hidden="true">/</span>
           <Link to="/prototype">Open the Explorer prototype</Link>
         </p>

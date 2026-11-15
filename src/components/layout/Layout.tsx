@@ -35,7 +35,8 @@ export function Layout() {
       <header className="fc-header">
         <div className="fc-header-inner">
           <Link to={MODE_LABEL[mode].home} className="fc-brand">
-            FireCalendar<span>+</span>
+            <img src="/brand/firefirm-mark.png" alt="" width={34} height={34} />
+            FireFirm
           </Link>
           <nav className="fc-nav" aria-label="Main">
             {navFor(mode).map(([to, label]) => (

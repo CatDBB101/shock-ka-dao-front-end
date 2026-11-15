@@ -44,7 +44,7 @@ export default function Home() {
                   Naive splice
                 </button>
                 <button type="button" aria-pressed={mode === "harmonized"} onClick={() => setMode("harmonized")}>
-                  Calibrated by FireCalendar+
+                  Calibrated by FireFirm
                 </button>
               </div>
               <p className="orbit-caption">
@@ -85,7 +85,7 @@ export default function Home() {
       <section className="band" aria-labelledby="seam">
         <div className="band-head">
           <h2 id="seam">Annual totals before and after calibration</h2>
-          <p className="muted">Grey is raw MODIS, orange is FireCalendar+. Over the VIIRS years the dashed blue line is the model's prediction, which sits almost on top of the measurements.</p>
+          <p className="muted">Grey is raw MODIS, orange is FireFirm. Over the VIIRS years the dashed blue line is the model's prediction, which sits almost on top of the measurements.</p>
         </div>
         <div className="sheet">{q.data ? <ContinuityChart rows={q.data.rows} title={regionTh(region)} /> : <p role="status">Loading…</p>}</div>
       </section>
@@ -95,14 +95,14 @@ export default function Home() {
           <h2 id="proof">Accuracy on data never used for training</h2>
           <p className="muted">Poisson deviance, shorter is better, measured on areas and years held out from the start and opened once at the end.</p>
         </div>
-        <div className="proof" role="img" aria-label="Single multiplier 5.17 versus FireCalendar+ 1.09">
+        <div className="proof" role="img" aria-label="Single multiplier 5.17 versus FireFirm 1.09">
           <div className="proof-row">
             <span>MODIS × one multiplier</span>
             <i style={{ width: "100%" }} className="proof-bar base" />
             <b>5.17</b>
           </div>
           <div className="proof-row">
-            <span>FireCalendar+ (LightGBM)</span>
+            <span>FireFirm (LightGBM)</span>
             <i style={{ width: `${(1.09 / 5.17) * 100}%` }} className="proof-bar ours" />
             <b>1.09</b>
           </div>

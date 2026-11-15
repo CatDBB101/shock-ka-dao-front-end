@@ -347,5 +347,5 @@ export default function Explorer(){
  React.useEffect(()=>{if(!ready)loadGeo().then(()=>setReady(true)).catch(e=>setErr(String(e)))},[]);
  return h('div',{className:'ep-root'},
   ready?h(App):h('div',{style:{padding:24}},err?'Could not load the map: '+err:'Loading map…'),
-  h(Link,{to:'/',className:'ep-back',title:'Back to FireCalendar+'},'← FireCalendar+'));
+  h(Link,{to:'/',className:'ep-back',title:'Back to FireFirm'},'← FireFirm'));
 }

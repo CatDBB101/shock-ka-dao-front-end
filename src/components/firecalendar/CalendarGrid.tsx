@@ -3,7 +3,7 @@ import type { CalendarCell } from "../../lib/firecalendar";
 import { colourSteps, CRITICAL_PCT, fmtCount, monthTh, MONTHS_TH, SOURCE_LABEL_TH } from "../../lib/firecalendar";
 import { viirsGap } from "../../lib/firecalendar/time";
 
-/** Which number colours the cell. harmonized = FireCalendar+ (VIIRS-equivalent), modis = raw MODIS, viirs = measured VIIRS only. */
+/** Which number colours the cell. harmonized = FireFirm (VIIRS-equivalent), modis = raw MODIS, viirs = measured VIIRS only. */
 export type Series = "harmonized" | "modis" | "viirs";
 export const SERIES_LABEL_TH: Record<Series, string> = {
   harmonized: "Harmonized (VIIRS-equivalent)",

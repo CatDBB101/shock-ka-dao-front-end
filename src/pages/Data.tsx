@@ -113,7 +113,7 @@ export default function Data() {
             </tr>
             <tr>
               <td>Citation</td>
-              <td colSpan={2}>NASA FIRMS (MODIS C6.1, VIIRS 375 m), MCD12C1 · FireCalendar+ v3</td>
+              <td colSpan={2}>NASA FIRMS (MODIS C6.1, VIIRS 375 m), MCD12C1 · FireFirm v3</td>
             </tr>
           </tbody>
         </table>

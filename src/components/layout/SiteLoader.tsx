@@ -79,10 +79,11 @@ export function SiteLoader() {
   };
 
   return (
-    <div className={`fc-loader${leaving ? " is-leaving" : ""}${reduced ? " is-still" : ""}`} role="dialog" aria-modal="true" aria-label="Loading FireCalendar+">
+    <div className={`fc-loader${leaving ? " is-leaving" : ""}${reduced ? " is-still" : ""}`} role="dialog" aria-modal="true" aria-label="Loading FireFirm">
       <div className="fc-loader-inner">
         <p className="fc-loader-brand">
-          FireCalendar<span>+</span>
+          <img src="/brand/firefirm-mark.png" alt="" width={44} height={44} />
+          FireFirm
         </p>
         {reduced ? (
           <p className="fc-loader-msg" role="status">

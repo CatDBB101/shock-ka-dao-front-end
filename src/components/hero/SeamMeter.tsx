@@ -63,6 +63,9 @@ export function SeamMeter({ rows, mode }: { rows: StrataRow[]; mode: StrataMode 
           {healed ? "After calibration, 2012–16 and 2007–11 differ only by natural year-to-year variation" : "Spliced naively, 2012–16 looks several times more active than 2007–11, only because the satellite changed"}
         </p>
         <div className="seam-gauge" aria-hidden="true">
+          {[2, 3, 4].map((k) => (
+            <b key={k} style={{ left: `${(Math.log(k) / Math.log(5)) * 100}%` }} />
+          ))}
           <i style={{ left: `${pos * 100}%` }} />
           <span>×1</span>
           <span>×5</span>

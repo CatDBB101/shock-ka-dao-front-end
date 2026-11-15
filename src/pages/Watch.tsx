@@ -343,7 +343,7 @@ function WatchDetail({ wp, status, month }: { wp: Watchpoint; status: WatchStatu
 
       <div>
         <h4 style={{ margin: "8px 0 4px" }}>Seasonal fire here (median 2013–2024)</h4>
-        {!covered && <p className="small muted">No history: this watchpoint is outside the 6 countries the FireCalendar+ calendar covers. Satellite hotspots are still checked as usual.</p>}
+        {!covered && <p className="small muted">No history: this watchpoint is outside the 6 countries the FireFirm calendar covers. Satellite hotspots are still checked as usual.</p>}
         {covered && hist.isPending && <p className="small muted" role="status">Calculating… the first run takes a moment</p>}
         {hist.isError && <LoadError error={hist.error} onRetry={() => void hist.refetch()} />}
         {clim && (
