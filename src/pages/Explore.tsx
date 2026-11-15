@@ -106,7 +106,7 @@ export default function Explore() {
   return (
     <>
       <h1>สำรวจพื้นที่</h1>
-      <p className="muted">พื้นที่นี้ไฟมาเดือนไหน ปีนี้ผิดปกติไหม — ค้นหาสถานที่แล้ววาดหกเหลี่ยมบนแผนที่ หรือกรอกกรอบพิกัด</p>
+      <p className="muted">ค้นหาสถานที่แล้ววาดหกเหลี่ยมบนแผนที่ หรือกรอกกรอบพิกัด</p>
 
       <section className="panel stack" aria-label="แผนที่">
         <Suspense fallback={<div className="aoi-map-wrap"><div className="aoi-map" /><p className="aoi-map-hint" role="status">กำลังโหลดแผนที่…</p></div>}>
@@ -275,7 +275,7 @@ export default function Explore() {
         )}
       </section>
       <p className="small muted" style={{ marginTop: 24 }}>
-        รุ่นนี้ครอบคลุม {COVERED_COUNTRIES_TH}
+        ครอบคลุม {COVERED_COUNTRIES_TH}
       </p>
     </>
   );

@@ -149,7 +149,7 @@ export default function Watch() {
 
       <section className="panel small" style={{ marginTop: 24 }} aria-labelledby="ff-how">
         <h3 id="ff-how" style={{ marginTop: 0 }}>
-          ระบบตัดสินระดับอย่างไร
+          ระบบคำนวณอย่างไร
         </h3>
         <ul style={{ paddingLeft: 18, margin: 0 }}>
           <li>

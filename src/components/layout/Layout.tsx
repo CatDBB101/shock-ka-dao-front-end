@@ -32,7 +32,7 @@ export function Layout() {
       </a>
       <header className="fc-header">
         <div className="fc-header-inner">
-          <Link to={mode === "firefighter" ? "/watch" : "/"} className="fc-brand">
+          <Link to={mode === "firefighter" ? "/" : "/"} className="fc-brand">
             FireCalendar<span>+</span>
           </Link>
           <nav className="fc-nav" aria-label="เมนูหลัก">
